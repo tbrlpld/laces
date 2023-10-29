@@ -78,3 +78,10 @@ or, you can run them for a specific environment `tox -e python3.11-django4.2-wag
 `tox -e python3.11-django4.2-wagtail5.1-sqlite laces.tests.test_file.TestClass.test_method`
 
 To run the test app interactively, use `tox -e interactive`, visit `http://127.0.0.1:8020/admin/` and log in with `admin`/`changeme`.
+
+### Python version management
+
+Tox will attempt to find installed Python versions on your machine.
+If you use `pyenv` to manage multiple versions, you can tell `tox` to use those versions.
+This working, is depended on [`virtualenv-pyenv`](https://pypi.org/project/virtualenv-pyenv/) (note: this is not `pyenv-virtualenv`) which is part of the CI dependencies (just like `tox` itself is).
+To enable the use, you want to set the environment variable `VIRTUALENV_DISCOVERY=pyenv`.
