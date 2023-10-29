@@ -1,0 +1,16 @@
+__pycache__/
+*.py[co]
+/build
+/dist
+/laces.egg-info
+/.coverage
+/htmlcov
+/.tox
+/.venv
+/venv
+/.vscode
+/site
+/test_laces.db
+/node_modules
+/test-static
+/test-media
