@@ -34,24 +34,6 @@ ALLOWED_HOSTS = ["localhost", "testserver"]
 INSTALLED_APPS = [
     "laces",
     "laces.test",
-    "wagtail.contrib.search_promotions",
-    "wagtail.contrib.forms",
-    "wagtail.contrib.redirects",
-    "wagtail.embeds",
-    "wagtail.users",
-    "wagtail.snippets",
-    "wagtail.documents",
-    "wagtail.images",
-    "wagtail.search",
-    "wagtail.admin",
-    "wagtail.api.v2",
-    "wagtail.contrib.modeladmin",
-    "wagtail.contrib.routable_page",
-    "wagtail.contrib.styleguide",
-    "wagtail.sites",
-    "wagtail",
-    "taggit",
-    "rest_framework",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -69,7 +51,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
 
 ROOT_URLCONF = "laces.test.urls"
@@ -92,8 +73,6 @@ TEMPLATES = [
 
 
 # Using DatabaseCache to make sure that the cache is cleared between tests.
-# This prevents false-positives in some wagtail core tests where we are
-# changing the 'wagtail_root_paths' key which may cause future tests to fail.
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.db.DatabaseCache",
@@ -155,8 +134,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, "test-static")
 STATIC_URL = "/static/"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "test-media")
-
-
-# Wagtail settings
-
-WAGTAIL_SITE_NAME = "Wagtail laces test site"

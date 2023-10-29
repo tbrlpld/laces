@@ -1,4 +1,4 @@
-# Wagtail laces
+# Laces
 
 Django components that know how to render themselves.
 
@@ -18,7 +18,6 @@ Django components that know how to render themselves.
 
 - Python ...
 - Django ...
-- Wagtail ...
 
 ## Installation
 

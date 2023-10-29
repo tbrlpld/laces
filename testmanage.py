@@ -29,23 +29,23 @@ def parse_args(args=None):
 def runtests():
     args, rest = parse_args()
 
-    only_wagtail = r"^wagtail(\.|$)"
+    only_django = r"^django(\.|$)"
     if args.deprecation == "all":
         # Show all deprecation warnings from all packages
         warnings.simplefilter("default", DeprecationWarning)
         warnings.simplefilter("default", PendingDeprecationWarning)
     elif args.deprecation == "pending":
-        # Show all deprecation warnings from wagtail
+        # Show all deprecation warnings from django
         warnings.filterwarnings(
-            "default", category=DeprecationWarning, module=only_wagtail
+            "default", category=DeprecationWarning, module=only_django
         )
         warnings.filterwarnings(
-            "default", category=PendingDeprecationWarning, module=only_wagtail
+            "default", category=PendingDeprecationWarning, module=only_django
         )
     elif args.deprecation == "imminent":
-        # Show only imminent deprecation warnings from wagtail
+        # Show only imminent deprecation warnings from django
         warnings.filterwarnings(
-            "default", category=DeprecationWarning, module=only_wagtail
+            "default", category=DeprecationWarning, module=only_django
         )
     elif args.deprecation == "none":
         # Deprecation warnings are ignored by default
@@ -56,7 +56,7 @@ def runtests():
     try:
         execute_from_command_line(argv)
     finally:
-        from wagtail.test.settings import MEDIA_ROOT, STATIC_ROOT
+        from laces.test.settings import MEDIA_ROOT, STATIC_ROOT
 
         shutil.rmtree(STATIC_ROOT, ignore_errors=True)
         shutil.rmtree(MEDIA_ROOT, ignore_errors=True)
