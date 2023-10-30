@@ -1,2 +1,3 @@
 class Component:
-    pass
+    def render(self):
+        return "Hello, world!"
