@@ -7,6 +7,13 @@ register = template.library.Library()
 
 
 class ComponentNode(template.Node):
+    """
+    Template node to render a component.
+
+    Extracted from Wagtail. See:
+    https://github.com/wagtail/wagtail/blob/094834909d5c4b48517fd2703eb1f6d386572ffa/wagtail/admin/templatetags/wagtailadmin_tags.py#L937-L987  # noqa: E501
+    """
+
     def __init__(
         self,
         component,
@@ -61,6 +68,12 @@ class ComponentNode(template.Node):
 
 @register.tag(name="component")
 def component(parser, token):
+    """
+    Template tag to render a component via ComponentNode.
+
+    Extracted from Wagtail. See:
+    https://github.com/wagtail/wagtail/blob/094834909d5c4b48517fd2703eb1f6d386572ffa/wagtail/admin/templatetags/wagtailadmin_tags.py#L990-L1037  # noqa: E501
+    """
     bits = token.split_contents()[1:]
     if not bits:
         raise template.TemplateSyntaxError(

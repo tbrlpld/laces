@@ -6,6 +6,13 @@ from laces.components import Component
 
 
 class TestComponentTag(SimpleTestCase):
+    """
+    Test for the `component` template tag.
+
+    Extracted from Wagtail. See:
+    https://github.com/wagtail/wagtail/blob/main/wagtail/admin/tests/test_templatetags.py#L225-L305  # noqa: E501
+    """
+
     def test_passing_context_to_component(self):
         class MyComponent(Component):
             def render_html(self, parent_context):

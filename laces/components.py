@@ -6,6 +6,13 @@ from django.template.loader import get_template
 
 
 class Component(metaclass=MediaDefiningClass):
+    """
+    A class that knows how to render itself.
+
+    Extracted from Wagtail. See:
+    https://github.com/wagtail/wagtail/blob/094834909d5c4b48517fd2703eb1f6d386572ffa/wagtail/admin/ui/components.py#L8-L22  # noqa: E501
+    """
+
     def get_context_data(
         self, parent_context: MutableMapping[str, Any]
     ) -> MutableMapping[str, Any]:
