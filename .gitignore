@@ -9,6 +9,7 @@ __pycache__/
 /.venv
 /venv
 /.vscode
+/.idea
 /site
 /test_laces.db
 /node_modules
