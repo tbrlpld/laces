@@ -16,13 +16,25 @@ Django components that know how to render themselves.
 
 ## Supported versions
 
-- Python ...
-- Django ...
+- Python >= 3.8
+- Django >= 3.2
 
 ## Installation
 
-- `python -m pip install laces`
-- ...
+First, install with pip:
+```sh
+$ python -m pip install laces
+```
+
+Then, add to your installed apps:
+
+```python
+# settings.py
+
+INSTALLED_APPS = ["laces", ...]
+```
+
+That's it.
 
 ## Contributing
 
