@@ -43,8 +43,8 @@ That's it.
 To make changes to this project, first clone this repository:
 
 ```sh
-git clone https://github.com/tbrlpld/laces.git
-cd laces
+$ git clone https://github.com/tbrlpld/laces.git
+$ cd laces
 ```
 
 With your preferred virtualenv activated, install testing dependencies:
@@ -52,15 +52,15 @@ With your preferred virtualenv activated, install testing dependencies:
 #### Using pip
 
 ```sh
-python -m pip install --upgrade pip>=21.3
-python -m pip install -e '.[testing]' -U
+$ python -m pip install --upgrade pip>=21.3
+$ python -m pip install -e '.[testing]' -U
 ```
 
 #### Using flit
 
 ```sh
-python -m pip install flit
-flit install
+$ python -m pip install flit
+$ flit install
 ```
 
 ### pre-commit
@@ -80,16 +80,31 @@ $ git ls-files --others --cached --exclude-standard | xargs pre-commit run --fil
 
 ### How to run tests
 
-Now you can run tests as shown below:
+Now you can run all tests like so:
 
 ```sh
-tox
+$ tox
 ```
 
-or, you can run them for a specific environment `tox -e python3.11-django4.2-wagtail5.1` or specific test
-`tox -e python3.11-django4.2-wagtail5.1-sqlite laces.tests.test_file.TestClass.test_method`
+Or, you can run them for a specific environment:
 
-To run the test app interactively, use `tox -e interactive`, visit `http://127.0.0.1:8020/admin/` and log in with `admin`/`changeme`.
+```sh
+$ tox -e python3.11-django4.2-wagtail5.1
+```
+
+Or, run only a specific test:
+
+```sh
+$ tox -e python3.11-django4.2-wagtail5.1-sqlite laces.tests.test_file.TestClass.test_method
+```
+
+To run the test app interactively, use:
+
+```sh
+$ tox -e interactive
+```
+
+You can now visit `http://localhost:8020/`.
 
 ### Python version management
 
