@@ -1,6 +1,6 @@
 from typing import Any, MutableMapping
 
-from django.forms import MediaDefiningClass
+from django.forms import Media, MediaDefiningClass
 from django.template import Context
 from django.template.loader import get_template
 
@@ -38,3 +38,20 @@ class Component(metaclass=MediaDefiningClass):
 
         template = get_template(self.template_name)
         return template.render(context_data)
+
+
+class MediaContainer(list):
+    """
+    A list that provides a ``media`` property that combines the media definitions
+    of its members.
+
+    Extracted from Wagtail. See:
+    https://github.com/wagtail/wagtail/blob/ca8a87077b82e20397e5a5b80154d923995e6ca9/wagtail/admin/ui/components.py#L25-L36  # noqa: E501
+    """
+
+    @property
+    def media(self):
+        media = Media()
+        for item in self:
+            media += item.media
+        return media
