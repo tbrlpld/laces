@@ -1,10 +1,20 @@
 # Laces
 
-Django components that know how to render themselves.
-
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![PyPI version](https://badge.fury.io/py/laces.svg)](https://badge.fury.io/py/laces)
 [![laces CI](https://github.com/tbrlpld/laces/actions/workflows/test.yml/badge.svg)](https://github.com/tbrlpld/laces/actions/workflows/test.yml)
+
+---
+
+Django components that know how to render themselves.
+
+
+Working with objects that know how to render themselves as HTML elements is a common pattern found in complex Django applications (e.g. the [Wagtail](https://github.com/wagtail/wagtail) admin interface).
+This package provides tools enable and support working with such objects, also known as "components".
+
+The APIs provided in the package have previously been discovered, developed and solidified in the Wagtail project.
+The purpose of this package is to make these tools available to other Django projects outside the Wagtail ecosystem.
+
 
 ## Links
 
