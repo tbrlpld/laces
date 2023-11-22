@@ -19,6 +19,17 @@ class Component(metaclass=MediaDefiningClass):
         return {}
 
     def render_html(self, parent_context: MutableMapping[str, Any] = None) -> str:
+        """
+        Return string representation of the object.
+
+        Given a context dictionary from the calling template (which may be a
+        `django.template.Context` object or a plain ``dict`` of context variables),
+        returns the string representation to be rendered.
+
+        This will be subject to Django's HTML escaping rules, so a return value
+        consisting of HTML should typically be returned as a
+        `django.utils.safestring.SafeString` instance.
+        """
         if parent_context is None:
             parent_context = Context()
         context_data = self.get_context_data(parent_context)
