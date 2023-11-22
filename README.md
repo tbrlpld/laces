@@ -50,10 +50,13 @@ That's it.
 
 ### Creating components
 
-The preferred way to create a component is to define a subclass of `wagtail.admin.ui.components.Component` and specify a `template_name` attribute on it. The rendered template will then be used as the component's HTML representation:
+The preferred way to create a component is to define a subclass of `laces.components.Component` and specify a `template_name` attribute on it.
+The rendered template will then be used as the component's HTML representation:
 
 ```python
-from wagtail.admin.ui.components import Component
+# my_app/components.py
+
+from laces.components import Component
 
 
 class WelcomePanel(Component):
@@ -63,17 +66,19 @@ class WelcomePanel(Component):
 my_welcome_panel = WelcomePanel()
 ```
 
-`my_app/templates/my_app/panels/welcome.html`:
-
 ```html+django
+{# my_app/templates/my_app/panels/welcome.html #}
+
 <h1>Welcome to my app!</h1>
 ```
 
 For simple cases that don't require a template, the `render_html` method can be overridden instead:
 
 ```python
+# my_app/components.py
+
 from django.utils.html import format_html
-from wagtail.admin.components import Component
+from laces.components import Component
 
 
 class WelcomePanel(Component):
@@ -83,10 +88,13 @@ class WelcomePanel(Component):
 
 ### Passing context to the template
 
-The `get_context_data` method can be overridden to pass context variables to the template. As with `render_html`, this receives the context dictionary from the calling template:
+The `get_context_data` method can be overridden to pass context variables to the template.
+As with `render_html`, this receives the context dictionary from the calling template.
 
 ```python
-from wagtail.admin.ui.components import Component
+# my_app/components.py
+
+from laces.components import Component
 
 
 class WelcomePanel(Component):
@@ -98,17 +106,22 @@ class WelcomePanel(Component):
         return context
 ```
 
-`my_app/templates/my_app/panels/welcome.html`:
-
 ```html+django
+{# my_app/templates/my_app/panels/welcome.html #}
+
 <h1>Welcome to my app, {{ username }}!</h1>
 ```
 
 ### Adding media definitions
 
-Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property:
+Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
 
 ```python
+# my_app/components.py
+
+from laces.components import Component
+
+
 class WelcomePanel(Component):
     template_name = "my_app/panels/welcome.html"
 
@@ -116,35 +129,40 @@ class WelcomePanel(Component):
         css = {"all": ("my_app/css/welcome-panel.css",)}
 ```
 
-### Using components on your own templates
+### Using components in other templates
 
-The `wagtailadmin_tags` tag library provides a `{% component %}` tag for including components on a template. This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag). For example, given the view:
+The `laces` tag library provides a `{% component %}` tag for including components on a template.
+This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag).
+
+For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/welcome.html`.
 
 ```python
+# my_app/views.py
+
 from django.shortcuts import render
+
+from my_app.components import WelcomePanel
 
 
 def welcome_page(request):
-    panels = [
-        WelcomePanel(),
-    ]
+    panel = (WelcomePanel(),)
 
-    render(
+    return render(
         request,
         "my_app/welcome.html",
         {
-            "panels": panels,
+            "panel": panel,
         },
     )
 ```
 
-the `my_app/welcome.html` template could render the panels as follows:
+The template `my_app/templates/my_app/welcome.html` could render the panel as follows:
 
 ```html+django
-{% load wagtailadmin_tags %}
-{% for panel in panels %}
-    {% component panel %}
-{% endfor %}
+{# my_app/templates/my_app/welcome.html #}
+
+{% load laces %}
+{% component panel %}
 ```
 
 You can pass additional context variables to the component using the keyword `with`:
@@ -167,11 +185,16 @@ To store the component's rendered output in a variable rather than outputting it
 {{ panel_html }}
 ```
 
-Note that it is your template's responsibility to output any media declarations defined on the components. For a Wagtail admin view, this is best done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via the base template's `extra_js` and `extra_css` blocks:
+Note that it is your template's responsibility to output any media declarations defined on the components.
+This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.
 
 ```python
+# my_app/views.py
+
 from django.forms import Media
 from django.shortcuts import render
+
+from my_app.components import WelcomePanel
 
 
 def welcome_page(request):
@@ -193,27 +216,21 @@ def welcome_page(request):
     )
 ```
 
-`my_app/welcome.html`:
 
 ```html+django
-{% extends "wagtailadmin/base.html" %}
-{% load wagtailadmin_tags %}
+{# my_app/templates/my_app/welcome.html #}
 
-{% block extra_js %}
-    {{ block.super }}
+{% load laces %}
+
+<head>
     {{ media.js }}
-{% endblock %}
-
-{% block extra_css %}
-    {{ block.super }}
     {{ media.css }}
-{% endblock %}
-
-{% block content %}
+<head>
+<body>
     {% for panel in panels %}
         {% component panel %}
     {% endfor %}
-{% endblock %}
+</body>
 ```
 
 ## Contributing
