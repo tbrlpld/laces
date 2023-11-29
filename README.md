@@ -315,6 +315,10 @@ To enable the use, you want to set the environment variable `VIRTUALENV_DISCOVER
 This project uses the [Trusted Publisher model for PyPI releases](https://docs.pypi.org/trusted-publishers/).
 This means that publishing is done through GitHub Actions when a [new release is created on GitHub](https://github.com/tbrlpld/laces/releases/new).
 
+To create a release you need a Git tag.
+The tag can either be created on the command line and pushed or in the "create release" interface on GitHub.
+The tag name should be the version number prefixed with a `v` (e.g. `v0.1.0`).
+
 Before publishing a new release, make sure to update the changelog in `CHANGELOG.md` and the version number in `laces/__init__.py`.
 
 To manually test publishing the package, you can use `flit`.
