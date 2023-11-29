@@ -35,6 +35,8 @@ ALLOWED_HOSTS = ["localhost", "testserver"]
 INSTALLED_APPS = [
     "laces",
     "laces.test",
+    "laces.test.home",
+    "laces.test.components",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
