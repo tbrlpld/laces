@@ -309,3 +309,21 @@ Tox will attempt to find installed Python versions on your machine.
 If you use `pyenv` to manage multiple versions, you can tell `tox` to use those versions.
 This working, is depended on [`virtualenv-pyenv`](https://pypi.org/project/virtualenv-pyenv/) (note: this is not `pyenv-virtualenv`) which is part of the CI dependencies (just like `tox` itself is).
 To enable the use, you want to set the environment variable `VIRTUALENV_DISCOVERY=pyenv`.
+
+### Publishing
+
+This project uses the [Trusted Publisher model for PyPI releases](https://docs.pypi.org/trusted-publishers/).
+This means that publishing is done through GitHub Actions when a [new release is created on GitHub](https://github.com/tbrlpld/laces/releases/new).
+
+Before publishing a new release, make sure to update the changelog in `CHANGELOG.md` and the version number in `laces/__init__.py`.
+
+To manually test publishing the package, you can use `flit`.
+Be sure to configure the `testpypi` repository in your `~/.pypirc` file according to the Flit [documentation](https://flit.pypa.io/en/stable/upload.html#controlling-package-uploads).
+If your PyPI account is using 2FA, you'll need to create a [PyPI API token](https://test.pypi.org/help/#apitoken) and use that as your password and `__token__` as the username.
+
+When you're ready to test the publishing, run:
+
+```shell
+$ flit build
+$ flit publish --repository testpypi
+```
