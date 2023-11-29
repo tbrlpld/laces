@@ -317,10 +317,11 @@ This means that publishing is done through GitHub Actions when a [new release is
 
 Before publishing a new release, make sure to update the changelog in `CHANGELOG.md` and the version number in `laces/__init__.py`.
 
-To manually test a release, you can use `flit`.
+To manually test publishing the package, you can use `flit`.
 Be sure to configure the `testpypi` repository in your `~/.pypirc` file according to the Flit [documentation](https://flit.pypa.io/en/stable/upload.html#controlling-package-uploads).
+If your PyPI account is using 2FA, you'll need to create a [PyPI API token](https://test.pypi.org/help/#apitoken) and use that as your password and `__token__` as the username.
 
-When you're ready to test the relase, run:
+When you're ready to test the publishing, run:
 
 ```shell
 $ flit build
