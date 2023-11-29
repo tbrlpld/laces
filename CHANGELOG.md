@@ -7,19 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 2023-10-29
+## [0.1.0] - 2023-11-29
 
 ### Added
 
-- ...
-
-### Changed
-
-- ...
-
-### Removed
-
-- ...
+- Extracted component related code from Wagtail project for reuse.
 
 <!-- TEMPLATE - keep below to copy for new releases -->
 <!--
