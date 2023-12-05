@@ -1,1 +1,5 @@
-from .heading import *  # noqa: F401, F403
+from laces.components import Component
+
+
+class Heading(Component):
+    template_name = "components/heading.html"
