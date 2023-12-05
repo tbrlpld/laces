@@ -1,5 +1,5 @@
 from laces.components import Component
 
 
-class Heading(Component):
-    template_name = "components/heading.html"
+class StaticTemplate(Component):
+    template_name = "components/static-template.html"
