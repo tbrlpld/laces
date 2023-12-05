@@ -1,12 +1,19 @@
 from django.shortcuts import render
 
-from laces.test.components import StaticTemplate
+from laces.test.components import (
+    PassesFixedNameToContextComponent,
+    RendersTemplateWithFixedContentComponent,
+)
 
 
 def home(request):
-    static_template = StaticTemplate()
+    fixed_content = RendersTemplateWithFixedContentComponent()
+    passes_name = PassesFixedNameToContextComponent()
     return render(
         request,
         template_name="home/home.html",
-        context={"static_template": static_template},
+        context={
+            "fixed_content": fixed_content,
+            "passes_name": passes_name,
+        },
     )
