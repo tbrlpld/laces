@@ -13,11 +13,6 @@ class Component(metaclass=MediaDefiningClass):
     https://github.com/wagtail/wagtail/blob/094834909d5c4b48517fd2703eb1f6d386572ffa/wagtail/admin/ui/components.py#L8-L22  # noqa: E501
     """
 
-    def get_context_data(
-        self, parent_context: MutableMapping[str, Any]
-    ) -> MutableMapping[str, Any]:
-        return {}
-
     def render_html(self, parent_context: MutableMapping[str, Any] = None) -> str:
         """
         Return string representation of the object.
@@ -38,6 +33,11 @@ class Component(metaclass=MediaDefiningClass):
 
         template = get_template(self.template_name)
         return template.render(context_data)
+
+    def get_context_data(
+        self, parent_context: MutableMapping[str, Any]
+    ) -> MutableMapping[str, Any]:
+        return {}
 
 
 class MediaContainer(list):
