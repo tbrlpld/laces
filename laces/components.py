@@ -11,6 +11,11 @@ class Component(metaclass=MediaDefiningClass):
 
     Extracted from Wagtail. See:
     https://github.com/wagtail/wagtail/blob/094834909d5c4b48517fd2703eb1f6d386572ffa/wagtail/admin/ui/components.py#L8-L22  # noqa: E501
+
+    A component uses the `MetaDefiningClass` metaclass to add a `media` property, which
+    allows the definitions of CSS and JavaScript assets that are associated with the
+    component. This is practically the same as `Media` class used by Django forms.
+    See also: https://docs.djangoproject.com/en/4.2/topics/forms/media/
     """
 
     def render_html(self, parent_context: MutableMapping[str, Any] = None) -> str:
