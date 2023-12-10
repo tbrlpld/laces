@@ -2,6 +2,7 @@ import os
 import random
 
 from pathlib import Path
+from test.support import os_helper
 
 from django.conf import settings
 from django.forms.widgets import Media
@@ -76,12 +77,17 @@ class TestComponentSubclasses(SimpleTestCase):
         self.example_template = (
             Path(settings.PROJECT_DIR) / "templates" / self.example_template_name
         )
+        os_helper.create_empty_file(self.example_template)
 
     def set_example_template_content(self, content: str):
         with open(self.example_template, "w") as f:
             f.write(content)
 
     def test_render_html_with_template_name_set(self):
+        """
+        Test the `render_html` with a set `template_name` attribute.
+        """
+
         # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
             template_name = self.example_template_name
@@ -97,6 +103,10 @@ class TestComponentSubclasses(SimpleTestCase):
         self.assertEqual(result, "Test")
 
     def test_render_html_with_template_name_set_and_data_from_get_context_data(self):
+        """
+        Test the `render_html` with `get_context_data` providing data for the context.
+        """
+
         # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
             template_name = self.example_template_name
@@ -111,6 +121,28 @@ class TestComponentSubclasses(SimpleTestCase):
         result = ExampleComponent().render_html()
 
         self.assertEqual(result, "Hello World")
+
+    def test_render_html_when_get_context_data_returns_None(self):
+        """
+        Test the `render_html` method when `get_context_data` returns `None`.
+
+        This behavior was present when the class was extracted. It is not totally clear
+        why this specific check is needed. By default, the `get_context_data` method
+        provides and empty dict. If an override wanted to `get_context_data` return
+        `None`, it should be expected that no context data is available during
+        rendering. The underlying `template.render` method does not seem to case about
+        `None` as the context.
+        """
+
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            def get_context_data(self, parent_context):
+                return None
+
+        # -----------------------------------------------------------------------------
+
+        with self.assertRaises(TypeError):
+            ExampleComponent().render_html()
 
     def tearDown(self):
         os.remove(path=self.example_template)
