@@ -82,8 +82,11 @@ class TestComponentSubclasses(SimpleTestCase):
             f.write(content)
 
     def test_render_html_with_template_name_set(self):
+        # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
             template_name = self.example_template_name
+
+        # -----------------------------------------------------------------------------
 
         self.set_example_template_content("Test")
 
@@ -92,6 +95,22 @@ class TestComponentSubclasses(SimpleTestCase):
         self.assertIsInstance(result, str)
         self.assertIsInstance(result, SafeString)
         self.assertEqual(result, "Test")
+
+    def test_render_html_with_template_name_set_and_data_from_get_context_data(self):
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            template_name = self.example_template_name
+
+            def get_context_data(self, parent_context):
+                return {"name": "World"}
+
+        # -----------------------------------------------------------------------------
+
+        self.set_example_template_content("Hello {{ name }}")
+
+        result = ExampleComponent().render_html()
+
+        self.assertEqual(result, "Hello World")
 
     def tearDown(self):
         os.remove(path=self.example_template)
