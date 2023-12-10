@@ -42,3 +42,20 @@ class TestComponent(SimpleTestCase):
         empty_media = Media()
         self.assertEqual(self.component.media._css, empty_media._css)
         self.assertEqual(self.component.media._js, empty_media._js)
+
+
+class TestComponentSubclasses(SimpleTestCase):
+    """
+    Test the Component class through  subclasses.
+
+    Most functionality of the Component class is only unlocked through subclassing and
+    definition of certain attributes (like `template_name`).
+    """
+
+    def test_render_html_with_template_name_set(self):
+        class ExampleComponent(Component):
+            template_name = "example.html"
+
+        result = ExampleComponent().render_html()
+
+        self.assertIsInstance(result, str)
