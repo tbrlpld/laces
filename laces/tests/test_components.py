@@ -1,3 +1,8 @@
+import os
+
+from pathlib import Path
+
+from django.conf import settings
 from django.forms.widgets import Media
 from django.template import Context
 from django.test import SimpleTestCase
@@ -52,10 +57,26 @@ class TestComponentSubclasses(SimpleTestCase):
     definition of certain attributes (like `template_name`).
     """
 
+    def setUp(self):
+        self.example_template_name = "example.html"
+        self.example_template = (
+            Path(settings.PROJECT_DIR) / "templates" / self.example_template_name
+        )
+
+    def set_example_template_content(self, content: str):
+        with open(self.example_template, "w") as f:
+            f.write(content)
+
     def test_render_html_with_template_name_set(self):
         class ExampleComponent(Component):
-            template_name = "example.html"
+            template_name = self.example_template_name
+
+        self.set_example_template_content("Test")
 
         result = ExampleComponent().render_html()
 
         self.assertIsInstance(result, str)
+        self.assertEqual(result, "Test")
+
+    def tearDown(self):
+        os.remove(path=self.example_template)
