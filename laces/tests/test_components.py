@@ -6,6 +6,7 @@ from django.conf import settings
 from django.forms.widgets import Media
 from django.template import Context
 from django.test import SimpleTestCase
+from django.utils.html import SafeString
 
 from laces.components import Component
 
@@ -54,7 +55,8 @@ class TestComponentSubclasses(SimpleTestCase):
     Test the Component class through  subclasses.
 
     Most functionality of the Component class is only unlocked through subclassing and
-    definition of certain attributes (like `template_name`).
+    definition of certain attributes (like `template_name`) or overriding of the
+    existing methods.
     """
 
     def setUp(self):
@@ -76,6 +78,7 @@ class TestComponentSubclasses(SimpleTestCase):
         result = ExampleComponent().render_html()
 
         self.assertIsInstance(result, str)
+        self.assertIsInstance(result, SafeString)
         self.assertEqual(result, "Test")
 
     def tearDown(self):
