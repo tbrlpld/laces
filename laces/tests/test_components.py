@@ -1,4 +1,5 @@
 import os
+import random
 
 from pathlib import Path
 
@@ -59,8 +60,19 @@ class TestComponentSubclasses(SimpleTestCase):
     existing methods.
     """
 
+    @classmethod
+    def make_example_template_name(cls):
+        return f"example-{random.randint(1000, 10000)}.html"
+
+    @classmethod
+    def get_example_template_name(cls):
+        example_template_name = cls.make_example_template_name()
+        while os.path.exists(example_template_name):
+            example_template_name = cls.make_example_template_name()
+        return example_template_name
+
     def setUp(self):
-        self.example_template_name = "example.html"
+        self.example_template_name = self.get_example_template_name()
         self.example_template = (
             Path(settings.PROJECT_DIR) / "templates" / self.example_template_name
         )
