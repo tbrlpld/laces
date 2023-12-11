@@ -56,6 +56,13 @@ class MediaContainer(list):
 
     @property
     def media(self):
+        """
+        Return a `Media` object containing the media definitions of all members.
+
+        This makes use of the `Media.__add__` method, which combines the media
+        definitions of two `Media` objects.
+
+        """
         media = Media()
         for item in self:
             media += item.media
