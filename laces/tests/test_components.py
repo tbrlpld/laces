@@ -154,6 +154,13 @@ class TestMediaContainer(SimpleTestCase):
     def setUp(self):
         self.media_container = MediaContainer()
 
+    def test_empty(self):
+        result = self.media_container.media
+
+        self.assertIsInstance(result, Media)
+        self.assertEqual(result._css, {})
+        self.assertEqual(result._js, [])
+
     def test_single_member(self):
         # -----------------------------------------------------------------------------
         class ExampleClass:
