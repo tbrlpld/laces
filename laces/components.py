@@ -23,7 +23,7 @@ class Component(metaclass=MediaDefiningClass):
         Return string representation of the object.
 
         Given a context dictionary from the calling template (which may be a
-        `django.template.Context` object or a plain ``dict`` of context variables),
+        `django.template.Context` object or a plain `dict` of context variables),
         returns the string representation to be rendered.
 
         This will be subject to Django's HTML escaping rules, so a return value
@@ -47,7 +47,7 @@ class Component(metaclass=MediaDefiningClass):
 
 class MediaContainer(list):
     """
-    A list that provides a ``media`` property that combines the media definitions
+    A list that provides a `media` property that combines the media definitions
     of its members.
 
     Extracted from Wagtail. See:
