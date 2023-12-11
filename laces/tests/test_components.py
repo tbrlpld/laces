@@ -2,7 +2,6 @@ import os
 import random
 
 from pathlib import Path
-from test.support import os_helper
 
 from django.conf import settings
 from django.forms.widgets import Media
@@ -77,7 +76,8 @@ class TestComponentSubclasses(SimpleTestCase):
         self.example_template = (
             Path(settings.PROJECT_DIR) / "templates" / self.example_template_name
         )
-        os_helper.create_empty_file(self.example_template)
+        # Write content to the template file to ensure it exists.
+        self.set_example_template_content("")
 
     def set_example_template_content(self, content: str):
         with open(self.example_template, "w") as f:
