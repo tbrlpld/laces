@@ -144,6 +144,29 @@ class TestComponentSubclasses(SimpleTestCase):
         with self.assertRaises(TypeError):
             ExampleComponent().render_html()
 
+    def test_media_defined_through_nested_class(self):
+        """
+        Test the `media` property when defined through a nested class.
+
+        The `media` property is added through the `metaclass=MediaDefiningClass`
+        definition. This test ensures that the `media` property is available when
+        configured through a nested class.
+        """
+
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            class Media:
+                css = {"all": ["example.css"]}
+                js = ["example.js"]
+
+        # -----------------------------------------------------------------------------
+
+        result = ExampleComponent().media
+
+        self.assertIsInstance(result, Media)
+        self.assertEqual(result._css, {"all": ["example.css"]})
+        self.assertEqual(result._js, ["example.js"])
+
     def tearDown(self):
         os.remove(path=self.example_template)
 
