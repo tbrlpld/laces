@@ -155,15 +155,35 @@ class TestMediaContainer(SimpleTestCase):
         self.media_container = MediaContainer()
 
     def test_single_member(self):
+        # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ("example.css",)})
+            media = Media(css={"all": ["example.css"]})
 
+        # -----------------------------------------------------------------------------
         example = ExampleClass()
-
         self.media_container.append(example)
 
-        self.assertIsInstance(self.media_container.media, Media)
-        self.assertEqual(self.media_container.media._css, example.media._css)
-        self.assertEqual(self.media_container.media._css, {"all": ["example.css"]})
-        self.assertEqual(self.media_container.media._js, example.media._js)
-        self.assertEqual(self.media_container.media._js, [])
+        result = self.media_container.media
+
+        self.assertIsInstance(result, Media)
+        self.assertEqual(result._css, example.media._css)
+        self.assertEqual(result._css, {"all": ["example.css"]})
+        self.assertEqual(result._js, example.media._js)
+        self.assertEqual(result._js, [])
+
+    def test_two_same_members_of_same_class(self):
+        # -----------------------------------------------------------------------------
+        class ExampleClass:
+            media = Media(css={"all": ["example.css"]}, js=["example.js"])
+
+        # -----------------------------------------------------------------------------
+        example = ExampleClass()
+        self.media_container.append(example)
+
+        result = self.media_container.media
+
+        self.assertIsInstance(result, Media)
+        self.assertEqual(result._css, example.media._css)
+        self.assertEqual(result._css, {"all": ["example.css"]})
+        self.assertEqual(result._js, example.media._js)
+        self.assertEqual(result._js, ["example.js"])
