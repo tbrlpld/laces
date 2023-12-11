@@ -10,7 +10,7 @@ from django.template import Context
 from django.test import SimpleTestCase
 from django.utils.html import SafeString
 
-from laces.components import Component
+from laces.components import Component, MediaContainer
 
 
 class TestComponent(SimpleTestCase):
@@ -146,3 +146,24 @@ class TestComponentSubclasses(SimpleTestCase):
 
     def tearDown(self):
         os.remove(path=self.example_template)
+
+
+class TestMediaContainer(SimpleTestCase):
+    """Test the MediaContainer class."""
+
+    def setUp(self):
+        self.media_container = MediaContainer()
+
+    def test_single_member(self):
+        class ExampleClass:
+            media = Media(css={"all": ("example.css",)})
+
+        example = ExampleClass()
+
+        self.media_container.append(example)
+
+        self.assertIsInstance(self.media_container.media, Media)
+        self.assertEqual(self.media_container.media._css, example.media._css)
+        self.assertEqual(self.media_container.media._css, {"all": ["example.css"]})
+        self.assertEqual(self.media_container.media._js, example.media._js)
+        self.assertEqual(self.media_container.media._js, [])
