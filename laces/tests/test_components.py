@@ -149,7 +149,18 @@ class TestComponentSubclasses(SimpleTestCase):
 
 
 class TestMediaContainer(SimpleTestCase):
-    """Test the MediaContainer class."""
+    """
+    Test the MediaContainer class.
+
+    The `MediaContainer` functionality depends on the `django.forms.widgets.Media`
+    class. The `Media` class provides the logic to combine the media definitions of
+    multiple objects through its `__add__` method. The `MediaContainer` relies on this
+    functionality to provide a `media` property that combines the media definitions of
+    its members.
+
+    See also:
+    https://docs.djangoproject.com/en/4.2/topics/forms/media
+    """
 
     def setUp(self):
         self.media_container = MediaContainer()

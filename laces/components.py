@@ -52,6 +52,15 @@ class MediaContainer(list):
 
     Extracted from Wagtail. See:
     https://github.com/wagtail/wagtail/blob/ca8a87077b82e20397e5a5b80154d923995e6ca9/wagtail/admin/ui/components.py#L25-L36  # noqa: E501
+
+    The `MediaContainer` functionality depends on the `django.forms.widgets.Media`
+    class. The `Media` class provides the logic to combine the media definitions of
+    multiple objects through its `__add__` method. The `MediaContainer` relies on this
+    functionality to provide a `media` property that combines the media definitions of
+    its members.
+
+    See also:
+    https://docs.djangoproject.com/en/4.2/topics/forms/media
     """
 
     @property
