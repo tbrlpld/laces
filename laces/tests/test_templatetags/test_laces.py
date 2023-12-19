@@ -115,7 +115,18 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
 
-    # TODO: Test interaction of with block and with keyword
+    def test_with_keyword_overrides_with_block(self):
+        self.set_parent_template(
+            """
+            {% with test='something' %}
+            {% component my_component with test='something else' %}
+            {% endwith %}
+            """
+        )
+
+        self.render_parent_template_with_context({"my_component": self.component})
+
+        self.assertRenderHTMLCalledWith({"test": "something else"})
 
     def test_passing_context_to_component(self):
         class MyComponent(Component):
