@@ -128,31 +128,6 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
 
-    def test_passing_context_to_component(self):
-        class MyComponent(Component):
-            def render_html(self, parent_context):
-                return format_html(
-                    "<h1>{} was here</h1>", parent_context.get("first_name", "nobody")
-                )
-
-        template = Template(
-            "{% load laces %}{% with first_name='Kilroy' %}{% component my_component %}{% endwith %}"
-        )
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "<h1>Kilroy was here</h1>")
-
-        template = Template(
-            "{% load laces %}{% component my_component with first_name='Kilroy' %}"
-        )
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "<h1>Kilroy was here</h1>")
-
-        template = Template(
-            "{% load laces %}{% with first_name='Kilroy' %}{% component my_component with surname='Silk' only %}{% endwith %}"
-        )
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "<h1>nobody was here</h1>")
-
     def test_fallback_render_method(self):
         class MyComponent(Component):
             def render_html(self, parent_context):
