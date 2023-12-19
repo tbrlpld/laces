@@ -1,3 +1,5 @@
+from unittest.mock import Mock
+
 from django.template import Context, Template
 from django.test import SimpleTestCase
 from django.utils.html import format_html
@@ -15,6 +17,10 @@ class TestComponentTag(SimpleTestCase):
 
     def setUp(self):
         self.parent_template = Template("")
+        # Testing with a mock component to make it easy to check method calls and passed
+        # arguments. Since it is the responsibility of the component to render itself,
+        # we don't need to check the rendering here.
+        self.component = Mock(name="component")
 
     def set_parent_template(self, template_string):
         self.parent_template = Template(template_string)
@@ -22,17 +28,30 @@ class TestComponentTag(SimpleTestCase):
     def render_parent_template_with_context(self, context: dict):
         return self.parent_template.render(Context(context))
 
+    def assertRenderHTMLCalledWith(self, context: dict):
+        self.assertTrue(self.component.render_html.called_with(Context(context)))
+
     def test_only_component_in_context(self):
-        from unittest import mock
-
-        component = mock.Mock(name="component")
-
         self.set_parent_template("{% load laces %}{% component component %}")
 
-        self.render_parent_template_with_context({"component": component})
+        self.render_parent_template_with_context({"component": self.component})
 
-        self.assertTrue(component.render_html.called)
-        self.assertTrue(component.render_html.called_with(Context()))
+        self.assertTrue(self.component.render_html.called)
+        # The component itself is not included in the context that is passed to the
+        # `render_html` method.
+        self.assertRenderHTMLCalledWith({})
+
+    def test_other_variable_in_context(self):
+        self.set_parent_template("{% load laces %}{% component component %}")
+
+        self.render_parent_template_with_context(
+            {
+                "component": self.component,
+                "test": "something",
+            }
+        )
+
+        self.assertRenderHTMLCalledWith({"test": "something"})
 
     def test_passing_context_to_component(self):
         class MyComponent(Component):
