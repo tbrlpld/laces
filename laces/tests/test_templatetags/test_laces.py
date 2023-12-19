@@ -32,9 +32,9 @@ class TestComponentTag(SimpleTestCase):
         self.assertTrue(self.component.render_html.called_with(Context(context)))
 
     def test_only_component_in_context(self):
-        self.set_parent_template("{% load laces %}{% component component %}")
+        self.set_parent_template("{% load laces %}{% component my_component %}")
 
-        self.render_parent_template_with_context({"component": self.component})
+        self.render_parent_template_with_context({"my_component": self.component})
 
         self.assertTrue(self.component.render_html.called)
         # The component itself is not included in the context that is passed to the
@@ -42,11 +42,11 @@ class TestComponentTag(SimpleTestCase):
         self.assertRenderHTMLCalledWith({})
 
     def test_other_variable_in_context(self):
-        self.set_parent_template("{% load laces %}{% component component %}")
+        self.set_parent_template("{% load laces %}{% component my_component %}")
 
         self.render_parent_template_with_context(
             {
-                "component": self.component,
+                "my_component": self.component,
                 "test": "something",
             }
         )
@@ -55,10 +55,10 @@ class TestComponentTag(SimpleTestCase):
 
     def test_with_sets_extra_context(self):
         self.set_parent_template(
-            "{% load laces %}{% component component with test='something' %}"
+            "{% load laces %}{% component my_component with test='something' %}"
         )
 
-        self.render_parent_template_with_context({"component": self.component})
+        self.render_parent_template_with_context({"my_component": self.component})
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
