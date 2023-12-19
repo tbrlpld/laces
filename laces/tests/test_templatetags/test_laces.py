@@ -53,6 +53,15 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
+    def test_with_sets_extra_context(self):
+        self.set_parent_template(
+            "{% load laces %}{% component component with test='something' %}"
+        )
+
+        self.render_parent_template_with_context({"component": self.component})
+
+        self.assertRenderHTMLCalledWith({"test": "something"})
+
     def test_passing_context_to_component(self):
         class MyComponent(Component):
             def render_html(self, parent_context):
