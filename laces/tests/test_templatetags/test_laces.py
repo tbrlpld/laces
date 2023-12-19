@@ -13,6 +13,27 @@ class TestComponentTag(SimpleTestCase):
     https://github.com/wagtail/wagtail/blob/main/wagtail/admin/tests/test_templatetags.py#L225-L305  # noqa: E501
     """
 
+    def setUp(self):
+        self.parent_template = Template("")
+
+    def set_parent_template(self, template_string):
+        self.parent_template = Template(template_string)
+
+    def render_parent_template_with_context(self, context: dict):
+        return self.parent_template.render(Context(context))
+
+    def test_only_component_in_context(self):
+        from unittest import mock
+
+        component = mock.Mock(name="component")
+
+        self.set_parent_template("{% load laces %}{% component component %}")
+
+        self.render_parent_template_with_context({"component": component})
+
+        self.assertTrue(component.render_html.called)
+        self.assertTrue(component.render_html.called_with(Context()))
+
     def test_passing_context_to_component(self):
         class MyComponent(Component):
             def render_html(self, parent_context):
