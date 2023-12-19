@@ -72,6 +72,23 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
+    def test_with_only_keyword_limits_extra_context(self):
+        self.set_parent_template(
+            "{% component my_component with test='nothing else' only %}"
+        )
+
+        self.render_parent_template_with_context(
+            {
+                "my_component": self.component,
+                "other": "something else",
+            }
+        )
+
+        # The `other` variable from the parent's rendering context is not included in
+        # the context that is passed to the `render_html` method. This is because of the
+        # `only` keyword.
+        self.assertRenderHTMLCalledWith({"test": "nothing else"})
+
     def test_passing_context_to_component(self):
         class MyComponent(Component):
             def render_html(self, parent_context):
