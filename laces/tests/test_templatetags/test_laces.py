@@ -192,15 +192,18 @@ class TestComponentTag(SimpleTestCase):
                 {"my_non_component": non_component},
             )
 
-    def test_component_escapes_unsafe_strings(self):
-        class MyComponent(Component):
-            def render_html(self, parent_context):
-                return "Look, I'm running with scissors! 8< 8< 8<"
+    def test_render_html_return_in_parent_template_is_escaped(self):
+        self.component.render_html.return_value = (
+            "Look, I'm running with scissors! 8< 8< 8<"
+        )
+        self.set_parent_template("{% component my__component %}")
 
-        template = Template("{% load laces %}<h1>{% component my_component %}</h1>")
-        html = template.render(Context({"my_component": MyComponent()}))
+        result = self.render_parent_template_with_context(
+            {"my__component": self.component},
+        )
+
         self.assertEqual(
-            html, "<h1>Look, I&#x27;m running with scissors! 8&lt; 8&lt; 8&lt;</h1>"
+            result, "Look, I&#x27;m running with scissors! 8&lt; 8&lt; 8&lt;"
         )
 
     def test_error_on_rendering_non_component(self):
