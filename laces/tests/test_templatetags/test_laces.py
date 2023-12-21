@@ -35,7 +35,18 @@ class TestComponentTag(SimpleTestCase):
     def assertRenderHTMLCalledWith(self, context: dict):
         self.assertTrue(self.component.render_html.called_with(Context(context)))
 
-    def test_only_component_in_context(self):
+    def test_render_html_return_in_parent_template(self):
+        self.set_parent_template("Before {% component my_component %} After")
+        self.assertEqual(self.component.render_html(), "Rendered HTML")
+
+        result = self.render_parent_template_with_context(
+            {"my_component": self.component},
+        )
+
+        # This matches the return value of the `render_html` method.
+        self.assertEqual(result, "Before Rendered HTML After")
+
+    def test_render_html_parent_context_when_only_component_in_context(self):
         self.set_parent_template("{% component my_component %}")
 
         self.render_parent_template_with_context({"my_component": self.component})
@@ -45,7 +56,7 @@ class TestComponentTag(SimpleTestCase):
         # `render_html` method.
         self.assertRenderHTMLCalledWith({})
 
-    def test_other_variable_in_context(self):
+    def test_render_html_parent_context_when_other_variable_in_context(self):
         self.set_parent_template("{% component my_component %}")
 
         self.render_parent_template_with_context(
@@ -57,7 +68,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
-    def test_with_block_sets_extra_context(self):
+    def test_render_html_parent_context_when_with_block_sets_extra_context(self):
         self.set_parent_template(
             "{% with test='something' %}{% component my_component %}{% endwith %}"
         )
@@ -66,14 +77,16 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
-    def test_with_keyword_sets_extra_context(self):
+    def test_render_html_parent_context_when_with_keyword_sets_extra_context(self):
         self.set_parent_template("{% component my_component with test='something' %}")
 
         self.render_parent_template_with_context({"my_component": self.component})
 
         self.assertRenderHTMLCalledWith({"test": "something"})
 
-    def test_with_only_keyword_limits_extra_context(self):
+    def test_render_html_parent_context_when_with_only_keyword_limits_extra_context(
+        self,
+    ):
         self.set_parent_template(
             "{% component my_component with test='nothing else' only %}"
         )
@@ -90,7 +103,7 @@ class TestComponentTag(SimpleTestCase):
         # `only` keyword.
         self.assertRenderHTMLCalledWith({"test": "nothing else"})
 
-    def test_with_block_overrides_context(self):
+    def test_render_html_parent_context_when_with_block_overrides_context(self):
         self.set_parent_template(
             "{% with test='something else' %}{% component my_component %}{% endwith %}"
         )
@@ -104,7 +117,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
 
-    def test_with_keyword_overrides_context(self):
+    def test_render_html_parent_context_when_with_keyword_overrides_context(self):
         self.set_parent_template(
             "{% component my_component with test='something else' %}"
         )
@@ -118,7 +131,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
 
-    def test_with_keyword_overrides_with_block(self):
+    def test_render_html_parent_context_when_with_keyword_overrides_with_block(self):
         self.set_parent_template(
             """
             {% with test='something' %}
@@ -130,18 +143,6 @@ class TestComponentTag(SimpleTestCase):
         self.render_parent_template_with_context({"my_component": self.component})
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
-
-    def test_render_html_output(self):
-        self.set_parent_template("{% component my_component %}")
-        self.assertEqual(self.component.render_html(), "Rendered HTML")
-
-        result = self.render_parent_template_with_context(
-            {"my_component": self.component},
-        )
-
-        # This matches the return value of the `render_html` method. No other content
-        # is present in the parent template.
-        self.assertEqual(result, "Rendered HTML")
 
     def test_fallback_render_method_arg_true_and_object_with_render_method(self):
         # -----------------------------------------------------------------------------
