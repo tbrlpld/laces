@@ -35,16 +35,6 @@ class TestComponentTag(SimpleTestCase):
     def assertRenderHTMLCalledWith(self, context: dict):
         self.assertTrue(self.component.render_html.called_with(Context(context)))
 
-    def test_output_is_rendered_html(self):
-        self.assertEqual(self.component.render_html(), "Rendered HTML")
-        self.set_parent_template("{% component my_component %}")
-
-        result = self.render_parent_template_with_context(
-            {"my_component": self.component},
-        )
-
-        self.assertEqual(result, "Rendered HTML")
-
     def test_only_component_in_context(self):
         self.set_parent_template("{% component my_component %}")
 
@@ -141,28 +131,65 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertRenderHTMLCalledWith({"test": "something else"})
 
-    def test_fallback_render_method(self):
-        class MyComponent(Component):
-            def render_html(self, parent_context):
-                return format_html("<h1>I am a component</h1>")
+    def test_render_html_output(self):
+        self.set_parent_template("{% component my_component %}")
+        self.assertEqual(self.component.render_html(), "Rendered HTML")
 
-        class MyNonComponent:
-            def render(self):
-                return format_html("<h1>I am not a component</h1>")
-
-        template = Template("{% load laces %}{% component my_component %}")
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "<h1>I am a component</h1>")
-        with self.assertRaises(ValueError):
-            template.render(Context({"my_component": MyNonComponent()}))
-
-        template = Template(
-            "{% load laces %}{% component my_component fallback_render_method=True %}"
+        result = self.render_parent_template_with_context(
+            {"my_component": self.component},
         )
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "<h1>I am a component</h1>")
-        html = template.render(Context({"my_component": MyNonComponent()}))
-        self.assertEqual(html, "<h1>I am not a component</h1>")
+
+        # This matches the return value of the `render_html` method. No other content
+        # is present in the parent template.
+        self.assertEqual(result, "Rendered HTML")
+
+    def test_fallback_render_method_arg_true_and_object_with_render_method(self):
+        # -----------------------------------------------------------------------------
+        class ExampleNonComponentWithRenderMethod:
+            def render(self):
+                return "Rendered non-component"
+
+        # -----------------------------------------------------------------------------
+        non_component = ExampleNonComponentWithRenderMethod()
+        self.set_parent_template(
+            "{% component my_non_component fallback_render_method=True %}"
+        )
+
+        result = self.render_parent_template_with_context(
+            {"my_non_component": non_component},
+        )
+
+        self.assertEqual(result, "Rendered non-component")
+
+    def test_fallback_render_method_arg_true_but_object_without_render_method(self):
+        # -----------------------------------------------------------------------------
+        class ExampleNonComponentWithoutRenderMethod:
+            pass
+
+        # -----------------------------------------------------------------------------
+        non_component = ExampleNonComponentWithoutRenderMethod()
+        self.set_parent_template(
+            "{% component my_non_component fallback_render_method=True %}"
+        )
+
+        with self.assertRaises(ValueError):
+            self.render_parent_template_with_context(
+                {"my_non_component": non_component},
+            )
+
+    def test_no_fallback_render_method_arg_and_object_without_render_method(self):
+        # -----------------------------------------------------------------------------
+        class ExampleNonComponentWithoutRenderMethod:
+            pass
+
+        # -----------------------------------------------------------------------------
+        non_component = ExampleNonComponentWithoutRenderMethod()
+        self.set_parent_template("{% component my_non_component %}")
+
+        with self.assertRaises(ValueError):
+            self.render_parent_template_with_context(
+                {"my_non_component": non_component},
+            )
 
     def test_component_escapes_unsafe_strings(self):
         class MyComponent(Component):
