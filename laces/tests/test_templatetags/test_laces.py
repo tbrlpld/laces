@@ -2,7 +2,6 @@ from unittest.mock import Mock
 
 from django.template import Context, Template
 from django.test import SimpleTestCase
-from django.utils.html import format_html
 
 from laces.components import Component
 
@@ -57,7 +56,8 @@ class TestComponentTag(SimpleTestCase):
         )
 
         self.assertEqual(
-            result, "Look, I&#x27;m running with scissors! 8&lt; 8&lt; 8&lt;"
+            result,
+            "Look, I&#x27;m running with scissors! 8&lt; 8&lt; 8&lt;",
         )
 
     def test_render_html_parent_context_when_only_component_in_context(self):
@@ -211,13 +211,13 @@ class TestComponentTag(SimpleTestCase):
             "Cannot render <Example repr> as a component",
         )
 
-    def test_render_as_var(self):
-        class MyComponent(Component):
-            def render_html(self, parent_context):
-                return format_html("<h1>I am a component</h1>")
-
-        template = Template(
-            "{% load laces %}{% component my_component as my_html %}The result was: {{ my_html }}"
+    def test_as_keyword_stores_render_html_return_as_variable(self):
+        self.set_parent_template(
+            "{% component my_component as my_var %}The result was: {{ my_var }}"
         )
-        html = template.render(Context({"my_component": MyComponent()}))
-        self.assertEqual(html, "The result was: <h1>I am a component</h1>")
+
+        result = self.render_parent_template_with_context(
+            {"my_component": self.component},
+        )
+
+        self.assertEqual(result, "The result was: Rendered HTML")
