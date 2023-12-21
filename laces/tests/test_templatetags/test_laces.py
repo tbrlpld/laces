@@ -260,3 +260,20 @@ class TestComponentTag(SimpleTestCase):
         )
 
         self.assertEqual(result, "The result was: Rendered HTML")
+
+    def test_autoescape_off_block_can_disable_escaping_of_render_html_return(self):
+        self.component.render_html.return_value = (
+            "Look, I'm running with scissors! 8< 8< 8<"
+        )
+        self.set_parent_template(
+            "{% autoescape off %}{% component my_component %}{% endautoescape %}"
+        )
+
+        result = self.render_parent_template_with_context(
+            {"my_component": self.component},
+        )
+
+        self.assertEqual(
+            result,
+            "Look, I'm running with scissors! 8< 8< 8<",
+        )
