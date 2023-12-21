@@ -17,10 +17,13 @@ class TestComponentTag(SimpleTestCase):
 
     def setUp(self):
         self.parent_template = Template("")
-        # Testing with a mock component to make it easy to check method calls and passed
-        # arguments. Since it is the responsibility of the component to render itself,
-        # we don't need to check the rendering here.
-        self.component = Mock(name="component", spec=Component)
+
+        class ExampleComponent(Component):
+            pass
+
+        self.component = ExampleComponent()
+        # Using a mock to be able to check if the `render_html` method is called.
+        self.component.render_html: Mock = Mock(return_value="")
 
     def set_parent_template(self, template_string):
         template_string = "{% load laces %}" + template_string
@@ -37,6 +40,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.render_parent_template_with_context({"my_component": self.component})
 
+        self.assertTrue(self.component.render_html.called)
         # The component itself is not included in the context that is passed to the
         # `render_html` method.
         self.assertRenderHTMLCalledWith({})
