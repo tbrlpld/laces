@@ -29,12 +29,28 @@ class ComponentNode(template.Node):
         self.target_var = target_var
 
     def render(self, context: template.Context) -> str:
-        # Render a component by calling its render_html method, passing request and context from the
-        # calling template.
-        # If fallback_render_method is true, objects without a render_html method will have render()
-        # called instead (with no arguments) - this is to provide deprecation path for things that have
-        # been newly upgraded to use the component pattern.
+        """
+        Render the ComponentNode template node.
 
+        The rendering is done by rendering the passed component by calling its
+        `render_html` method and passing context from the calling template.
+
+        If the passed object does not have a `render_html` method but a `render` method
+        and the `fallback_render_method` arguments of the template tag is true, then
+        the `render` method is used. The `render` method does not receive any arguments.
+
+        Additional context variables can be passed to the component by using the `with`
+        keyword. The `with` keyword accepts a list of key-value pairs. The key is the
+        name of the context variable and the value is the value of the context variable.
+
+        The `only` keyword can be used to isolate the context. This means that the
+        context variables from the parent context are not passed to the component the
+        only context variables passed to the component are the ones passed with the
+        `with` keyword.
+
+        The `as` keyword can be used to store the rendered component in a variable
+        in the parent context. The variable name is passed after the `as` keyword.
+        """
         component = self.component.resolve(context)
 
         if self.fallback_render_method:
