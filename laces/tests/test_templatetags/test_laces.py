@@ -1,5 +1,10 @@
+import os
+import random
+
+from pathlib import Path
 from unittest.mock import Mock
 
+from django.conf import settings
 from django.template import Context, Template
 from django.test import SimpleTestCase
 from django.utils.html import format_html
@@ -46,7 +51,7 @@ class TestComponentTag(SimpleTestCase):
         # This matches the return value of the `render_html` method.
         self.assertEqual(result, "Before Rendered HTML After")
 
-    def test_render_html_return_in_parent_template_is_escaped(self):
+    def test_render_html_return_is_escaped(self):
         self.component.render_html.return_value = (
             "Look, I'm running with scissors! 8< 8< 8<"
         )
@@ -70,6 +75,29 @@ class TestComponentTag(SimpleTestCase):
         )
 
         self.assertEqual(result, "<h1>My component</h1>")
+
+    def test_render_html_return_not_escaped_when_actually_rendered_template(self):
+        example_template_name = f"example-{random.randint(1000, 10000)}.html"
+        example_template = (
+            Path(settings.PROJECT_DIR) / "templates" / example_template_name
+        )
+        with open(example_template, "w") as f:
+            f.write("<h1>My component</h1>")
+
+        # -----------------------------------------------------------------------------
+        class RealExampleComponent(Component):
+            template_name = example_template_name
+
+        # -----------------------------------------------------------------------------
+        component = RealExampleComponent()
+        self.set_parent_template("{% component my_component %}")
+
+        result = self.render_parent_template_with_context(
+            {"my_component": component},
+        )
+
+        self.assertEqual(result, "<h1>My component</h1>")
+        os.remove(example_template)
 
     def test_render_html_parent_context_when_only_component_in_context(self):
         self.set_parent_template("{% component my_component %}")
