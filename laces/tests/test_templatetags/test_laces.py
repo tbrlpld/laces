@@ -195,23 +195,21 @@ class TestComponentTag(SimpleTestCase):
     def test_no_fallback_render_method_arg_and_object_without_render_method(self):
         # -----------------------------------------------------------------------------
         class ExampleNonComponentWithoutRenderMethod:
-            pass
+            def __repr__(self):
+                return "<Example repr>"
 
         # -----------------------------------------------------------------------------
         non_component = ExampleNonComponentWithoutRenderMethod()
         self.set_parent_template("{% component my_non_component %}")
 
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as cm:
             self.render_parent_template_with_context(
                 {"my_non_component": non_component},
             )
-
-    def test_error_on_rendering_non_component(self):
-        template = Template("{% load laces %}<h1>{% component my_component %}</h1>")
-
-        with self.assertRaises(ValueError) as cm:
-            template.render(Context({"my_component": "hello"}))
-        self.assertEqual(str(cm.exception), "Cannot render 'hello' as a component")
+        self.assertEqual(
+            str(cm.exception),
+            "Cannot render <Example repr> as a component",
+        )
 
     def test_render_as_var(self):
         class MyComponent(Component):
