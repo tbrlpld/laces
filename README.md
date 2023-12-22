@@ -303,6 +303,20 @@ $ tox -e interactive
 
 You can now visit `http://localhost:8020/`.
 
+#### Testing with coverage
+
+To run tests with coverage, use:
+
+```sh
+$ coverage run ./testmanage.py test
+```
+
+Then see the results with
+
+```sh
+$ coverage report
+```
+
 ### Python version management
 
 Tox will attempt to find installed Python versions on your machine.
