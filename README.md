@@ -317,6 +317,14 @@ Then see the results with
 $ coverage report
 ```
 
+Running the tests with tox will automatically use coverage and store the data for each environment in a separate file.
+To combine the results into one overarching report use:
+
+```sh
+$ coverage combine
+$ coverage report
+```
+
 ### Python version management
 
 Tox will attempt to find installed Python versions on your machine.
