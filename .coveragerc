@@ -23,6 +23,3 @@ exclude_lines =
 
 ignore_errors = True
 show_missing = True
-
-[json]
-output = .coverage.json
