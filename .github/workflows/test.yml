@@ -49,6 +49,8 @@ jobs:
         run: tox
         env:
           DB: sqlite
+      - name: Combine coverage reports
+        run: coverage combine
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
