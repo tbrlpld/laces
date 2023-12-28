@@ -100,9 +100,9 @@ def component(parser, token):
 
     # the only valid keyword argument immediately following the component
     # is fallback_render_method
-    flags = token_kwargs(bits, parser)
-    fallback_render_method = flags.pop("fallback_render_method", None)
-    if flags:
+    kwargs = token_kwargs(bits, parser)
+    fallback_render_method = kwargs.pop("fallback_render_method", None)
+    if kwargs:
         raise template.TemplateSyntaxError(
             "'component' tag only accepts 'fallback_render_method' as a keyword argument"
         )
