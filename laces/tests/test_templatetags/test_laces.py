@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 from django.conf import settings
-from django.template import Context, Template
+from django.template import Context, Template, TemplateSyntaxError
 from django.test import SimpleTestCase
 from django.utils.html import format_html
 
@@ -277,3 +277,9 @@ class TestComponentTag(SimpleTestCase):
             result,
             "Look, I'm running with scissors! 8< 8< 8<",
         )
+
+    def test_no_arguments(self):
+        with self.assertRaises(TemplateSyntaxError):
+            # The template is already parsed when the parent template is set. This is
+            # the moment where the parsing error is raised.
+            self.set_parent_template("{% component %}")
