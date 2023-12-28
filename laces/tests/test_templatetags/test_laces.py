@@ -279,13 +279,23 @@ class TestComponentTag(SimpleTestCase):
         )
 
     def test_parsing_no_arguments(self):
-        with self.assertRaises(TemplateSyntaxError):
+        with self.assertRaises(TemplateSyntaxError) as cm:
             # The template is already parsed when the parent template is set. This is
             # the moment where the parsing error is raised.
             self.set_parent_template("{% component %}")
 
-    def test_parsing_unknown_flag(self):
-        with self.assertRaises(TemplateSyntaxError):
+        self.assertEqual(
+            str(cm.exception),
+            "'component' tag requires at least one argument, the component object",
+        )
+
+    def test_parsing_unknown_kwarg(self):
+        with self.assertRaises(TemplateSyntaxError) as cm:
             # The template is already parsed when the parent template is set. This is
             # the moment where the parsing error is raised.
-            self.set_parent_template("{% component my_component unknown_flag %}")
+            self.set_parent_template("{% component my_component unknown_kwarg=True %}")
+
+        self.assertEqual(
+            str(cm.exception),
+            "'component' tag only accepts 'fallback_render_method' as a keyword argument",
+        )
