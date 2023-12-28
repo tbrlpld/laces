@@ -278,8 +278,14 @@ class TestComponentTag(SimpleTestCase):
             "Look, I'm running with scissors! 8< 8< 8<",
         )
 
-    def test_no_arguments(self):
+    def test_parsing_no_arguments(self):
         with self.assertRaises(TemplateSyntaxError):
             # The template is already parsed when the parent template is set. This is
             # the moment where the parsing error is raised.
             self.set_parent_template("{% component %}")
+
+    def test_parsing_unknown_flag(self):
+        with self.assertRaises(TemplateSyntaxError):
+            # The template is already parsed when the parent template is set. This is
+            # the moment where the parsing error is raised.
+            self.set_parent_template("{% component my_component unknown_flag %}")
