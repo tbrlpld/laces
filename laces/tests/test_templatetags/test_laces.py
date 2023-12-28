@@ -261,6 +261,17 @@ class TestComponentTag(SimpleTestCase):
 
         self.assertEqual(result, "The result was: Rendered HTML")
 
+    def test_as_keyword_without_variable_name(self):
+        # The template is already parsed when the parent template is set. This is the
+        # moment where the parsing error is raised.
+        with self.assertRaises(TemplateSyntaxError) as cm:
+            self.set_parent_template("{% component my_component as %}")
+
+        self.assertEqual(
+            str(cm.exception),
+            "'component' tag with 'as' must be followed by a variable name",
+        )
+
     def test_autoescape_off_block_can_disable_escaping_of_render_html_return(self):
         self.component.render_html.return_value = (
             "Look, I'm running with scissors! 8< 8< 8<"
