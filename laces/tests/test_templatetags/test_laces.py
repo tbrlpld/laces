@@ -279,9 +279,9 @@ class TestComponentTag(SimpleTestCase):
         )
 
     def test_parsing_no_arguments(self):
+        # The template is already parsed when the parent template is set. This is the
+        # moment where the parsing error is raised.
         with self.assertRaises(TemplateSyntaxError) as cm:
-            # The template is already parsed when the parent template is set. This is
-            # the moment where the parsing error is raised.
             self.set_parent_template("{% component %}")
 
         self.assertEqual(
@@ -290,9 +290,9 @@ class TestComponentTag(SimpleTestCase):
         )
 
     def test_parsing_unknown_kwarg(self):
+        # The template is already parsed when the parent template is set. This is the
+        # moment where the parsing error is raised.
         with self.assertRaises(TemplateSyntaxError) as cm:
-            # The template is already parsed when the parent template is set. This is
-            # the moment where the parsing error is raised.
             self.set_parent_template("{% component my_component unknown_kwarg=True %}")
 
         self.assertEqual(
