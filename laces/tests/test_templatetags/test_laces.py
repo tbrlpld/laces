@@ -310,3 +310,14 @@ class TestComponentTag(SimpleTestCase):
             str(cm.exception),
             "'component' tag only accepts 'fallback_render_method' as a keyword argument",
         )
+
+    def test_parsing_unknown_bit(self):
+        # The template is already parsed when the parent template is set. This is the
+        # moment where the parsing error is raised.
+        with self.assertRaises(TemplateSyntaxError) as cm:
+            self.set_parent_template("{% component my_component unknown_bit %}")
+
+        self.assertEqual(
+            str(cm.exception),
+            "'component' tag received an unknown argument: 'unknown_bit'",
+        )
