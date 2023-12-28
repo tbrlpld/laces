@@ -49,9 +49,11 @@ jobs:
         run: tox
         env:
           DB: sqlite
+      - name: Convert coverage report to JSON
+        run: coverage json -o ./.coverage.json
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
-          files: ./.coverage
+          files: ./.coverage.json
