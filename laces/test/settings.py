@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     "laces",
     "laces.test",
     "laces.test.example",
-    "laces.test.components",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

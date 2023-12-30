@@ -1,9 +1,9 @@
 """
 Tests for a variety of different ways how components may be used.
- """
+"""
 from django.test import SimpleTestCase
 
-from laces.test.components import (
+from laces.test.example.components import (
     PassesFixedNameToContextComponent,
     RendersTemplateWithFixedContentComponent,
 )

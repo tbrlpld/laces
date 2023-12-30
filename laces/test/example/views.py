@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from laces.test.components import (
+from laces.test.example.components import (
     PassesFixedNameToContextComponent,
     RendersTemplateWithFixedContentComponent,
 )
