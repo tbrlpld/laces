@@ -51,8 +51,7 @@ That's it.
 
 ### Creating components
 
-The preferred way to create a component is to define a subclass of `laces.components.Component` and specify a `template_name` attribute on it.
-The rendered template will then be used as the component's HTML representation:
+The simplest way to create a component is to define a subclass of `laces.components.Component` and specify a `template_name` attribute on it.
 
 ```python
 # my_app/components.py
@@ -61,17 +60,47 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
-
-
-my_welcome_panel = WelcomePanel()
+    template_name = "my_app/components/welcome.html"
 ```
 
 ```html+django
-{# my_app/templates/my_app/panels/welcome.html #}
+{# my_app/templates/my_app/components/welcome.html #}
 
 <h1>Welcome to my app!</h1>
 ```
+
+With the above in place, you then instantiate the component (e.g. in a view) and pass it to another template for rendering.
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+
+from my_app.components import WelcomePanel
+
+
+def home(request):
+    welcome = WelcomePanel()  # <-- Instantiates the component
+    return render(
+        request,
+        "my_app/home.html",
+        {"welcome": welcome},  # <-- Passes the component to the template
+    )
+```
+
+In the template, we `load` the `laces` tag library and use the `component` tag to render the component.
+
+```html+django
+{# my_app/templates/my_app/home.html #}
+
+{% load laces %}
+{% component welcome %}
+```
+
+That's it!
+The component template will be rendered with the context of the calling template.
+
+### Without a template
 
 For simple cases that don't require a template, the `render_html` method can be overridden instead:
 
