@@ -175,7 +175,7 @@ from my_app.components import WelcomePanel
 
 
 def welcome_page(request):
-    panel = (WelcomePanel(),)
+    panel = WelcomePanel()
 
     return render(
         request,
