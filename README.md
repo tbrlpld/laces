@@ -84,11 +84,11 @@ def home(request):
     return render(
         request,
         "my_app/home.html",
-        {"welcome": welcome},  # <-- Passes the component to the template
+        {"welcome": welcome},  # <-- Passes the component to the view template
     )
 ```
 
-In the template, we `load` the `laces` tag library and use the `component` tag to render the component.
+In the view template, we `load` the `laces` tag library and use the `component` tag to render the component.
 
 ```html+django
 {# my_app/templates/my_app/home.html #}
@@ -98,11 +98,16 @@ In the template, we `load` the `laces` tag library and use the `component` tag t
 ```
 
 That's it!
-The component template will be rendered with the context of the calling template.
+The component's template will be rendered right there in the view template.
+
+Of course, this is a very simple example and not much more useful than using a simple `include`.
+We will go into some more useful use cases below.
 
 ### Without a template
 
-For simple cases that don't require a template, the `render_html` method can be overridden instead:
+Before we dig deeper into the component use cases, just a quick note that components don't have to have a template.
+For simple cases that don't require a template, the `render_html` method can be overridden instead.
+If the return value contains HTML, it should be marked as safe using `django.utils.html.format_html` or `django.utils.safestring.mark_safe`.
 
 ```python
 # my_app/components.py
