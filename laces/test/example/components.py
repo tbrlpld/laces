@@ -47,3 +47,36 @@ class PassesNameFromParentContextComponent(Component):
 
     def get_context_data(self, parent_context):
         return {"name": parent_context["name"]}
+
+
+class SectionWithHeadingAndParagraphComponent(Component):
+    template_name = "components/section.html"
+
+    def __init__(self, heading: "HeadingComponent", content: "ParagraphComponent"):
+        super().__init__()
+        self.heading = heading
+        self.content = content
+
+    def get_context_data(self, parent_context=None):
+        return {
+            "heading": self.heading,
+            "content": self.content,
+        }
+
+
+class HeadingComponent(Component):
+    def __init__(self, text: str):
+        super().__init__()
+        self.text = text
+
+    def render_html(self, parent_context=None):
+        return format_html("<h2>{}</h2>\n", self.text)
+
+
+class ParagraphComponent(Component):
+    def __init__(self, text: str):
+        super().__init__()
+        self.text = text
+
+    def render_html(self, parent_context=None):
+        return format_html("<p>{}</p>\n", self.text)

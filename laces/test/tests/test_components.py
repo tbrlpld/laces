@@ -5,11 +5,14 @@ from django.test import SimpleTestCase
 
 from laces.test.example.components import (
     DataclassAsDictContextComponent,
+    HeadingComponent,
+    ParagraphComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
     PassesNameFromParentContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
+    SectionWithHeadingAndParagraphComponent,
 )
 
 
@@ -139,4 +142,40 @@ class TestPassesNameFromParentContextComponent(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(parent_context={"name": "Dan"}),
             "<h1>Hello Dan</h1>\n",
+        )
+
+
+class TestSectionWithHeadingAndParagraphComponent(SimpleTestCase):
+    def setUp(self):
+        self.heading = HeadingComponent(text="Heading")
+        self.content = ParagraphComponent(text="Paragraph")
+        self.component = SectionWithHeadingAndParagraphComponent(
+            heading=self.heading,
+            content=self.content,
+        )
+
+    def test_template_name(self):
+        self.assertEqual(
+            self.component.template_name,
+            "components/section.html",
+        )
+
+    def test_get_context_data(self):
+        self.assertEqual(
+            self.component.get_context_data(),
+            {
+                "heading": self.heading,
+                "content": self.content,
+            },
+        )
+
+    def test_render_html(self):
+        self.assertHTMLEqual(
+            self.component.render_html(),
+            """
+            <section>
+                <h2>Heading</h2>
+                <p>Paragraph</p>
+            </section>
+            """,
         )

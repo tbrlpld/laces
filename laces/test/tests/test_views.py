@@ -13,10 +13,20 @@ class TestKitchenSink(TestCase):
         response = kitchen_sink(request)
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
-        self.assertContains(response, "<h1>Hello World</h1>")
-        self.assertContains(response, "<h1>Hello World Return</h1>")
-        self.assertContains(response, "<h1>Hello Alice</h1>")
-        self.assertContains(response, "<h1>Hello Bob</h1>")
-        self.assertContains(response, "<h1>Hello Charlie</h1>")
-        self.assertContains(response, "<h1>Hello Dan</h1>")
-        self.assertContains(response, "<h1>Hello Erin</h1>")
+        response_html = response.content.decode("utf-8")
+        self.assertInHTML("<h1>Hello World</h1>", response_html)
+        self.assertInHTML("<h1>Hello World Return</h1>", response_html)
+        self.assertInHTML("<h1>Hello Alice</h1>", response_html)
+        self.assertInHTML("<h1>Hello Bob</h1>", response_html)
+        self.assertInHTML("<h1>Hello Charlie</h1>", response_html)
+        self.assertInHTML("<h1>Hello Dan</h1>", response_html)
+        self.assertInHTML("<h1>Hello Erin</h1>", response_html)
+        self.assertInHTML(
+            """
+            <section>
+                <h2>Hello</h2>
+                <p>World</p>
+            </section>
+            """,
+            response_html,
+        )
