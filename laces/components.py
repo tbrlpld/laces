@@ -14,7 +14,7 @@ class Component(metaclass=MediaDefiningClass):
 
     A component uses the `MetaDefiningClass` metaclass to add a `media` property, which
     allows the definitions of CSS and JavaScript assets that are associated with the
-    component. This is practically the same as `Media` class used by Django forms.
+    component. This works the same as `Media` class used by Django forms.
     See also: https://docs.djangoproject.com/en/4.2/topics/forms/media/
     """
 
