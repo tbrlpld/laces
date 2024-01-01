@@ -14,4 +14,5 @@ class TestKitchenSink(TestCase):
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertContains(response, "<h1>Hello World</h1>")
+        self.assertContains(response, "<h1>Hello World Return</h1>")
         self.assertContains(response, "<h1>Hello Alice</h1>")

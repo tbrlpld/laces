@@ -6,10 +6,11 @@ from django.test import SimpleTestCase
 from laces.test.example.components import (
     PassesFixedNameToContextComponent,
     RendersTemplateWithFixedContentComponent,
+    ReturnsFixedContentComponent,
 )
 
 
-class TestStaticTemplate(SimpleTestCase):
+class TestRendersTempalteWithFixedContentComponent(SimpleTestCase):
     """Test that the template is rendered."""
 
     def setUp(self):
@@ -25,6 +26,22 @@ class TestStaticTemplate(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello World</h1>\n",
+        )
+
+
+class TestReturnsFixedContentComponent(SimpleTestCase):
+    """Test the component that returns fixed content."""
+
+    def setUp(self):
+        self.component = ReturnsFixedContentComponent()
+
+    def test_template_name(self):
+        self.assertFalse(hasattr(self.component, "template_name"))
+
+    def test_render_html(self):
+        self.assertEqual(
+            self.component.render_html(),
+            "<h1>Hello World Return</h1>\n",
         )
 
 
