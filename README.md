@@ -121,7 +121,7 @@ class WelcomePanel(Component):
         return format_html("<h1>Welcome to my app!</h1>")
 ```
 
-### Passing context to the template
+### Passing context to the component template
 
 The `get_context_data` method can be overridden to pass context variables to the template.
 As with `render_html`, this receives the context dictionary from the calling template.
@@ -133,7 +133,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
+    template_name = "my_app/components/welcome.html"
 
     def get_context_data(self, parent_context):
         context = super().get_context_data(parent_context)
@@ -142,7 +142,7 @@ class WelcomePanel(Component):
 ```
 
 ```html+django
-{# my_app/templates/my_app/panels/welcome.html #}
+{# my_app/templates/my_app/components/welcome.html #}
 
 <h1>Welcome to my app, {{ username }}!</h1>
 ```
@@ -158,7 +158,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
+    template_name = "my_app/components/welcome.html"
 
     class Media:
         css = {"all": ("my_app/css/welcome-panel.css",)}
@@ -169,7 +169,7 @@ class WelcomePanel(Component):
 The `laces` tag library provides a `{% component %}` tag for including components on a template.
 This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag).
 
-For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/welcome.html`.
+For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
 
 ```python
 # my_app/views.py
@@ -179,45 +179,45 @@ from django.shortcuts import render
 from my_app.components import WelcomePanel
 
 
-def welcome_page(request):
-    panel = WelcomePanel()
+def home(request):
+    welcome = WelcomePanel()
 
     return render(
         request,
-        "my_app/welcome.html",
+        "my_app/home.html",
         {
-            "panel": panel,
+            "welcome": welcome,
         },
     )
 ```
 
-The template `my_app/templates/my_app/welcome.html` could render the panel as follows:
+The template `my_app/templates/my_app/home.html` could render the welcome panel component as follows:
 
 ```html+django
-{# my_app/templates/my_app/welcome.html #}
+{# my_app/templates/my_app/home.html #}
 
 {% load laces %}
-{% component panel %}
+{% component welcome %}
 ```
 
 You can pass additional context variables to the component using the keyword `with`:
 
 ```html+django
-{% component panel with username=request.user.username %}
+{% component welcome with username=request.user.username %}
 ```
 
 To render the component with only the variables provided (and no others from the calling template's context), use `only`:
 
 ```html+django
-{% component panel with username=request.user.username only %}
+{% component welcome with username=request.user.username only %}
 ```
 
 To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
 
 ```html+django
-{% component panel as panel_html %}
+{% component welcome as welcome_html %}
 
-{{ panel_html }}
+{{ welcome_html }}
 ```
 
 Note that it is your template's responsibility to output any media declarations defined on the components.
@@ -232,20 +232,20 @@ from django.shortcuts import render
 from my_app.components import WelcomePanel
 
 
-def welcome_page(request):
-    panels = [
+def home(request):
+    components = [
         WelcomePanel(),
     ]
 
     media = Media()
-    for panel in panels:
-        media += panel.media
+    for component in components:
+        media += component.media
 
     render(
         request,
-        "my_app/welcome.html",
+        "my_app/home.html",
         {
-            "panels": panels,
+            "components": components,
             "media": media,
         },
     )
@@ -253,7 +253,7 @@ def welcome_page(request):
 
 
 ```html+django
-{# my_app/templates/my_app/welcome.html #}
+{# my_app/templates/my_app/home.html #}
 
 {% load laces %}
 
@@ -262,8 +262,8 @@ def welcome_page(request):
     {{ media.css }}
 <head>
 <body>
-    {% for panel in panels %}
-        {% component panel %}
+    {% for comp in components %}
+        {% component comp %}
     {% endfor %}
 </body>
 ```
