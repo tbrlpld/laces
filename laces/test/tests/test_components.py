@@ -4,6 +4,7 @@ Tests for a variety of different ways how components may be used.
 from django.test import SimpleTestCase
 
 from laces.test.example.components import (
+    DataclassAsDictToContextComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
     RendersTemplateWithFixedContentComponent,
@@ -72,8 +73,6 @@ class TestPassesFixedNameToContextComponent(SimpleTestCase):
 
 
 class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
-    """Test that the context is used to render the template."""
-
     def setUp(self):
         self.component = PassesInstanceAttributeToContextComponent(name="Bob")
 
@@ -93,4 +92,27 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Bob</h1>\n",
+        )
+
+
+class TestDataclassComponent(SimpleTestCase):
+    def setUp(self):
+        self.component = DataclassAsDictToContextComponent(name="Charlie")
+
+    def test_template_name(self):
+        self.assertEqual(
+            self.component.template_name,
+            "components/hello-name.html",
+        )
+
+    def test_get_context_data(self):
+        self.assertEqual(
+            self.component.get_context_data(),
+            {"name": "Charlie"},
+        )
+
+    def test_render_html(self):
+        self.assertEqual(
+            self.component.render_html(),
+            "<h1>Hello Charlie</h1>\n",
         )

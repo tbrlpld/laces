@@ -1,3 +1,5 @@
+from dataclasses import asdict, dataclass
+
 from django.utils.html import format_html
 
 from laces.components import Component
@@ -28,3 +30,13 @@ class PassesInstanceAttributeToContextComponent(Component):
 
     def get_context_data(self, parent_context=None):
         return {"name": self.name}
+
+
+@dataclass
+class DataclassAsDictToContextComponent(Component):
+    template_name = "components/hello-name.html"
+
+    name: str
+
+    def get_context_data(self, parent_context=None):
+        return asdict(self)
