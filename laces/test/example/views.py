@@ -9,6 +9,7 @@ from laces.test.example.components import (
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
     PassesNameFromParentContextComponent,
+    PassesSelfToContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
     SectionWithHeadingAndParagraphComponent,
@@ -20,6 +21,7 @@ def kitchen_sink(request):
     fixed_content_return = ReturnsFixedContentComponent()
     passes_fixed_name = PassesFixedNameToContextComponent()
     passes_instance_attr_name = PassesInstanceAttributeToContextComponent(name="Bob")
+    passes_self = PassesSelfToContextComponent(name="Carol")
     dataclass_attr_name = DataclassAsDictContextComponent(name="Charlie")
     passes_name_from_parent_context = PassesNameFromParentContextComponent()
     section_with_heading_and_paragraph = SectionWithHeadingAndParagraphComponent(
@@ -43,6 +45,7 @@ def kitchen_sink(request):
             "fixed_content_return": fixed_content_return,
             "passes_fixed_name": passes_fixed_name,
             "passes_instance_attr_name": passes_instance_attr_name,
+            "passes_self": passes_self,
             "dataclass_attr_name": dataclass_attr_name,
             "passes_name_from_parent_context": passes_name_from_parent_context,
             "name": "Dan",

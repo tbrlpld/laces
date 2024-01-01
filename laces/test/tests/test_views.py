@@ -18,6 +18,7 @@ class TestKitchenSink(TestCase):
         self.assertInHTML("<h1>Hello World Return</h1>", response_html)
         self.assertInHTML("<h1>Hello Alice</h1>", response_html)
         self.assertInHTML("<h1>Hello Bob</h1>", response_html)
+        self.assertInHTML("<h1>Hello Carol's self</h1>", response_html)
         self.assertInHTML("<h1>Hello Charlie</h1>", response_html)
         self.assertInHTML("<h1>Hello Dan</h1>", response_html)
         self.assertInHTML("<h1>Hello Erin</h1>", response_html)

@@ -11,6 +11,7 @@ from laces.test.example.components import (
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
     PassesNameFromParentContextComponent,
+    PassesSelfToContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
     SectionWithHeadingAndParagraphComponent,
@@ -97,6 +98,29 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Bob</h1>\n",
+        )
+
+
+class TestPassesSelfToContextComponent(SimpleTestCase):
+    def setUp(self):
+        self.component = PassesSelfToContextComponent(name="Carol")
+
+    def test_template_name(self):
+        self.assertEqual(
+            self.component.template_name,
+            "components/hello-self-name.html",
+        )
+
+    def test_get_context_data(self):
+        self.assertEqual(
+            self.component.get_context_data(),
+            {"self": self.component},
+        )
+
+    def test_render_html(self):
+        self.assertEqual(
+            self.component.render_html(),
+            "<h1>Hello Carol's self</h1>\n",
         )
 
 

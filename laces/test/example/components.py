@@ -32,6 +32,17 @@ class PassesInstanceAttributeToContextComponent(Component):
         return {"name": self.name}
 
 
+class PassesSelfToContextComponent(Component):
+    template_name = "components/hello-self-name.html"
+
+    def __init__(self, name, **kwargs):
+        super().__init__(**kwargs)
+        self.name = name
+
+    def get_context_data(self, parent_context=None):
+        return {"self": self}
+
+
 @dataclass
 class DataclassAsDictContextComponent(Component):
     template_name = "components/hello-name.html"
