@@ -220,15 +220,17 @@ class TestMediaContainer(SimpleTestCase):
             media = Media(css={"all": ["example.css"]}, js=["example.js"])
 
         # -----------------------------------------------------------------------------
-        example = ExampleClass()
-        self.media_container.append(example)
+        example_1 = ExampleClass()
+        example_2 = ExampleClass()
+        self.media_container.append(example_1)
+        self.media_container.append(example_2)
 
         result = self.media_container.media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, example.media._css)
+        self.assertEqual(result._css, example_1.media._css)
         self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, example.media._js)
+        self.assertEqual(result._js, example_1.media._js)
         self.assertEqual(result._js, ["example.js"])
 
     def test_two_members_of_different_classes(self):
