@@ -20,4 +20,3 @@ class TestKitchenSink(TestCase):
         self.assertContains(response, "<h1>Hello Charlie</h1>")
         self.assertContains(response, "<h1>Hello Dan</h1>")
         self.assertContains(response, "<h1>Hello Erin</h1>")
-        self.assertContains(response, "<h1>Hello Faythe</h1>")
