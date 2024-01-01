@@ -117,8 +117,8 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    def render_html(self, parent_context):
-        return format_html("<h1>{}</h1>", "Welcome to my app!")
+    def render_html(self, parent_context=None):
+        return format_html("<h1>Welcome to my app!</h1>")
 ```
 
 ### Passing context to the template
