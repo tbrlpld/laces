@@ -4,9 +4,10 @@ Tests for a variety of different ways how components may be used.
 from django.test import SimpleTestCase
 
 from laces.test.example.components import (
-    DataclassAsDictToContextComponent,
+    DataclassAsDictContextComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
+    PassesNameFromParentContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
 )
@@ -95,9 +96,9 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
         )
 
 
-class TestDataclassComponent(SimpleTestCase):
+class TestDataclassAsDictContextComponent(SimpleTestCase):
     def setUp(self):
-        self.component = DataclassAsDictToContextComponent(name="Charlie")
+        self.component = DataclassAsDictContextComponent(name="Charlie")
 
     def test_template_name(self):
         self.assertEqual(
@@ -115,4 +116,27 @@ class TestDataclassComponent(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Charlie</h1>\n",
+        )
+
+
+class TestPassesNameFromParentContextComponent(SimpleTestCase):
+    def setUp(self):
+        self.component = PassesNameFromParentContextComponent()
+
+    def test_template_name(self):
+        self.assertEqual(
+            self.component.template_name,
+            "components/hello-name.html",
+        )
+
+    def test_get_context_data(self):
+        self.assertEqual(
+            self.component.get_context_data(parent_context={"name": "Dan"}),
+            {"name": "Dan"},
+        )
+
+    def test_render_html(self):
+        self.assertEqual(
+            self.component.render_html(parent_context={"name": "Dan"}),
+            "<h1>Hello Dan</h1>\n",
         )

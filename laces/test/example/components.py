@@ -33,10 +33,17 @@ class PassesInstanceAttributeToContextComponent(Component):
 
 
 @dataclass
-class DataclassAsDictToContextComponent(Component):
+class DataclassAsDictContextComponent(Component):
     template_name = "components/hello-name.html"
 
     name: str
 
     def get_context_data(self, parent_context=None):
         return asdict(self)
+
+
+class PassesNameFromParentContextComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def get_context_data(self, parent_context):
+        return {"name": parent_context["name"]}

@@ -1,9 +1,10 @@
 from django.shortcuts import render
 
 from laces.test.example.components import (
-    DataclassAsDictToContextComponent,
+    DataclassAsDictContextComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
+    PassesNameFromParentContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
 )
@@ -14,7 +15,8 @@ def kitchen_sink(request):
     fixed_content_return = ReturnsFixedContentComponent()
     passes_fixed_name = PassesFixedNameToContextComponent()
     passes_instance_attr_name = PassesInstanceAttributeToContextComponent(name="Bob")
-    dataclass_attr_name = DataclassAsDictToContextComponent(name="Charlie")
+    dataclass_attr_name = DataclassAsDictContextComponent(name="Charlie")
+    passed_name_from_parent_context = PassesNameFromParentContextComponent()
 
     return render(
         request,
@@ -25,5 +27,7 @@ def kitchen_sink(request):
             "passes_fixed_name": passes_fixed_name,
             "passes_instance_attr_name": passes_instance_attr_name,
             "dataclass_attr_name": dataclass_attr_name,
+            "passed_name_from_parent_context": passed_name_from_parent_context,
+            "name": "Dan",
         },
     )
