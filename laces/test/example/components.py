@@ -17,3 +17,14 @@ class PassesFixedNameToContextComponent(Component):
 
     def get_context_data(self, parent_context=None):
         return {"name": "Alice"}
+
+
+class PassesInstanceAttributeToContextComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def __init__(self, name, **kwargs):
+        super().__init__(**kwargs)
+        self.name = name
+
+    def get_context_data(self, parent_context=None):
+        return {"name": self.name}

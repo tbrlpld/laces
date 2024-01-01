@@ -5,6 +5,7 @@ from django.test import SimpleTestCase
 
 from laces.test.example.components import (
     PassesFixedNameToContextComponent,
+    PassesInstanceAttributeToContextComponent,
     RendersTemplateWithFixedContentComponent,
     ReturnsFixedContentComponent,
 )
@@ -67,4 +68,29 @@ class TestPassesFixedNameToContextComponent(SimpleTestCase):
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Alice</h1>\n",
+        )
+
+
+class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
+    """Test that the context is used to render the template."""
+
+    def setUp(self):
+        self.component = PassesInstanceAttributeToContextComponent(name="Bob")
+
+    def test_template_name(self):
+        self.assertEqual(
+            self.component.template_name,
+            "components/hello-name.html",
+        )
+
+    def test_get_context_data(self):
+        self.assertEqual(
+            self.component.get_context_data(),
+            {"name": "Bob"},
+        )
+
+    def test_render_html(self):
+        self.assertEqual(
+            self.component.render_html(),
+            "<h1>Hello Bob</h1>\n",
         )
