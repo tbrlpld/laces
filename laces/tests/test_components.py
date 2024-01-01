@@ -47,6 +47,8 @@ class TestComponent(SimpleTestCase):
         """
         self.assertIsInstance(self.component.media, Media)
         empty_media = Media()
+        # We need to compare the internal dicts and lists as the `Media` class does not
+        # implement `__eq__`.
         self.assertEqual(self.component.media._css, empty_media._css)
         self.assertEqual(self.component.media._js, empty_media._js)
 
