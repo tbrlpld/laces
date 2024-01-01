@@ -30,3 +30,22 @@ class TestKitchenSink(TestCase):
             """,
             response_html,
         )
+        self.assertInHTML(
+            """
+            <section>
+                <h2>Heading</h2>
+                <ul>
+                    <li>
+                        <p>Item 1</p>
+                    </li>
+                    <li>
+                        <blockquote>Item 2</blockquote>
+                    </li>
+                    <li>
+                        <p>Item 3</p>
+                    </li>
+                </ul>
+            </section>
+            """,
+            response_html,
+        )

@@ -1,8 +1,10 @@
 from django.shortcuts import render
 
 from laces.test.example.components import (
+    BlockquoteComponent,
     DataclassAsDictContextComponent,
     HeadingComponent,
+    ListSectionComponent,
     ParagraphComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
@@ -24,6 +26,14 @@ def kitchen_sink(request):
         heading=HeadingComponent(text="Hello"),
         content=ParagraphComponent(text="World"),
     )
+    list_section = ListSectionComponent(
+        heading=HeadingComponent(text="Heading"),
+        items=[
+            ParagraphComponent(text="Item 1"),
+            BlockquoteComponent(text="Item 2"),
+            ParagraphComponent(text="Item 3"),
+        ],
+    )
 
     return render(
         request,
@@ -37,5 +47,6 @@ def kitchen_sink(request):
             "passes_name_from_parent_context": passes_name_from_parent_context,
             "name": "Dan",
             "section_with_heading_and_paragraph": section_with_heading_and_paragraph,
+            "list_section": list_section,
         },
     )
