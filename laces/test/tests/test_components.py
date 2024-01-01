@@ -13,7 +13,7 @@ from laces.test.example.components import (
 )
 
 
-class TestRendersTempalteWithFixedContentComponent(SimpleTestCase):
+class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
     """Test that the template is rendered."""
 
     def setUp(self):
