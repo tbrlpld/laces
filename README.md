@@ -353,7 +353,7 @@ $ coverage report
 ```
 
 When the tests are run with `tox`, the coverage report is combined for all environments.
-This is done by using the `--apend` flag when running coverage in `tox`.
+This is done by using the `--append` flag when running coverage in `tox`.
 This means it will also include previous results.
 To get a clean report, you can run `coverage erase` before running `tox`.
 
