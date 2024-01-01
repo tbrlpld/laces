@@ -132,7 +132,7 @@ class TestComponentSubclasses(SimpleTestCase):
         why this specific check is needed. By default, the `get_context_data` method
         provides and empty dict. If an override wanted to `get_context_data` return
         `None`, it should be expected that no context data is available during
-        rendering. The underlying `template.render` method does not seem to case about
+        rendering. The underlying `template.render` method does not seem to care about
         `None` as the context.
         """
 
