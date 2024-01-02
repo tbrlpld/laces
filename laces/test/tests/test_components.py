@@ -22,8 +22,6 @@ from laces.test.example.components import (
 
 
 class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
-    """Test that the template is rendered."""
-
     def setUp(self):
         self.component = RendersTemplateWithFixedContentComponent()
 
@@ -41,8 +39,6 @@ class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
 
 
 class TestReturnsFixedContentComponent(SimpleTestCase):
-    """Test the component that returns fixed content."""
-
     def setUp(self):
         self.component = ReturnsFixedContentComponent()
 
@@ -57,8 +53,6 @@ class TestReturnsFixedContentComponent(SimpleTestCase):
 
 
 class TestPassesFixedNameToContextComponent(SimpleTestCase):
-    """Test that the context is used to render the template."""
-
     def setUp(self):
         self.component = PassesFixedNameToContextComponent()
 
