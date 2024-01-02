@@ -87,6 +87,10 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
 
     def test_get_context_data(self):
         self.assertEqual(
+            self.component.name,
+            "Bob",
+        )
+        self.assertEqual(
             self.component.get_context_data(),
             {"name": "Bob"},
         )
@@ -132,6 +136,10 @@ class TestDataclassAsDictContextComponent(SimpleTestCase):
         )
 
     def test_get_context_data(self):
+        self.assertEqual(
+            self.component.name,
+            "Charlie",
+        )
         self.assertEqual(
             self.component.get_context_data(),
             {"name": "Charlie"},
