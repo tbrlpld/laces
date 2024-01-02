@@ -1,3 +1,4 @@
+"""Tests for the example views that demonstrate the use of components."""
 from http import HTTPStatus
 
 from django.test import RequestFactory, TestCase

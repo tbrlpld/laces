@@ -13,6 +13,9 @@
     {% component dataclass_attr_name %}
     {% component passes_name_from_parent_context %}
     {% with name="Erin" %}
+        {% comment %}
+            Override parent context through the with-block. The same component receives a different parent context.
+        {% endcomment %}
         {% component passes_name_from_parent_context %}
     {% endwith %}
     {% component section_with_heading_and_paragraph %}

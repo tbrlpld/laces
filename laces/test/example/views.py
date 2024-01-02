@@ -49,7 +49,7 @@ def kitchen_sink(request):
             "passes_self": passes_self,
             "dataclass_attr_name": dataclass_attr_name,
             "passes_name_from_parent_context": passes_name_from_parent_context,
-            "name": "Dan",
+            "name": "Dan",  # Provide as an example of parent context.
             "section_with_heading_and_paragraph": section_with_heading_and_paragraph,
             "list_section": list_section,
         },
