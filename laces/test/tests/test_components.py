@@ -1,5 +1,8 @@
 """
-Tests for a variety of different ways how components may be used.
+Tests for the example components.
+
+These tests are very basic and only ensure that the examples are configured as
+desired. More thorough tests can be found in the `laces.tests.test_components` module.
 """
 from django.test import SimpleTestCase
 

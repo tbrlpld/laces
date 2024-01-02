@@ -17,6 +17,7 @@ from laces.test.example.components import (
 
 
 def kitchen_sink(request):
+    """Render a page with all example components."""
     fixed_content_template = RendersTemplateWithFixedContentComponent()
     fixed_content_return = ReturnsFixedContentComponent()
     passes_fixed_name = PassesFixedNameToContextComponent()
