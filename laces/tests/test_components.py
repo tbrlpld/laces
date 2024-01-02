@@ -89,7 +89,7 @@ class TestComponentSubclasses(SimpleTestCase):
 
     def test_render_html_with_template_name_set(self):
         """
-        Test the `render_html` with a set `template_name` attribute.
+        Test `render_html` method with a set `template_name` attribute.
         """
 
         # -----------------------------------------------------------------------------
@@ -108,7 +108,8 @@ class TestComponentSubclasses(SimpleTestCase):
 
     def test_render_html_with_template_name_set_and_data_from_get_context_data(self):
         """
-        Test the `render_html` with `get_context_data` providing data for the context.
+        Test `render_html` method with `get_context_data` providing data for the
+        context.
         """
 
         # -----------------------------------------------------------------------------
@@ -128,14 +129,15 @@ class TestComponentSubclasses(SimpleTestCase):
 
     def test_render_html_when_get_context_data_returns_None(self):
         """
-        Test the `render_html` method when `get_context_data` returns `None`.
+        Test `render_html` method when `get_context_data` returns `None`.
 
-        This behavior was present when the class was extracted. It is not totally clear
-        why this specific check is needed. By default, the `get_context_data` method
-        provides and empty dict. If an override wanted to `get_context_data` return
-        `None`, it should be expected that no context data is available during
-        rendering. The underlying `template.render` method does not seem to care about
-        `None` as the context.
+        The `render_html` method raises a `TypeError` when `None` is returned from
+        `get_context_method`. This behavior was present when the class was extracted
+        from Wagtail. It is not totally clear why this specific check is needed. By
+        default, the `get_context_data` method provides and empty dict. If an override
+        wanted to `get_context_data` return `None`, it should be expected that no
+        context data is available during rendering. The underlying `template.render`
+        method does not seem to be ok with `None` the provided context.
         """
 
         # -----------------------------------------------------------------------------
