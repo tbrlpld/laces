@@ -20,8 +20,9 @@ class TestComponent(SimpleTestCase):
 
     def test_render_html(self):
         """Test the `render_html` method."""
-        # The default Component does not specify a `tempalte_name` attribute which is
-        # required for `render_html`.
+        # The default Component does not specify a `template_name` attribute which is
+        # required for `render_html`. So calling the method on the Component class
+        # will raise an error.
         with self.assertRaises(AttributeError):
             self.component.render_html()
 
@@ -30,7 +31,7 @@ class TestComponent(SimpleTestCase):
         Test the default get_context_data.
 
         The parent context should not matter, but we use it as it is used in
-        `render_html`.
+        `render_html` (which passes a `Context` object).
         """
         result = self.component.get_context_data(parent_context=Context())
 
@@ -59,7 +60,8 @@ class TestComponentSubclasses(SimpleTestCase):
 
     Most functionality of the Component class is only unlocked through subclassing and
     definition of certain attributes (like `template_name`) or overriding of the
-    existing methods.
+    existing methods. This test class tests the functionality that is unlocked through
+    subclassing.
     """
 
     @classmethod
