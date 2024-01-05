@@ -153,8 +153,9 @@ class TestComponentTag(SimpleTestCase):
         )
 
         # The `other` variable from the parent's rendering context is not included in
-        # the context that is passed to the `render_html` method. This is because of the
-        # `only` keyword.
+        # the context that is passed to the `render_html` method. The `test` variable,
+        # that was defined with the with-keyword, is present though. Both of these
+        # effects come form the `only` keyword.
         self.assertRenderHTMLCalledWith({"test": "nothing else"})
 
     def test_render_html_parent_context_when_with_block_overrides_context(self):
