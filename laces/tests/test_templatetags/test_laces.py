@@ -48,7 +48,8 @@ class TestComponentTag(SimpleTestCase):
             {"my_component": self.component},
         )
 
-        # This matches the return value of the `render_html` method.
+        # This matches the return value of the `render_html` method inserted into the
+        # parent template.
         self.assertEqual(result, "Before Rendered HTML After")
 
     def test_render_html_return_is_escaped(self):
