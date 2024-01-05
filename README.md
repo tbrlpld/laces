@@ -66,7 +66,7 @@ class WelcomePanel(Component):
 ```html+django
 {# my_app/templates/my_app/components/welcome.html #}
 
-<h1>Welcome to my app!</h1>
+<h1>Hello World!</h1>
 ```
 
 With the above in place, you then instantiate the component (e.g. in a view) and pass it to another template for rendering.
@@ -118,13 +118,22 @@ from laces.components import Component
 
 class WelcomePanel(Component):
     def render_html(self, parent_context=None):
-        return format_html("<h1>Welcome to my app!</h1>")
+        return format_html("<h1>Hello World!</h1>")
 ```
 
 ### Passing context to the component template
 
-The `get_context_data` method can be overridden to pass context variables to the template.
-As with `render_html`, this receives the context dictionary from the calling template.
+Now back to components with templates.
+
+The example shown above with the static welcome message in the template is, of course, not very useful.
+It seems more like an overcomplicated way to replace a simple `include`.
+
+But, we rarely ever want to render templates with static content.
+Usually, we want to pass some context variables to the template to be rendered.
+This is where components start to become interesting.
+
+The default implementation of `render_html` calls the component's `get_context_data` method to get the context variables to pass to the template.
+So, to customize the context variables passed to the template, we can override `get_context_data`.
 
 ```python
 # my_app/components.py
@@ -136,16 +145,23 @@ class WelcomePanel(Component):
     template_name = "my_app/components/welcome.html"
 
     def get_context_data(self, parent_context):
-        context = super().get_context_data(parent_context)
-        context["username"] = parent_context["request"].user.username
-        return context
+        return {"name": "Alice"}
 ```
 
 ```html+django
 {# my_app/templates/my_app/components/welcome.html #}
 
-<h1>Welcome to my app, {{ username }}!</h1>
+<h1>Hello {{ name }}</h1>
 ```
+
+With the above we are now rendering a welcome message with the name coming from the component's `get_context_data` method.
+Nice.
+But, still not very useful as the name is still hardcoded.
+In the component method instead of the template, but hardcoded nonetheless.
+
+### Context examples
+
+TODO: Expand this section with examples of how to add context to the component hen instantiating it.
 
 ### Adding media definitions
 
