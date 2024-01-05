@@ -41,8 +41,8 @@ class TestComponentTag(SimpleTestCase):
         self.assertTrue(self.component.render_html.called_with(Context(context)))
 
     def test_render_html_return_in_parent_template(self):
-        self.set_parent_template("Before {% component my_component %} After")
         self.assertEqual(self.component.render_html(), "Rendered HTML")
+        self.set_parent_template("Before {% component my_component %} After")
 
         result = self.render_parent_template_with_context(
             {"my_component": self.component},
