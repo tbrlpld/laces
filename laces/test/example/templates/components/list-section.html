@@ -1,0 +1,9 @@
+{% load laces %}
+<section>
+    {% component heading %}
+    <ul>
+        {% for item in items %}
+            <li>{% component item %}</li>
+        {% endfor %}
+    </ul>
+</section>

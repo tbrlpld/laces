@@ -4,6 +4,7 @@ __pycache__/
 /dist
 /laces.egg-info
 /.coverage
+/.coverage.json
 /htmlcov
 /.tox
 /.venv
