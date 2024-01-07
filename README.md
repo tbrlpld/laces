@@ -9,13 +9,14 @@
 
 Django components that know how to render themselves.
 
+Laces components provide a simple way to combine data (in the form of Python objects) with the Django templates that are meant to render that data.
+The benefit of this combination is that the components can be used in other templates without having to worry about passing the right context variables to the template.
+Template and data are tied together 😅 and they can be passed around together.
+This becomes especially useful when components are nested — it allows us to avoid building the same nested structure twice (once in the data and again in the templates).
 
-Working with objects that know how to render themselves as HTML elements is a common pattern found in complex Django applications (e.g. the [Wagtail](https://github.com/wagtail/wagtail) admin interface).
-This package provides tools enable and support working with such objects, also known as "components".
-
-The APIs provided in the package have previously been discovered, developed and solidified in the Wagtail project.
+Working with objects that know how to render themselves as HTML elements is a common pattern found in complex Django applications, such as the [Wagtail](https://github.com/wagtail/wagtail) admin interface.
+The Wagtail admin is also where the APIs provided in this package have previously been discovered, developed and solidified.
 The purpose of this package is to make these tools available to other Django projects outside the Wagtail ecosystem.
-
 
 ## Links
 
@@ -66,7 +67,7 @@ class WelcomePanel(Component):
 ```html+django
 {# my_app/templates/my_app/components/welcome.html #}
 
-<h1>Welcome to my app!</h1>
+<h1>Hello World!</h1>
 ```
 
 With the above in place, you then instantiate the component (e.g. in a view) and pass it to another template for rendering.
@@ -94,7 +95,7 @@ In the view template, we `load` the `laces` tag library and use the `component` 
 {# my_app/templates/my_app/home.html #}
 
 {% load laces %}
-{% component welcome %}
+{% component welcome %}  {# <-- Renders the component #}
 ```
 
 That's it!
@@ -117,14 +118,24 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    def render_html(self, parent_context=None):
-        return format_html("<h1>Welcome to my app!</h1>")
+    def render_html(self, parent_context):
+        return format_html("<h1>Hello World!</h1>")
 ```
 
 ### Passing context to the component template
 
-The `get_context_data` method can be overridden to pass context variables to the template.
-As with `render_html`, this receives the context dictionary from the calling template.
+Now back to components with templates.
+
+The example shown above with the static welcome message in the template is, of course, not very useful.
+It seems more like an overcomplicated way to replace a simple `include`.
+
+But, we rarely ever want to render templates with static content.
+Usually, we want to pass some context variables to the template to be rendered.
+This is where components start to become interesting.
+
+The default implementation of `render_html` calls the component's `get_context_data` method to get the context variables to pass to the template.
+The default implementation of `get_context_data` returns an empty dictionary.
+To customize the context variables passed to the template, we can override `get_context_data`.
 
 ```python
 # my_app/components.py
@@ -136,20 +147,25 @@ class WelcomePanel(Component):
     template_name = "my_app/components/welcome.html"
 
     def get_context_data(self, parent_context):
-        context = super().get_context_data(parent_context)
-        context["username"] = parent_context["request"].user.username
-        return context
+        return {"name": "Alice"}
 ```
 
 ```html+django
 {# my_app/templates/my_app/components/welcome.html #}
 
-<h1>Welcome to my app, {{ username }}!</h1>
+<h1>Hello {{ name }}</h1>
 ```
 
-### Adding media definitions
+With the above we are now rendering a welcome message with the name coming from the component's `get_context_data` method.
+Nice.
+But, still not very useful, as the name is still hardcoded — in the component method instead of the template, but hardcoded nonetheless.
 
-Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
+#### Using class properties
+
+When considering how to make the context of our components more useful, it's helpful to remember that components are just normal Python classes and objects.
+So, you are basically free to get the context data into the component in any way you like.
+
+For example, we can pass arguments to the constructor and use them in the component's methods, like `get_context_data`.
 
 ```python
 # my_app/components.py
@@ -160,16 +176,72 @@ from laces.components import Component
 class WelcomePanel(Component):
     template_name = "my_app/components/welcome.html"
 
-    class Media:
-        css = {"all": ("my_app/css/welcome-panel.css",)}
+    def __init__(self, name):
+        self.name = name
+
+    def get_context_data(self, parent_context):
+        return {"name": self.name}
 ```
+
+Nice, this is getting better.
+Now we can pass the name to the component when we instantiate it and pass the component ready to be rendered to the view template.
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+
+from my_app.components import WelcomePanel
+
+
+def home(request):
+    welcome = WelcomePanel(name="Alice")
+    return render(
+        request,
+        "my_app/home.html",
+        {"welcome": welcome},
+    )
+```
+
+So, as mentioned before, we can use the full power of Python classes and objects to provide context data to our components.
+A couple more examples of how components can be used can be found [below](#patterns-for-using-components).
+
+#### Using the parent context
+
+You may have noticed in the above examples that the `render_html` and `get_context_data` methods take a `parent_context` argument.
+This is the context of the template that is calling the component.
+The `parent_context` is passed into the `render_html` method by the `{% component %}` template tag.
+In the default implementation of the `render_html` method, the `parent_context` is then passed to the `get_context_data` method.
+The default implementation of the `get_context_data` method, however, ignores the `parent_context` argument and returns an empty dictionary.
+To make use of it, you will have to override the `get_context_data` method.
+
+Relying on data from the parent context somewhat forgoes some of the benefits of components, which is tying the data and template together.
+Especially for nested uses of components, you now require that the data in the right format is passed through all layers of templates again.
+It is usually cleaner to provide all the data needed by the component directly to the component itself.
+
+However, there may be cases where this is not possible of desirable.
+For those cases, you have access to the parent context in the component's `get_context_data` method.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    def get_context_data(self, parent_context):
+        return {"name": parent_context["request"].user.first_name}
+```
+
+(Of course, this could have also been achieved by passing the request or user object to the component in the view, but this is just an example.)
 
 ### Using components in other templates
 
-The `laces` tag library provides a `{% component %}` tag for including components on a template.
-This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag).
+It's already been mentioned in the [first example](#creating-components), that components are rendered in other templates using the `{% component %}` tag from the `laces` tag library.
 
-For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
+Here is that example from above again, in which the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
 
 ```python
 # my_app/views.py
@@ -191,7 +263,7 @@ def home(request):
     )
 ```
 
-The template `my_app/templates/my_app/home.html` could render the welcome panel component as follows:
+Then, in the `my_app/templates/my_app/home.html` template we render the welcome panel component as follows:
 
 ```html+django
 {# my_app/templates/my_app/home.html #}
@@ -200,17 +272,34 @@ The template `my_app/templates/my_app/home.html` could render the welcome panel 
 {% component welcome %}
 ```
 
-You can pass additional context variables to the component using the keyword `with`:
+This is the basic usage of components and should cover most cases.
+
+However, the `{% component %}` tag also supports some additional features.
+Specifically, the `component` tag supports the `with`, `only` and `as` keywords, akin to the [`include`](https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatetag-include) tag.
+
+#### Provide additional parent context variables with `with`
+
+You can pass additional parent context variables to the component using the keyword `with`:
 
 ```html+django
-{% component welcome with username=request.user.username %}
+{% component welcome with name=request.user.first_name %}
 ```
 
-To render the component with only the variables provided (and no others from the calling template's context), use `only`:
+**Note**: These extra variables will be added to the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods.
+The default implementation of `get_context_data` ignores the `parent_context` argument, so you will have to override it to make use of the extra variables.
+For more information see the above section on the [parent context](#using-the-parent-context).
+
+#### Limit the parent context variables with `only`
+
+To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
 
 ```html+django
-{% component welcome with username=request.user.username only %}
+{% component welcome with name=request.user.first_name only %}
 ```
+
+**Note**: Both, `with` and `only`, only affect the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods. They do not have any direct effect on actual context that is passed to the component's template. E.g. if the component's `get_context_data` method returns a dictionary which always contains a key `foo`, then that key will be available in the component's template, regardless of whether `only` was used or not.
+
+#### Store the rendered output in a variable with `as`
 
 To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
 
@@ -218,6 +307,23 @@ To store the component's rendered output in a variable rather than outputting it
 {% component welcome as welcome_html %}
 
 {{ welcome_html }}
+```
+
+### Adding static files to a component
+
+Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    class Media:
+        css = {"all": ("my_app/css/welcome-panel.css",)}
 ```
 
 Note that it is your template's responsibility to output any media declarations defined on the components.
@@ -251,7 +357,6 @@ def home(request):
     )
 ```
 
-
 ```html+django
 {# my_app/templates/my_app/home.html #}
 
@@ -267,6 +372,45 @@ def home(request):
     {% endfor %}
 </body>
 ```
+
+## Patterns for using components
+
+### Using dataclasses
+
+The above example is neat already, but is may become a little verbose when we have more than one or two arguments to pass to the component.
+You would have to list them all manually in the constructor and then assign them to the context.
+
+To make this a little easier, we can use dataclasses.
+
+```python
+# my_app/components.py
+
+from dataclasses import dataclass, asdict
+
+from laces.components import Component
+
+
+@dataclass
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    name: str
+
+    def get_context_data(self, parent_context):
+        return asdict(self)
+```
+
+With dataclasses we define the name and type of the properties we want to pass to the component in the class definition.
+Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be passed to the template context.
+The `asdict` function only  contains the properties defined in the dataclass, so we don't have to worry about accidentally passing other properties to the template.
+
+### Special constructor methods
+
+### Nesting components
+
+### Sets of components
+
+## About Laces and Components
 
 ## Contributing
 
