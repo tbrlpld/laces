@@ -118,7 +118,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    def render_html(self, parent_context=None):
+    def render_html(self, parent_context):
         return format_html("<h1>Hello World!</h1>")
 ```
 
@@ -163,6 +163,7 @@ But, still not very useful, as the name is still hardcoded — in the component 
 
 When considering how to make the context of our components more useful, it's helpful to remember that components are just normal Python classes and objects.
 So, you are basically free to get the context data into the component in any way you like.
+
 For example, we can pass arguments to the constructor and use them in the component's methods, like `get_context_data`.
 
 ```python
@@ -181,6 +182,9 @@ class WelcomePanel(Component):
         return {"name": self.name}
 ```
 
+Nice, this is getting better.
+Now we can pass the name to the component when we instantiate it and pass the component ready to be rendered to the view template.
+
 ```python
 # my_app/views.py
 
@@ -198,10 +202,35 @@ def home(request):
     )
 ```
 
-Nice, this is getting better.
-Now we can pass the name to the component when we instantiate it and pass the component ready to be rendered to the view template.
+So, as mentioned before, we can use the full power of Python classes and objects to provide context data to our components.
+A couple more examples of how components can be used can be found [below](#patterns-for-using-components).
 
 #### Parent context
+
+You may have noticed in the above examples that the `get_context_data` method takes a `parent_context` argument.
+This is the context of the template that is calling the component.
+
+Relying on data from the parent context somewhat forgoes some of the benefits of components, which is tying the data and template together.
+Especially for nested uses of components, you know require that the data in the right format is passed through all layers of templates again.
+It is usually cleaner to provide all the data needed by the component directly to the component itself.
+
+However, there may be cases where this is not possible of desirable.
+For those cases, you have access to the parent context in the component's `get_context_data` method.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    def get_context_data(self, parent_context):
+        return {"name": parent_context["request"].user.first_name}
+```
+
+(Of course, this could have also been achieved by passing the request or user object to the component in the view, but this is just an example.)
 
 ### Using components in other templates
 
