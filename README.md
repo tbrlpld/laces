@@ -9,13 +9,14 @@
 
 Django components that know how to render themselves.
 
+Laces components provide a simple way to combine data (in the form of Python objects) with the Django templates that are meant to render that data.
+The benefit of this combination is that the components can be used in other templates without having to worry about passing the right context variables to the template.
+Template and data are tied together 😅 and they can be passed around together.
+This becomes especially useful when components are nested — it allows us to avoid building the same nested structure twice (once in the data and again in the templates).
 
-Working with objects that know how to render themselves as HTML elements is a common pattern found in complex Django applications (e.g. the [Wagtail](https://github.com/wagtail/wagtail) admin interface).
-This package provides tools enable and support working with such objects, also known as "components".
-
-The APIs provided in the package have previously been discovered, developed and solidified in the Wagtail project.
+Working with objects that know how to render themselves as HTML elements is a common pattern found in complex Django applications, such as the [Wagtail](https://github.com/wagtail/wagtail) admin interface.
+The Wagtail admin is also where the APIs provided in this package have previously been discovered, developed and solidified.
 The purpose of this package is to make these tools available to other Django projects outside the Wagtail ecosystem.
-
 
 ## Links
 
