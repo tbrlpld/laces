@@ -95,7 +95,7 @@ In the view template, we `load` the `laces` tag library and use the `component` 
 {# my_app/templates/my_app/home.html #}
 
 {% load laces %}
-{% component welcome %}
+{% component welcome %}  {# <-- Renders the component #}
 ```
 
 That's it!
@@ -134,7 +134,8 @@ Usually, we want to pass some context variables to the template to be rendered.
 This is where components start to become interesting.
 
 The default implementation of `render_html` calls the component's `get_context_data` method to get the context variables to pass to the template.
-So, to customize the context variables passed to the template, we can override `get_context_data`.
+The default implementation of `get_context_data` returns an empty dictionary.
+To customize the context variables passed to the template, we can override `get_context_data`.
 
 ```python
 # my_app/components.py
@@ -207,11 +208,15 @@ A couple more examples of how components can be used can be found [below](#patte
 
 #### Parent context
 
-You may have noticed in the above examples that the `get_context_data` method takes a `parent_context` argument.
+You may have noticed in the above examples that the `render_html` and `get_context_data` methods take a `parent_context` argument.
 This is the context of the template that is calling the component.
+The `parent_context` is passed into the `render_html` method by the `{% component %}` template tag.
+In the default implementation of the `render_html` method, the `parent_context` is then passed to the `get_context_data` method.
+The default implementation of the `get_context_data` method, however, ignores the `parent_context` argument and returns an empty dictionary.
+To make use of it, you will have to override the `get_context_data` method.
 
 Relying on data from the parent context somewhat forgoes some of the benefits of components, which is tying the data and template together.
-Especially for nested uses of components, you know require that the data in the right format is passed through all layers of templates again.
+Especially for nested uses of components, you now require that the data in the right format is passed through all layers of templates again.
 It is usually cleaner to provide all the data needed by the component directly to the component itself.
 
 However, there may be cases where this is not possible of desirable.
