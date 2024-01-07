@@ -159,14 +159,11 @@ With the above we are now rendering a welcome message with the name coming from 
 Nice.
 But, still not very useful, as the name is still hardcoded — in the component method instead of the template, but hardcoded nonetheless.
 
-### Some more useful context examples
+#### Using class properties
 
-Let's have look at some more useful examples of how to pass context to the component template.
-
-#### Using the component's constructor
-
-Component are just normal Python classes and objects.
-That means, we can pass arguments to the constructor and use them in the component's methods.
+When considering how to make the context of our components more useful, it's helpful to remember that components are just normal Python classes and objects.
+So, you are basically free to get the context data into the component in any way you like.
+For example, we can pass arguments to the constructor and use them in the component's methods, like `get_context_data`.
 
 ```python
 # my_app/components.py
@@ -204,51 +201,7 @@ def home(request):
 Nice, this is getting better.
 Now we can pass the name to the component when we instantiate it and pass the component ready to be rendered to the view template.
 
-#### Using dataclasses
-
-The above example is neat already, but is may become a little verbose when we have more than one or two arguments to pass to the component.
-You would have to list them all manually in the constructor and then assign them to the context.
-
-To make this a little easier, we can use dataclasses.
-
-```python
-# my_app/components.py
-
-from dataclasses import dataclass, asdict
-
-from laces.components import Component
-
-
-@dataclass
-class WelcomePanel(Component):
-    template_name = "my_app/components/welcome.html"
-
-    name: str
-
-    def get_context_data(self, parent_context):
-        return asdict(self)
-```
-
-With dataclasses we define the name and type of the properties we want to pass to the component in the class definition.
-Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be passed to the template context.
-The `asdict` function only  contains the properties defined in the dataclass, so we don't have to worry about accidentally passing other properties to the template.
-
-### Adding media definitions
-
-Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
-
-```python
-# my_app/components.py
-
-from laces.components import Component
-
-
-class WelcomePanel(Component):
-    template_name = "my_app/components/welcome.html"
-
-    class Media:
-        css = {"all": ("my_app/css/welcome-panel.css",)}
-```
+#### Parent context
 
 ### Using components in other templates
 
@@ -306,6 +259,23 @@ To store the component's rendered output in a variable rather than outputting it
 {{ welcome_html }}
 ```
 
+### Adding static files to a component
+
+Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    class Media:
+        css = {"all": ("my_app/css/welcome-panel.css",)}
+```
+
 Note that it is your template's responsibility to output any media declarations defined on the components.
 This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.
 
@@ -337,7 +307,6 @@ def home(request):
     )
 ```
 
-
 ```html+django
 {# my_app/templates/my_app/home.html #}
 
@@ -353,6 +322,45 @@ def home(request):
     {% endfor %}
 </body>
 ```
+
+## Patterns for using components
+
+### Using dataclasses
+
+The above example is neat already, but is may become a little verbose when we have more than one or two arguments to pass to the component.
+You would have to list them all manually in the constructor and then assign them to the context.
+
+To make this a little easier, we can use dataclasses.
+
+```python
+# my_app/components.py
+
+from dataclasses import dataclass, asdict
+
+from laces.components import Component
+
+
+@dataclass
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    name: str
+
+    def get_context_data(self, parent_context):
+        return asdict(self)
+```
+
+With dataclasses we define the name and type of the properties we want to pass to the component in the class definition.
+Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be passed to the template context.
+The `asdict` function only  contains the properties defined in the dataclass, so we don't have to worry about accidentally passing other properties to the template.
+
+### Special constructor methods
+
+### Nesting components
+
+### Sets of components
+
+## About Laces and Components
 
 ## Contributing
 
