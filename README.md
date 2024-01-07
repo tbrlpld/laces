@@ -291,7 +291,7 @@ For more information see the above section on the [parent context](#using-the-pa
 
 #### Limit the parent context variables with `only`
 
-Limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
+To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
 
 ```html+django
 {% component welcome with name=request.user.first_name only %}
