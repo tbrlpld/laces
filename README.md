@@ -206,7 +206,7 @@ def home(request):
 So, as mentioned before, we can use the full power of Python classes and objects to provide context data to our components.
 A couple more examples of how components can be used can be found [below](#patterns-for-using-components).
 
-#### Parent context
+#### Using the parent context
 
 You may have noticed in the above examples that the `render_html` and `get_context_data` methods take a `parent_context` argument.
 This is the context of the template that is calling the component.
@@ -239,10 +239,9 @@ class WelcomePanel(Component):
 
 ### Using components in other templates
 
-The `laces` tag library provides a `{% component %}` tag for including components on a template.
-This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag).
+It's already been mentioned in the [first example](#creating-components), that components are rendered in other templates using the `{% component %}` tag from the `laces` tag library.
 
-For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
+Here is that example from above again, in which the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
 
 ```python
 # my_app/views.py
@@ -264,7 +263,7 @@ def home(request):
     )
 ```
 
-The template `my_app/templates/my_app/home.html` could render the welcome panel component as follows:
+Then, in the `my_app/templates/my_app/home.html` template we render the welcome panel component as follows:
 
 ```html+django
 {# my_app/templates/my_app/home.html #}
@@ -273,17 +272,34 @@ The template `my_app/templates/my_app/home.html` could render the welcome panel 
 {% component welcome %}
 ```
 
-You can pass additional context variables to the component using the keyword `with`:
+This is the basic usage of components and should cover most cases.
+
+However, the `{% component %}` tag also supports some additional features.
+Specifically, the `component` tag supports the `with`, `only` and `as` keywords, akin to the [`include`](https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatetag-include) tag.
+
+#### Provide additional parent context variables with `with`
+
+You can pass additional parent context variables to the component using the keyword `with`:
 
 ```html+django
-{% component welcome with username=request.user.username %}
+{% component welcome with name=request.user.first_name %}
 ```
 
-To render the component with only the variables provided (and no others from the calling template's context), use `only`:
+**Note**: These extra variables will be added to the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods.
+The default implementation of `get_context_data` ignores the `parent_context` argument, so you will have to override it to make use of the extra variables.
+For more information see the above section on the [parent context](#using-the-parent-context).
+
+#### Limit the parent context variables with `only`
+
+Limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
 
 ```html+django
-{% component welcome with username=request.user.username only %}
+{% component welcome with name=request.user.first_name only %}
 ```
+
+**Note**: Both, `with` and `only`, only affect the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods. They do not have any direct effect on actual context that is passed to the component's template. E.g. if the component's `get_context_data` method returns a dictionary which always contains a key `foo`, then that key will be available in the component's template, regardless of whether `only` was used or not.
+
+#### Store the rendered output in a variable with `as`
 
 To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
 
