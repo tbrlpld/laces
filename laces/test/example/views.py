@@ -5,6 +5,7 @@ from laces.test.example.components import (
     DataclassAsDictContextComponent,
     HeadingComponent,
     ListSectionComponent,
+    MediaDefiningComponent,
     ParagraphComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
@@ -37,6 +38,7 @@ def kitchen_sink(request):
             ParagraphComponent(text="Item 3"),
         ],
     )
+    media_defining_component = MediaDefiningComponent()
 
     return render(
         request,
@@ -52,5 +54,6 @@ def kitchen_sink(request):
             "name": "Dan",  # Provide as an example of parent context.
             "section_with_heading_and_paragraph": section_with_heading_and_paragraph,
             "list_section": list_section,
+            "media_defining_component": media_defining_component,
         },
     )
