@@ -89,7 +89,7 @@ def home(request):
     )
 ```
 
-In the view template, we `load` the `laces` tag library and use the `component` tag to render the component.
+In the view template, we `load` the `laces` tag library and use the `{% component %}` tag to render the component.
 
 ```html+django
 {# my_app/templates/my_app/home.html #}
@@ -275,7 +275,7 @@ Then, in the `my_app/templates/my_app/home.html` template we render the welcome 
 This is the basic usage of components and should cover most cases.
 
 However, the `{% component %}` tag also supports some additional features.
-Specifically, the `component` tag supports the `with`, `only` and `as` keywords, akin to the [`include`](https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatetag-include) tag.
+Specifically, the keywords `with`, `only` and `as` are supported, similar to how they work with the [`{% include %}`](https://docs.djangoproject.com/en/5.0/ref/templates/builtins/#std-templatetag-include) tag.
 
 #### Provide additional parent context variables with `with`
 
