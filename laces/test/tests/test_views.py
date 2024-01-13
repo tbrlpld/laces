@@ -54,3 +54,9 @@ class TestKitchenSink(TestCase):
             """,
             response_html,
         )
+        self.assertInHTML("<h1>Hello Media</h1>", response_html)
+        self.assertInHTML(
+            '<link href="/static/component.css" media="all" rel="stylesheet">',
+            response_html,
+        )
+        self.assertInHTML('<script src="/static/component.js"></script>', response_html)

@@ -158,3 +158,14 @@ class BlockquoteComponent(Component):
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
         return format_html("<blockquote>{}</blockquote>\n", self.text)
+
+
+class MediaDefiningComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def get_context_data(self, parent_context=None):
+        return {"name": "Media"}
+
+    class Media:
+        css = {"all": ("component.css",)}
+        js = ("component.js",)
