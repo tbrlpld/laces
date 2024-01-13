@@ -10,6 +10,7 @@ from laces.test.example.components import (
     DataclassAsDictContextComponent,
     HeadingComponent,
     ListSectionComponent,
+    MediaDefiningComponent,
     ParagraphComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
@@ -248,4 +249,25 @@ class TestListSection(SimpleTestCase):
                 </ul>
             </section>
             """,
+        )
+
+
+class TestMediaDefiningComponent(SimpleTestCase):
+    def setUp(self):
+        self.component = MediaDefiningComponent()
+
+    def test_media(self):
+        self.assertEqual(
+            self.component.media._css,
+            {
+                "all": [
+                    "component.css",
+                ]
+            },
+        )
+        self.assertEqual(
+            self.component.media._js,
+            [
+                "component.js",
+            ],
         )
