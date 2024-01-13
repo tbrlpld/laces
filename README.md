@@ -31,7 +31,9 @@ The purpose of this package is to make these tools available to other Django pro
 - Python >= 3.8
 - Django >= 3.2
 
-## Installation
+## Getting started
+
+### Installation
 
 First, install with pip:
 ```sh
@@ -47,8 +49,6 @@ INSTALLED_APPS = ["laces", ...]
 ```
 
 That's it.
-
-## Usage
 
 ### Creating components
 
