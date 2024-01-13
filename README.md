@@ -376,13 +376,68 @@ In the example home template from above, we can output the component's media dec
 
 #### Combining media with `MediaContainer`
 
-TODO: Fix this section.
-If you have many components, you can combine their media definitions into a single object with the `MediaContainer` class.
-~~This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.~~
+When you have many components in a page, it can be cumbersome to output the media declarations for each component individually.
+To make that process a bit easier, Laces provides a `MediaContainer` class.
+The `MediaContainer` class is a subclass of Python's built-in `list` class which combines the `media` of all it's members.
+
+In a view we can create a `MediaContainer` instance containing several media defining components and pass it to the view template.
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+from laces.components import MediaContainer
+
+from my_app.components import (
+    Dashboard,
+    Footer,
+    Header,
+    Sidebar,
+    WelcomePanel,
+)
+
+
+def home(request):
+    components = MediaContainer(
+        Header(),
+        Sidebar(),
+        WelcomePanel(),
+        Dashboard(),
+        Footer(),
+    )
+
+    return render(
+        request,
+        "my_app/home.html",
+        {
+            "components": components,
+        },
+    )
+```
+
+Then, in the view template, we can output the media declarations for all components in the container at once.
+
+```html+django
+{# my_app/templates/my_app/home.html #}
+
+{% load laces %}
+
+<head>
+    {{ components.media }}
+<head>
+<body>
+    {% for component in components %}
+        {% component component %}
+    {% endfor %}
+</body>
+```
+
+This will output a combined media declaration for all components in the container.
+The combination of the media declarations follows the behaviour outlined in the [Django documentation](https://docs.djangoproject.com/en/5.0/topics/forms/media/#combining-media-objects).
 
 **Note**:
 The use of `MediaContainer` is not limited to contain components.
-It can be used to combine the `media` properties of any number of objects that have a `media` property.
+It can be used to combine the `media` properties of any kind of objects that have a `media` property.
 
 ## Patterns for using components
 
