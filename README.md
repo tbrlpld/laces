@@ -309,9 +309,13 @@ To store the component's rendered output in a variable rather than outputting it
 {{ welcome_html }}
 ```
 
-### Adding static files to a component
+### Adding JavaScript and CSS assets to a component
 
-Like Django form widgets, components can specify associated JavaScript and CSS resources using either an inner `Media` class or a dynamic `media` property.
+Like Django form widgets, components can specify associated JavaScript and CSS assets.
+The assets for a component can be specified in the same way that [Django form assets are defined](https://docs.djangoproject.com/en/5.0/topics/forms/media).
+This can be achieved using either an inner `Media` class or a dynamic `media` property.
+
+An inner `Media` class definition looks like this:
 
 ```python
 # my_app/components.py
@@ -326,36 +330,28 @@ class WelcomePanel(Component):
         css = {"all": ("my_app/css/welcome-panel.css",)}
 ```
 
-Note that it is your template's responsibility to output any media declarations defined on the components.
-This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.
+The more dynamic definition via a `media` property looks like this:
 
 ```python
-# my_app/views.py
+# my_app/components.py
 
 from django.forms import Media
-from django.shortcuts import render
 
-from my_app.components import WelcomePanel
+from laces.components import Component
 
 
-def home(request):
-    components = [
-        WelcomePanel(),
-    ]
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
 
-    media = Media()
-    for component in components:
-        media += component.media
-
-    render(
-        request,
-        "my_app/home.html",
-        {
-            "components": components,
-            "media": media,
-        },
-    )
+    @property
+    def media(self):
+        return Media(css={"all": ("my_app/css/welcome-panel.css",)})
 ```
+
+**Note**:
+It is your template's responsibility to output any media declarations defined on the components.
+
+In the example home template from above, we can output the component's media declarations like so:
 
 ```html+django
 {# my_app/templates/my_app/home.html #}
@@ -363,15 +359,16 @@ def home(request):
 {% load laces %}
 
 <head>
-    {{ media.js }}
-    {{ media.css }}
+    {{ welcome.media }}
 <head>
 <body>
-    {% for comp in components %}
-        {% component comp %}
-    {% endfor %}
+    {% component welcome %}
 </body>
 ```
+
+TODO: Fix this section.
+If you have many components, you can combine their media definitions into a single object with the `MediaContainer` class.
+~~This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.~~
 
 ## Patterns for using components
 
