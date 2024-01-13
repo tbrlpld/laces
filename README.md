@@ -351,6 +351,14 @@ class WelcomePanel(Component):
 **Note**:
 It is your template's responsibility to output any media declarations defined on the components.
 
+#### Outputting component media in templates
+
+Once you have defined the assets on the component in one of the two ways above, you can output them in your templates.
+This, again, works in the same way as it does for Django form widgets.
+The component instance will have a `media` property which returns an instance of the `django.forms.Media` class.
+This is the case, even if you used the nested `Media` class to define the assets.
+The [string representation of a `Media` objects](https://docs.djangoproject.com/en/5.0/topics/forms/media#s-media-objects) are the HTML declarations to include the assets.
+
 In the example home template from above, we can output the component's media declarations like so:
 
 ```html+django
@@ -366,9 +374,15 @@ In the example home template from above, we can output the component's media dec
 </body>
 ```
 
+#### Combining media with `MediaContainer`
+
 TODO: Fix this section.
 If you have many components, you can combine their media definitions into a single object with the `MediaContainer` class.
 ~~This can be done by constructing a media object for the whole page within the view, passing this to the template, and outputting it via `media.js` and `media.css`.~~
+
+**Note**:
+The use of `MediaContainer` is not limited to contain components.
+It can be used to combine the `media` properties of any number of objects that have a `media` property.
 
 ## Patterns for using components
 
