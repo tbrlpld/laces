@@ -109,6 +109,21 @@ class SectionWithHeadingAndParagraphComponent(Component):
         }
 
 
+class ListSectionComponent(Component):
+    template_name = "components/list-section.html"
+
+    def __init__(self, heading: "HeadingComponent", items: "list[Component]"):
+        super().__init__()
+        self.heading = heading
+        self.items = items
+
+    def get_context_data(self, parent_context=None):
+        return {
+            "heading": self.heading,
+            "items": self.items,
+        }
+
+
 class HeadingComponent(Component):
     def __init__(self, text: str):
         super().__init__()
@@ -131,24 +146,6 @@ class ParagraphComponent(Component):
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
         return format_html("<p>{}</p>\n", self.text)
-
-
-class ListSectionComponent(Component):
-    template_name = "components/list-section.html"
-
-    def __init__(self, heading: "HeadingComponent", items: "list[Component]"):
-        super().__init__()
-        self.heading = heading
-        self.items = items
-
-    def get_context_data(
-        self,
-        parent_context: "Optional[RenderContext]" = None,
-    ) -> "RenderContext":
-        return {
-            "heading": self.heading,
-            "items": self.items,
-        }
 
 
 class BlockquoteComponent(Component):
