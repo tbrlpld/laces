@@ -239,7 +239,7 @@ class WelcomePanel(Component):
 
 ### Using components in other templates
 
-It's already been mentioned in the [first example](#creating-components), that components are rendered in other templates using the `{% component %}` tag from the `laces` tag library.
+As mentioned in the [first example](#creating-components), components are rendered in other templates using the `{% component %}` tag from the `laces` tag library.
 
 Here is that example from above again, in which the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
 
