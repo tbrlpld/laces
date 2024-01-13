@@ -219,7 +219,7 @@ Relying on data from the parent context somewhat forgoes some of the benefits of
 Especially for nested uses of components, you now require that the data in the right format is passed through all layers of templates again.
 It is usually cleaner to provide all the data needed by the component directly to the component itself.
 
-However, there may be cases where this is not possible of desirable.
+However, there may be cases where this is not possible or desirable.
 For those cases, you have access to the parent context in the component's `get_context_data` method.
 
 ```python
