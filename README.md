@@ -478,7 +478,7 @@ The `asdict` function only  contains the properties defined in the dataclass, so
 
 ### Sets of components
 
-## About Laces and Components
+## About Laces and components
 
 ## Contributing
 
