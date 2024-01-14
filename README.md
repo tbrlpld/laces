@@ -443,12 +443,15 @@ It can be used to combine the `media` properties of any kind of objects that hav
 
 ## Patterns for using components
 
+Below, we want so show a few more examples of how components can be used that were not covered in the ["Getting started" section](#getting-started) above.
+
 ### Using dataclasses
 
-The above example is neat already, but is may become a little verbose when we have more than one or two arguments to pass to the component.
-You would have to list them all manually in the constructor and then assign them to the context.
+Above, we showed how to [use class properties](#using-class-properties) to add data to the component's context.
+This is a very useful and common pattern.
+However, it is a bit verbose, especially when you have many properties directly pass the properties to the template context.
 
-To make this a little easier, we can use dataclasses.
+To make this a little more convenient, we can use [`dataclasses`](https://docs.python.org/3.12/library/dataclasses.html#module-dataclasses).
 
 ```python
 # my_app/components.py
@@ -469,8 +472,12 @@ class WelcomePanel(Component):
 ```
 
 With dataclasses we define the name and type of the properties we want to pass to the component in the class definition.
-Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be passed to the template context.
-The `asdict` function only  contains the properties defined in the dataclass, so we don't have to worry about accidentally passing other properties to the template.
+Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be directly as the template context.
+
+The `asdict` function only adds keys to the dictionary that were defined as the properties defined in the dataclass.
+In the above example, the dictionary returned by `asdict` would only contain the `name` key.
+It would not contain the `template_name` key, because that is set on the class with a value but without a type annotation.
+If you were to add the type annotation, then the `template_name` key would also be included in the dictionary returned by `asdict`.
 
 ### Special constructor methods
 
