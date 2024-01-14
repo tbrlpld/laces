@@ -1,8 +1,11 @@
 from django.shortcuts import render
 
+from laces.components import MediaContainer
 from laces.test.example.components import (
     BlockquoteComponent,
     DataclassAsDictContextComponent,
+    FooterWithMediaComponent,
+    HeaderWithMediaComponent,
     HeadingComponent,
     ListSectionComponent,
     MediaDefiningComponent,
@@ -39,6 +42,12 @@ def kitchen_sink(request):
         ],
     )
     media_defining_component = MediaDefiningComponent()
+    components_with_media = MediaContainer(
+        [
+            HeaderWithMediaComponent(),
+            FooterWithMediaComponent(),
+        ]
+    )
 
     return render(
         request,
@@ -55,5 +64,6 @@ def kitchen_sink(request):
             "section_with_heading_and_paragraph": section_with_heading_and_paragraph,
             "list_section": list_section,
             "media_defining_component": media_defining_component,
+            "components_with_media": components_with_media,
         },
     )

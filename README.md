@@ -399,11 +399,13 @@ from my_app.components import (
 
 def home(request):
     components = MediaContainer(
-        Header(),
-        Sidebar(),
-        WelcomePanel(),
-        Dashboard(),
-        Footer(),
+        [
+            Header(),
+            Sidebar(),
+            WelcomePanel(),
+            Dashboard(),
+            Footer(),
+        ]
     )
 
     return render(
