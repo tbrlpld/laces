@@ -169,3 +169,21 @@ class MediaDefiningComponent(Component):
     class Media:
         css = {"all": ("component.css",)}
         js = ("component.js",)
+
+
+class HeaderWithMediaComponent(Component):
+    def render_html(self, parent_context=None):
+        return format_html("<header>Header with Media</header>")
+
+    class Media:
+        css = {"all": ("header.css",)}
+        js = ("header.js", "common.js")
+
+
+class FooterWithMediaComponent(Component):
+    def render_html(self, parent_context=None):
+        return format_html("<footer>Footer with Media</footer>")
+
+    class Media:
+        css = {"all": ("footer.css",)}
+        js = ("footer.js", "common.js")

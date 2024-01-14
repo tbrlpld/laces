@@ -60,3 +60,20 @@ class TestKitchenSink(TestCase):
             response_html,
         )
         self.assertInHTML('<script src="/static/component.js"></script>', response_html)
+        self.assertInHTML("<header>Header with Media</header>", response_html)
+        self.assertInHTML("<footer>Footer with Media</footer>", response_html)
+        self.assertInHTML(
+            '<link href="/static/header.css" media="all" rel="stylesheet">',
+            response_html,
+        )
+        self.assertInHTML(
+            '<link href="/static/footer.css" media="all" rel="stylesheet">',
+            response_html,
+        )
+        self.assertInHTML('<script src="/static/header.js"></script>', response_html)
+        self.assertInHTML('<script src="/static/footer.js"></script>', response_html)
+        self.assertInHTML(
+            '<script src="/static/common.js"></script>',
+            response_html,
+            count=1,
+        )

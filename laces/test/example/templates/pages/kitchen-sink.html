@@ -4,6 +4,7 @@
 <head>
     <title>Kitchen Sink</title>
     {{ media_defining_component.media }}
+    {{ components_with_media.media }}
 </head>
 <body>
     {% component fixed_content_template %}
@@ -31,5 +32,8 @@
     {% component section_with_heading_and_paragraph %}
     {% component list_section %}
     {% component media_defining_component %}
+    {% for comp in components_with_media %}
+        {% component comp %}
+    {% endfor %}
 </body>
 </html>
