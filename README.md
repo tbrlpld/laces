@@ -445,6 +445,10 @@ It can be used to combine the `media` properties of any kind of objects that hav
 
 Below, we want so show a few more examples of how components can be used that were not covered in the ["Getting started" section](#getting-started) above.
 
+### Nesting components
+
+### Sets of components
+
 ### Using dataclasses
 
 Above, we showed how to [use class properties](#using-class-properties) to add data to the component's context.
@@ -479,11 +483,70 @@ In the above example, the dictionary returned by `asdict` would only contain the
 It would not contain the `template_name` key, because that is set on the class with a value but without a type annotation.
 If you were to add the type annotation, then the `template_name` key would also be included in the dictionary returned by `asdict`.
 
-### Special constructor methods
+### Custom constructor methods
 
-### Nesting components
+When a component has many properties, it can be a pain to pass each property to the constructor individually.
+This is especially true when the component is used in many places and the data preparation would need to be repeated in each use case.
+Custom constructor methods can help with that.
 
-### Sets of components
+In case of our `WelcomePanel` example, we might want to show some more user information, including a profile image and link to the user's profile page.
+We can add a `classmethod` that takes the user object and returns an instance of the component with all the data needed to render the component.
+We can also use this method to encapsulate the logic for generating additional data, such as the profile URL.
+
+```python
+# my_app/components.py
+
+from django import urls
+from dataclasses import dataclass, asdict
+
+from laces.components import Component
+
+
+@dataclass
+class WelcomePanel(Component):
+    template_name = "my_app/components/welcome.html"
+
+    first_name: str
+    last_name: str
+    profile_url: str
+    profile_image_url: str
+
+    @classmethod
+    def from_user(cls, user):
+        profile_url = urls.reverse("profile", kwargs={"pk": user.pk})
+        return cls(
+            first_name=user.first_name,
+            last_name=user.last_name,
+            profile_url=profile_url,
+            profile_image_url=user.profile.image.url,
+        )
+
+    def get_context_data(self, parent_context):
+        return asdict(self)
+```
+
+Now, we can instantiate the component in the view like so:
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+
+from my_app.components import WelcomePanel
+
+
+def home(request):
+    welcome = WelcomePanel.from_user(request.user)
+    return render(
+        request,
+        "my_app/home.html",
+        {"welcome": welcome},
+    )
+```
+
+The constructor method allows us to keep our view very simple and clean as all the data preparation is encapsulated in the component.
+
+As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can of course also be used without them.
 
 ## About Laces and components
 
