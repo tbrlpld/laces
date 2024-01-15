@@ -485,6 +485,14 @@ The child component already contains the data it needs and knows which template 
 </div>
 ```
 
+The nesting also provides us with a nice data structure we can test.
+
+```python
+dashboard = Dashboard(user=request.user)
+
+assert dashboard.welcome.name == request.user.first_name
+```
+
 ### Sets of components
 
 ### Using dataclasses
