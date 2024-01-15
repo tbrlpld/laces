@@ -447,6 +447,44 @@ Below, we want so show a few more examples of how components can be used that we
 
 ### Nesting components
 
+The combination of data and template that components provide becomes especially useful when components are nested.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    ...
+
+
+class Dashboard(Component):
+    template_name = "my_app/components/dashboard.html"
+
+    def __init__(self, user):
+        self.welcome = WelcomePanel(name=user.first_name)
+        ...
+
+    def get_context_data(self, parent_context):
+        return {"welcome": self.welcome}
+```
+
+The template of the "parent" component does not need to know anything about the "child" component, except for which template variable is a component.
+The child component already contains the data it needs and knows which template to use to render that data.
+
+```html+django
+{# my_app/templates/my_app/components/dashboard.html #}
+
+{% load laces %}
+
+<div class="dashboard">
+    {% component welcome %}
+
+    ...
+</div>
+```
+
 ### Sets of components
 
 ### Using dataclasses
