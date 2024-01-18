@@ -30,11 +30,6 @@ The purpose of this package is to make these tools available to other Django pro
 - [Discussions](https://github.com/tbrlpld/laces/discussions)
 - [Security](https://github.com/tbrlpld/laces/security)
 
-## Supported versions
-
-- Python >= 3.8
-- Django >= 3.2
-
 ## Getting started
 
 ### Installation
@@ -740,13 +735,20 @@ The constructor method allows us to keep our view very simple and clean as all t
 
 As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can of course also be used without them.
 
-## Why "Laces"?
+## About Laces and components
+
+### Why "Laces"?
 
 "Laces" is somewhat of a reference to the feature of tying data and templates together.
 The components are also "self-rendering", which could be a seen as "self-reliance", which relates to "bootstrapping".
 And, aren't "bootstraps" just a long kind of "(shoe)laces"?
 
 Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also taking a component focused approach to improve the experience when working with Django templates, but with a quite different way.
+
+### Supported versions
+
+- Python >= 3.8
+- Django >= 3.2
 
 ## Contributing
 
