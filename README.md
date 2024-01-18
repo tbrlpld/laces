@@ -746,7 +746,7 @@ As in the example above, custom constructor methods pair very well with the use 
 The components are also "self-rendering", which could be a seen as "self-reliance", which relates to "bootstrapping".
 And, aren't "bootstraps" just a long kind of "(shoe)laces"?
 
-Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also trying to improve the work with Django templates in a component focused fashion, but with a quite different approach.
+Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also taking a component focused approach to improve the experience when working with Django templates, but with a quite different way.
 
 ## Contributing
 
