@@ -13,6 +13,8 @@ Laces components provide a simple way to combine data (in the form of Python obj
 The components can then be simply rendered in any other template using the `{% component %}` template tag.
 That parent template does not need to know anything about the component's template or data.
 No need to receive, filter, restructure or pass any data to the component's template.
+Just let the component render itself.
+
 Template and data are tied together (sorry, not sorry 😅) in the component, and they can be passed around together.
 This becomes especially useful when components are nested — it allows us to avoid building the same nested structure twice (once in the data and again in the templates).
 
