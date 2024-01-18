@@ -738,7 +738,13 @@ The constructor method allows us to keep our view very simple and clean as all t
 
 As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can of course also be used without them.
 
-## About Laces and components
+## Why "Laces"?
+
+"Laces" is somewhat of a reference to the feature of tying data and templates together.
+The components are also "self-rendering", which could be a seen as "self-reliance", which relates to "bootstrapping".
+And, aren't "bootstraps" just a long kind of "(shoe)laces"?
+
+Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also trying to improve the work with Django templates in a component focused fashion, but with a quite different approach.
 
 ## Contributing
 
