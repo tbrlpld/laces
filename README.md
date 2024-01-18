@@ -24,9 +24,20 @@ The purpose of this package is to make these tools available to other Django pro
 
 ## Links
 
-- [Documentation](https://github.com/tbrlpld/laces/blob/main/README.md)
+- [Getting started](#getting-started)
+    - [Installation](#installation)
+    - [Creating components](#creating-components)
+    - [Passing context to the component template](#passing-context-to-the-component-template)
+    - [Using components in other templates](#using-components-in-other-templates)
+    - [Adding JavaScript and CSS assets to a component](#adding-javascript-and-css-assets-to-a-component)
+- [Patterns for using components](#patterns-for-using-components)
+  - [Nesting components](#nesting-components)
+  - [Nested groups of components](#nested-groups-of-components)
+  - [Container components](#container-components)
+  - [Using dataclasses](#using-dataclasses)
+- [About Laces and components](#about-laces-and-components)
+- [Contributing](#contributing)
 - [Changelog](https://github.com/tbrlpld/laces/blob/main/CHANGELOG.md)
-- [Contributing](https://github.com/tbrlpld/laces/blob/main/CONTRIBUTING.md)
 - [Discussions](https://github.com/tbrlpld/laces/discussions)
 - [Security](https://github.com/tbrlpld/laces/security)
 
