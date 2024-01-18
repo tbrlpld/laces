@@ -493,13 +493,155 @@ dashboard = Dashboard(user=request.user)
 assert dashboard.welcome.name == request.user.first_name
 ```
 
-### Sets of components
+### Nested groups of components
+
+The nesting of components is of course not limited to single instances.
+We can also nest groups of components.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class WelcomePanel(Component):
+    ...
+
+
+class UsagePanel(Component):
+    ...
+
+
+class TeamPanel(Component):
+    ...
+
+
+class Dashboard(Component):
+    template_name = "my_app/components/dashboard.html"
+
+    def __init__(self, user):
+        self.panels = [
+            WelcomePanel(name=user.first_name),
+            UsagePanel(user=user),
+            TeamPanel(groups=user.groups.all()),
+        ]
+        ...
+
+    def get_context_data(self, parent_context):
+        return {"panels": self.panels}
+```
+
+```html+django
+{# my_app/templates/my_app/components/dashboard.html #}
+
+{% load laces %}
+
+<div class="dashboard">
+    {% for panel in panels %}
+        {% component panel %}
+    {% endfor %}
+    ...
+</div>
+```
+
+### Container components
+
+The [above example](#nested-groups-of-components) is relatively static.
+The `Dashboard` component always contains the same panels.
+
+You could also imagine passing the child components in through the constructor.
+This would make your component into a dynamic container component.
+
+```python
+# my_app/components.py
+
+from laces.components import Component
+
+
+class Section(Component):
+    template_name = "my_app/components/section.html"
+
+    def __init__(self, children: list[Component]):
+        self.children = children
+        ...
+
+    def get_context_data(self, parent_context):
+        return {"children": self.children}
+
+
+class Heading(Component):
+    ...
+
+
+class Paragraph(Component):
+    ...
+
+
+class Image(Component):
+    ...
+```
+
+```html+django
+{# my_app/templates/my_app/components/section.html #}
+
+{% load laces %}
+<section>
+    {% for child in children %}
+        {% component child %}
+    {% endfor %}
+</section>
+```
+
+The above `Section` component can take any kind of component as children.
+The only thing that `Section` requires is that the children can be rendered with the `{% component %}` tag (which all components do).
+
+In the view, we can now instantiate the `Section` component with any children we want.
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+
+from my_app.components import (
+    Heading,
+    Image,
+    Paragraph,
+    Section,
+)
+
+
+def home(request):
+    content = Section(
+        children=[
+            Heading(...),
+            Paragraph(...),
+            Image(...),
+        ]
+    )
+
+    return render(
+        request,
+        "my_app/home.html",
+        {"content": content},
+    )
+```
+
+```html+django
+{# my_app/templates/my_app/home.html #}
+
+{% load laces %}
+
+<body>
+    {% component content %}
+    ...
+</body>
+```
 
 ### Using dataclasses
 
 Above, we showed how to [use class properties](#using-class-properties) to add data to the component's context.
 This is a very useful and common pattern.
-However, it is a bit verbose, especially when you have many properties directly pass the properties to the template context.
+However, it is a bit verbose, especially when you have many properties and directly pass the properties to the template context.
 
 To make this a little more convenient, we can use [`dataclasses`](https://docs.python.org/3.12/library/dataclasses.html#module-dataclasses).
 
