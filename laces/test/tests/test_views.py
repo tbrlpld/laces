@@ -2,6 +2,8 @@
 
 from http import HTTPStatus
 
+import django
+
 from django.test import RequestFactory, TestCase
 
 from laces.test.example.views import kitchen_sink
@@ -55,21 +57,39 @@ class TestKitchenSink(TestCase):
             response_html,
         )
         self.assertInHTML("<h1>Hello Media</h1>", response_html)
-        self.assertInHTML(
-            '<link href="/static/component.css" media="all" rel="stylesheet">',
-            response_html,
-        )
+        if django.VERSION < (4, 0):
+            # Before Django 4.0 the markup was including the (useless)
+            # `type="text/css"` attribute.
+            self.assertInHTML(
+                '<link href="/static/component.css" type="text/css" media="all" rel="stylesheet">',  # noqa: E501
+                response_html,
+            )
+        else:
+            self.assertInHTML(
+                '<link href="/static/component.css" media="all" rel="stylesheet">',
+                response_html,
+            )
         self.assertInHTML('<script src="/static/component.js"></script>', response_html)
         self.assertInHTML("<header>Header with Media</header>", response_html)
         self.assertInHTML("<footer>Footer with Media</footer>", response_html)
-        self.assertInHTML(
-            '<link href="/static/header.css" media="all" rel="stylesheet">',
-            response_html,
-        )
-        self.assertInHTML(
-            '<link href="/static/footer.css" media="all" rel="stylesheet">',
-            response_html,
-        )
+        if django.VERSION < (4, 0):
+            self.assertInHTML(
+                '<link href="/static/header.css" type="text/css" media="all" rel="stylesheet">',  # noqa: E501
+                response_html,
+            )
+            self.assertInHTML(
+                '<link href="/static/footer.css" type="text/css" media="all" rel="stylesheet">',  # noqa: E501
+                response_html,
+            )
+        else:
+            self.assertInHTML(
+                '<link href="/static/header.css" media="all" rel="stylesheet">',
+                response_html,
+            )
+            self.assertInHTML(
+                '<link href="/static/footer.css" media="all" rel="stylesheet">',
+                response_html,
+            )
         self.assertInHTML('<script src="/static/header.js"></script>', response_html)
         self.assertInHTML('<script src="/static/footer.js"></script>', response_html)
         self.assertInHTML(
