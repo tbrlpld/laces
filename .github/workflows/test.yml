@@ -46,7 +46,7 @@ jobs:
           python -m pip install --upgrade pip setuptools wheel
           python -m pip install .[ci]
       - name: Test
-        run: tox -vv
+        run: tox
         env:
           DB: sqlite
       - name: Upload coverage reports to Codecov
