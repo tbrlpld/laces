@@ -3,6 +3,7 @@
 [![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 [![PyPI version](https://badge.fury.io/py/laces.svg)](https://badge.fury.io/py/laces)
 [![laces CI](https://github.com/tbrlpld/laces/actions/workflows/test.yml/badge.svg)](https://github.com/tbrlpld/laces/actions/workflows/test.yml)
+[![codecov](https://codecov.io/gh/tbrlpld/laces/graph/badge.svg?token=FMHEHNVPSX)](https://codecov.io/gh/tbrlpld/laces)
 
 ---
 
@@ -50,8 +51,7 @@ That's it.
 
 ### Creating components
 
-The preferred way to create a component is to define a subclass of `laces.components.Component` and specify a `template_name` attribute on it.
-The rendered template will then be used as the component's HTML representation:
+The simplest way to create a component is to define a subclass of `laces.components.Component` and specify a `template_name` attribute on it.
 
 ```python
 # my_app/components.py
@@ -60,19 +60,54 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
-
-
-my_welcome_panel = WelcomePanel()
+    template_name = "my_app/components/welcome.html"
 ```
 
 ```html+django
-{# my_app/templates/my_app/panels/welcome.html #}
+{# my_app/templates/my_app/components/welcome.html #}
 
 <h1>Welcome to my app!</h1>
 ```
 
-For simple cases that don't require a template, the `render_html` method can be overridden instead:
+With the above in place, you then instantiate the component (e.g. in a view) and pass it to another template for rendering.
+
+```python
+# my_app/views.py
+
+from django.shortcuts import render
+
+from my_app.components import WelcomePanel
+
+
+def home(request):
+    welcome = WelcomePanel()  # <-- Instantiates the component
+    return render(
+        request,
+        "my_app/home.html",
+        {"welcome": welcome},  # <-- Passes the component to the view template
+    )
+```
+
+In the view template, we `load` the `laces` tag library and use the `component` tag to render the component.
+
+```html+django
+{# my_app/templates/my_app/home.html #}
+
+{% load laces %}
+{% component welcome %}
+```
+
+That's it!
+The component's template will be rendered right there in the view template.
+
+Of course, this is a very simple example and not much more useful than using a simple `include`.
+We will go into some more useful use cases below.
+
+### Without a template
+
+Before we dig deeper into the component use cases, just a quick note that components don't have to have a template.
+For simple cases that don't require a template, the `render_html` method can be overridden instead.
+If the return value contains HTML, it should be marked as safe using `django.utils.html.format_html` or `django.utils.safestring.mark_safe`.
 
 ```python
 # my_app/components.py
@@ -82,11 +117,11 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    def render_html(self, parent_context):
-        return format_html("<h1>{}</h1>", "Welcome to my app!")
+    def render_html(self, parent_context=None):
+        return format_html("<h1>Welcome to my app!</h1>")
 ```
 
-### Passing context to the template
+### Passing context to the component template
 
 The `get_context_data` method can be overridden to pass context variables to the template.
 As with `render_html`, this receives the context dictionary from the calling template.
@@ -98,7 +133,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
+    template_name = "my_app/components/welcome.html"
 
     def get_context_data(self, parent_context):
         context = super().get_context_data(parent_context)
@@ -107,7 +142,7 @@ class WelcomePanel(Component):
 ```
 
 ```html+django
-{# my_app/templates/my_app/panels/welcome.html #}
+{# my_app/templates/my_app/components/welcome.html #}
 
 <h1>Welcome to my app, {{ username }}!</h1>
 ```
@@ -123,7 +158,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    template_name = "my_app/panels/welcome.html"
+    template_name = "my_app/components/welcome.html"
 
     class Media:
         css = {"all": ("my_app/css/welcome-panel.css",)}
@@ -134,7 +169,7 @@ class WelcomePanel(Component):
 The `laces` tag library provides a `{% component %}` tag for including components on a template.
 This takes care of passing context variables from the calling template to the component (which would not be the case for a basic `{{ ... }}` variable tag).
 
-For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/welcome.html`.
+For example, given the view passes an instance of `WelcomePanel` to the context of `my_app/home.html`.
 
 ```python
 # my_app/views.py
@@ -144,45 +179,45 @@ from django.shortcuts import render
 from my_app.components import WelcomePanel
 
 
-def welcome_page(request):
-    panel = (WelcomePanel(),)
+def home(request):
+    welcome = WelcomePanel()
 
     return render(
         request,
-        "my_app/welcome.html",
+        "my_app/home.html",
         {
-            "panel": panel,
+            "welcome": welcome,
         },
     )
 ```
 
-The template `my_app/templates/my_app/welcome.html` could render the panel as follows:
+The template `my_app/templates/my_app/home.html` could render the welcome panel component as follows:
 
 ```html+django
-{# my_app/templates/my_app/welcome.html #}
+{# my_app/templates/my_app/home.html #}
 
 {% load laces %}
-{% component panel %}
+{% component welcome %}
 ```
 
 You can pass additional context variables to the component using the keyword `with`:
 
 ```html+django
-{% component panel with username=request.user.username %}
+{% component welcome with username=request.user.username %}
 ```
 
 To render the component with only the variables provided (and no others from the calling template's context), use `only`:
 
 ```html+django
-{% component panel with username=request.user.username only %}
+{% component welcome with username=request.user.username only %}
 ```
 
 To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
 
 ```html+django
-{% component panel as panel_html %}
+{% component welcome as welcome_html %}
 
-{{ panel_html }}
+{{ welcome_html }}
 ```
 
 Note that it is your template's responsibility to output any media declarations defined on the components.
@@ -197,20 +232,20 @@ from django.shortcuts import render
 from my_app.components import WelcomePanel
 
 
-def welcome_page(request):
-    panels = [
+def home(request):
+    components = [
         WelcomePanel(),
     ]
 
     media = Media()
-    for panel in panels:
-        media += panel.media
+    for component in components:
+        media += component.media
 
     render(
         request,
-        "my_app/welcome.html",
+        "my_app/home.html",
         {
-            "panels": panels,
+            "components": components,
             "media": media,
         },
     )
@@ -218,7 +253,7 @@ def welcome_page(request):
 
 
 ```html+django
-{# my_app/templates/my_app/welcome.html #}
+{# my_app/templates/my_app/home.html #}
 
 {% load laces %}
 
@@ -227,8 +262,8 @@ def welcome_page(request):
     {{ media.css }}
 <head>
 <body>
-    {% for panel in panels %}
-        {% component panel %}
+    {% for comp in components %}
+        {% component comp %}
     {% endfor %}
 </body>
 ```
@@ -302,6 +337,25 @@ $ tox -e interactive
 ```
 
 You can now visit `http://localhost:8020/`.
+
+#### Testing with coverage
+
+To run tests with coverage, use:
+
+```sh
+$ coverage run ./testmanage.py test
+```
+
+Then see the results with
+
+```sh
+$ coverage report
+```
+
+When the tests are run with `tox`, the coverage report is combined for all environments.
+This is done by using the `--append` flag when running coverage in `tox`.
+This means it will also include previous results.
+To get a clean report, you can run `coverage erase` before running `tox`.
 
 ### Python version management
 
