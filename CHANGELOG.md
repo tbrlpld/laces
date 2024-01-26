@@ -9,12 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add more tests and example usage.
-- Extended documentation in [README](./README.md).
+- Add more tests and example usage. ([#6](https://github.com/tbrlpld/laces/pull/6))
+- Extended documentation in [README](./README.md). ([#7](https://github.com/tbrlpld/laces/pull/7))
 
 ### Changed
 
-- ...
+- Fixed tox configuration to actually run Django 3.2 in CI. Tox also uses the "testing" dependencies without the need to duplicate them in the `tox.ini`. ([#7](https://github.com/tbrlpld/laces/pull/7))
 
 ### Removed
 
