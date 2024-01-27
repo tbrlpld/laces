@@ -38,7 +38,7 @@ class TestComponentTag(SimpleTestCase):
         return self.parent_template.render(Context(context))
 
     def assertRenderHTMLCalledWith(self, context: dict):
-        self.assertTrue(self.component.render_html.called_with(Context(context)))
+        self.component.render_html.assert_called_with(Context(context))
 
     def test_render_html_return_in_parent_template(self):
         self.assertEqual(self.component.render_html(), "Rendered HTML")
