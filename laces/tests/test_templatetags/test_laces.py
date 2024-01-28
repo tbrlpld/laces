@@ -106,9 +106,7 @@ class TestComponentTag(SimpleTestCase):
         self.render_parent_template_with_context({"my_component": self.component})
 
         self.assertTrue(self.component.render_html.called)
-        # The component itself is not included in the context that is passed to the
-        # `render_html` method.
-        self.assertRenderHTMLCalledWith({})
+        self.assertRenderHTMLCalledWith({"my_component": self.component})
 
     def test_render_html_parent_context_when_other_variable_in_context(self):
         self.set_parent_template("{% component my_component %}")
@@ -120,7 +118,12 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
     def test_render_html_parent_context_when_with_block_sets_extra_context(self):
         self.set_parent_template(
@@ -129,14 +132,24 @@ class TestComponentTag(SimpleTestCase):
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
     def test_render_html_parent_context_when_with_keyword_sets_extra_context(self):
         self.set_parent_template("{% component my_component with test='something' %}")
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
     def test_render_html_parent_context_when_with_only_keyword_limits_extra_context(
         self,
@@ -152,10 +165,10 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        # The `other` variable from the parent's rendering context is not included in
-        # the context that is passed to the `render_html` method. The `test` variable,
-        # that was defined with the with-keyword, is present though. Both of these
-        # effects come form the `only` keyword.
+        # The `my_component` and `other` variables from the parent's rendering context
+        # are not included in the context that is passed to the `render_html` method.
+        # The `test` variable, that was defined with the with-keyword, is present
+        # though. Both of these effects come form the `only` keyword.
         self.assertRenderHTMLCalledWith({"test": "nothing else"})
 
     def test_render_html_parent_context_when_with_block_overrides_context(self):
@@ -170,7 +183,13 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                # The `test` variable is overriden by the `with` block.
+                "test": "something else",
+            }
+        )
 
     def test_render_html_parent_context_when_with_keyword_overrides_context(self):
         self.set_parent_template(
@@ -184,7 +203,13 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                # The `test` variable is overriden by the `with` keyword.
+                "test": "something else",
+            },
+        )
 
     def test_render_html_parent_context_when_with_keyword_overrides_with_block(self):
         self.set_parent_template(
@@ -197,7 +222,12 @@ class TestComponentTag(SimpleTestCase):
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertRenderHTMLCalledWith(
+            {
+                "my_component": self.component,
+                "test": "something else",
+            }
+        )
 
     def test_fallback_render_method_arg_true_and_object_with_render_method(self):
         # -----------------------------------------------------------------------------
