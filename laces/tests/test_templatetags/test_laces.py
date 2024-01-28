@@ -28,7 +28,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.component = ExampleComponent()
         # Using a mock to be able to check if the `render_html` method is called.
-        self.component.render_html: Mock = Mock(return_value="Rendered HTML")
+        self.component.render_html = Mock(return_value="Rendered HTML")
 
     def set_parent_template(self, template_string):
         template_string = "{% load laces %}" + template_string
@@ -38,7 +38,7 @@ class TestComponentTag(SimpleTestCase):
         return self.parent_template.render(Context(context))
 
     def assertRenderHTMLCalledWith(self, context: dict):
-        self.assertTrue(self.component.render_html.called_with(Context(context)))
+        self.component.render_html.assert_called_with(Context(context))
 
     def test_render_html_return_in_parent_template(self):
         self.assertEqual(self.component.render_html(), "Rendered HTML")
