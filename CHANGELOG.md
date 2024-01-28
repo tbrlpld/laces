@@ -1,4 +1,4 @@
-# laces Changelog
+# Laces Changelog
 
 All notable changes to this project will be documented in this file.
 
@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add more tests and example usage.
+- Add more tests and example usage. ([#6](https://github.com/tbrlpld/laces/pull/6))
 
 ### Changed
 
-- ...
+- Fixed tox configuration to actually run Django 3.2 in CI. Tox also uses the "testing" dependencies without the need to duplicate them in the `tox.ini`. ([#10](https://github.com/tbrlpld/laces/pull/10))
+- Bumped GitHub Actions to latest versions. This removes a reliance on the now deprecated Node 16. ([#10](https://github.com/tbrlpld/laces/pull/10))
 
 ### Removed
 
