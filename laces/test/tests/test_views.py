@@ -1,4 +1,5 @@
 """Tests for the example views that demonstrate the use of components."""
+
 from http import HTTPStatus
 
 from django.test import RequestFactory, TestCase
@@ -22,7 +23,9 @@ class TestKitchenSink(TestCase):
         self.assertInHTML("<h1>Hello Carol's self</h1>", response_html)
         self.assertInHTML("<h1>Hello Charlie</h1>", response_html)
         self.assertInHTML("<h1>Hello Dan</h1>", response_html)
-        self.assertInHTML("<h1>Hello Erin</h1>", response_html)
+        self.assertInHTML("<h1>Hello Erin Keyword</h1>", response_html)
+        self.assertInHTML("<h1>Hello Erin Block</h1>", response_html)
+        self.assertInHTML("<h1>Hello Erin Keyword over Block</h1>", response_html)
         self.assertInHTML(
             """
             <section>

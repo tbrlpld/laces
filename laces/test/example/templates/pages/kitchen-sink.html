@@ -11,13 +11,22 @@
     {% component passes_instance_attr_name %}
     {% component passes_self %}
     {% component dataclass_attr_name %}
+
+    {% comment %}
+        The component output the name received from the parent context.
+        The parent context should already have a `name` variable defined.
+        That defined variable is used in the first case.
+        In the other cases, we override what's directly available in the parent context by using the features of the template tag.
+    {% endcomment %}
     {% component passes_name_from_parent_context %}
-    {% with name="Erin" %}
-        {% comment %}
-            Override parent context through the with-block. The same component receives a different parent context.
-        {% endcomment %}
+    {% component passes_name_from_parent_context with name="Erin Keyword" %}
+    {% with name="Erin Block" %}
         {% component passes_name_from_parent_context %}
     {% endwith %}
+    {% with name="Erin Block" %}
+        {% component passes_name_from_parent_context with name="Erin Keyword over Block" %}
+    {% endwith %}
+
     {% component section_with_heading_and_paragraph %}
     {% component list_section %}
 </body>
