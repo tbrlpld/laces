@@ -1,8 +1,9 @@
 import os
 import random
 
+from copy import deepcopy
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock
 
 from django.conf import settings
 from django.template import Context, Template, TemplateSyntaxError
@@ -10,6 +11,30 @@ from django.test import SimpleTestCase
 from django.utils.html import format_html
 
 from laces.components import Component
+
+
+class CopyingMock(MagicMock):
+    """
+    A mock that stores copies of the call arguments.
+
+    The default behaviour of a mock is to store references to the call arguments. This
+    means that if the call arguments are mutable, then the stored call arguments will
+    change when the call arguments are changed. This is not always desirable. E.g. the
+    `django.template.Context` class is mutable and the different layers are popped off
+    the context during rendering. This makes it hard to inspect the context that was
+    passed to a mock.
+
+    This variant of the mock stores copies of the call arguments. This means that the
+    stored call arguments will not change when the actual call arguments are changed.
+
+    This override is based on the Python docs:
+    https://docs.python.org/3/library/unittest.mock-examples.html#coping-with-mutable-arguments  # noqa: E501
+    """
+
+    def __call__(self, /, *args, **kwargs):
+        args = deepcopy(args)
+        kwargs = deepcopy(kwargs)
+        return super().__call__(*args, **kwargs)
 
 
 class TestComponentTag(SimpleTestCase):
@@ -28,7 +53,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.component = ExampleComponent()
         # Using a mock to be able to check if the `render_html` method is called.
-        self.component.render_html: Mock = Mock(return_value="Rendered HTML")
+        self.component.render_html = CopyingMock(return_value="Rendered HTML")
 
     def set_parent_template(self, template_string):
         template_string = "{% load laces %}" + template_string
@@ -37,8 +62,26 @@ class TestComponentTag(SimpleTestCase):
     def render_parent_template_with_context(self, context: dict):
         return self.parent_template.render(Context(context))
 
-    def assertRenderHTMLCalledWith(self, context: dict):
-        self.assertTrue(self.component.render_html.called_with(Context(context)))
+    def assertVariablesAvailableInRenderHTMLParentContext(
+        self,
+        expected_context_variables: dict,
+    ):
+        """
+        Assert that the variables defined in the given dictionary are available in the
+        parent context of the `render_html` method.
+
+        Keys and values are checked.
+        """
+        actual_context = self.component.render_html.call_args.args[0]
+
+        for key, value in expected_context_variables.items():
+            self.assertIn(key, actual_context)
+            actual_value = actual_context[key]
+            if not isinstance(actual_value, Component):
+                # Because we are inspecting copies of the context variables, we can
+                # not easily compare the components by identity. For now, we just
+                # skip components.
+                self.assertEqual(actual_value, value)
 
     def test_render_html_return_in_parent_template(self):
         self.assertEqual(self.component.render_html(), "Rendered HTML")
@@ -105,10 +148,9 @@ class TestComponentTag(SimpleTestCase):
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertTrue(self.component.render_html.called)
-        # The component itself is not included in the context that is passed to the
-        # `render_html` method.
-        self.assertRenderHTMLCalledWith({})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {"my_component": self.component}
+        )
 
     def test_render_html_parent_context_when_other_variable_in_context(self):
         self.set_parent_template("{% component my_component %}")
@@ -120,23 +162,40 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
-    def test_render_html_parent_context_when_with_block_sets_extra_context(self):
+    def test_render_html_parent_context_when_with_block_sets_extra_context(
+        self,
+    ):
         self.set_parent_template(
             "{% with test='something' %}{% component my_component %}{% endwith %}"
         )
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
     def test_render_html_parent_context_when_with_keyword_sets_extra_context(self):
         self.set_parent_template("{% component my_component with test='something' %}")
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                "test": "something",
+            }
+        )
 
     def test_render_html_parent_context_when_with_only_keyword_limits_extra_context(
         self,
@@ -152,11 +211,11 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        # The `other` variable from the parent's rendering context is not included in
-        # the context that is passed to the `render_html` method. The `test` variable,
-        # that was defined with the with-keyword, is present though. Both of these
-        # effects come form the `only` keyword.
-        self.assertRenderHTMLCalledWith({"test": "nothing else"})
+        # The `my_component` and `other` variables from the parent's rendering context
+        # are not included in the context that is passed to the `render_html` method.
+        # The `test` variable, that was defined with the with-keyword, is present
+        # though. Both of these effects come form the `only` keyword.
+        self.assertVariablesAvailableInRenderHTMLParentContext({"test": "nothing else"})
 
     def test_render_html_parent_context_when_with_block_overrides_context(self):
         self.set_parent_template(
@@ -170,7 +229,13 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                # The `test` variable is overriden by the `with` block.
+                "test": "something else",
+            }
+        )
 
     def test_render_html_parent_context_when_with_keyword_overrides_context(self):
         self.set_parent_template(
@@ -184,7 +249,13 @@ class TestComponentTag(SimpleTestCase):
             }
         )
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                # The `test` variable is overriden by the `with` keyword.
+                "test": "something else",
+            },
+        )
 
     def test_render_html_parent_context_when_with_keyword_overrides_with_block(self):
         self.set_parent_template(
@@ -197,7 +268,12 @@ class TestComponentTag(SimpleTestCase):
 
         self.render_parent_template_with_context({"my_component": self.component})
 
-        self.assertRenderHTMLCalledWith({"test": "something else"})
+        self.assertVariablesAvailableInRenderHTMLParentContext(
+            {
+                "my_component": self.component,
+                "test": "something else",
+            }
+        )
 
     def test_fallback_render_method_arg_true_and_object_with_render_method(self):
         # -----------------------------------------------------------------------------

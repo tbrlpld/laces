@@ -1,0 +1,13 @@
+{% load laces %}
+<html>
+<body>
+    {% component my_component %}
+    {% component my_component with name="Keyword" %}
+    {% with name="Block" %}
+        {% component my_component  %}
+    {% endwith %}
+    {% with name="Block" %}
+        {% component my_component with name="Keyword over block"  %}
+    {% endwith %}
+</body>
+</html>
