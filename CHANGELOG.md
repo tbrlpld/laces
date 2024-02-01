@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add more tests and example usage. ([#6](https://github.com/tbrlpld/laces/pull/6))
+- Added more tests and example usage. ([#6](https://github.com/tbrlpld/laces/pull/6))
 - Added support for Python 3.12 and Django 5.0. ([#15](https://github.com/tbrlpld/laces/pull/15))
 - Added type hints and type checking with `mypy` in CI. ([#18](https://github.com/tbrlpld/laces/pull/18))
 
