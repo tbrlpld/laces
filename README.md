@@ -285,7 +285,7 @@ With your preferred virtualenv activated, install testing dependencies:
 
 ```sh
 $ python -m pip install --upgrade pip>=21.3
-$ python -m pip install -e '.[testing]' -U
+$ python -m pip install -e '.[dev]' -U
 ```
 
 #### Using flit
@@ -340,22 +340,41 @@ You can now visit `http://localhost:8020/`.
 
 #### Testing with coverage
 
-To run tests with coverage, use:
+`tox` is configured to run tests with coverage.
+The coverage report is combined for all environments.
+This is done by using the `--append` flag when running coverage in `tox`.
+This means it will also include previous results.
 
-```sh
-$ coverage run ./testmanage.py test
-```
-
-Then see the results with
+You can see the coverage report by running:
 
 ```sh
 $ coverage report
 ```
 
-When the tests are run with `tox`, the coverage report is combined for all environments.
-This is done by using the `--append` flag when running coverage in `tox`.
-This means it will also include previous results.
 To get a clean report, you can run `coverage erase` before running `tox`.
+
+#### Running tests without tox
+
+If you want to run tests without `tox`, you can use the `testmanage.py` script.
+This script is a wrapper around Django's `manage.py` and will run tests with the correct settings.
+
+To make this work, you need to have the `testing` dependencies installed.
+
+```sh
+$ python -m pip install -e '.[testing]' -U
+```
+
+Then you can run tests with:
+
+```sh
+$ ./testmanage.py test
+````
+
+To run tests with coverage, use:
+
+```sh
+$ coverage run ./testmanage.py test
+```
 
 ### Python version management
 
