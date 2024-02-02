@@ -32,16 +32,14 @@ repos:
         language: system
         types: [python]
         files: \.(py)$
+      - id: flake8
+        name: flake8
+        entry: flake8
+        language: system
+        types: [python]
+        files: \.(py)$
   - repo: https://github.com/adamchainz/blacken-docs
     rev: 1.16.0
     hooks:
       - id: blacken-docs
         additional_dependencies: [black==23.9.1]
-  - repo: https://github.com/pycqa/flake8
-    # flake8 config is in setup.cfg
-    rev: 6.1.0
-    hooks:
-      - id: flake8
-        additional_dependencies:
-          - flake8-bugbear
-          - flake8-comprehensions
