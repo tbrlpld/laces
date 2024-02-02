@@ -465,8 +465,7 @@ The combination of data and template that components provide becomes especially 
 from laces.components import Component
 
 
-class WelcomePanel(Component):
-    ...
+class WelcomePanel(Component): ...
 
 
 class Dashboard(Component):
@@ -514,16 +513,13 @@ We can also nest groups of components.
 from laces.components import Component
 
 
-class WelcomePanel(Component):
-    ...
+class WelcomePanel(Component): ...
 
 
-class UsagePanel(Component):
-    ...
+class UsagePanel(Component): ...
 
 
-class TeamPanel(Component):
-    ...
+class TeamPanel(Component): ...
 
 
 class Dashboard(Component):
@@ -579,16 +575,13 @@ class Section(Component):
         return {"children": self.children}
 
 
-class Heading(Component):
-    ...
+class Heading(Component): ...
 
 
-class Paragraph(Component):
-    ...
+class Paragraph(Component): ...
 
 
-class Image(Component):
-    ...
+class Image(Component): ...
 ```
 
 ```html+django
