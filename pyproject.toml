@@ -50,6 +50,7 @@ dev = [
     # Linting etc.
     "pre-commit==3.4.0",
     "black==24.1.1",
+    "isort==5.13.2",
 ]
 
 [project.urls]
