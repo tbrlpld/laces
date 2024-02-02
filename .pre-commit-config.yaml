@@ -25,6 +25,11 @@ repos:
         entry: black
         language: system
         types: [python]
+      - id: blacken-docs
+        name: blacken-docs
+        entry: blacken-docs
+        language: system
+        files: '\.(rst|md|markdown|py|tex)$'
       - id: isort
         name: isort
         entry: isort
@@ -35,8 +40,3 @@ repos:
         entry: flake8
         language: system
         types: [python]
-  - repo: https://github.com/adamchainz/blacken-docs
-    rev: 1.16.0
-    hooks:
-      - id: blacken-docs
-        additional_dependencies: [black==23.9.1]
