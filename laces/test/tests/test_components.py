@@ -4,6 +4,7 @@ Tests for the example components.
 These tests are very basic and only ensure that the examples are configured as
 desired. More thorough tests can be found in the `laces.tests.test_components` module.
 """
+
 from django.test import SimpleTestCase
 
 from laces.test.example.components import (
