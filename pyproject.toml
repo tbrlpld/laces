@@ -35,15 +35,26 @@ dependencies = [
 [project.optional-dependencies]
 testing = [
     "dj-database-url==2.1.0",
-    "pre-commit==3.4.0",
+    # Running tests with coverage inside the tox test environment.
     "coverage==7.3.4",
 ]
-ci = [
+dev = [
     "tox==4.12.1",
     "tox-gh-actions==3.2.0",
     # Allow use of pyenv for virtual environments. To enable you need to set `VIRTUALENV_DISCOVERY=pyenv` in the shell.
     # This is useful to help tox find the correct python version when using pyenv.
-    "virtualenv-pyenv==0.4.0"
+    "virtualenv-pyenv==0.4.0",
+    # This is to have coverage available in the development environment.
+    # It's not great that it's duplicated, but I can't find a way to make it work with tox otherwise.
+    "coverage==7.3.4",
+    # Linting etc.
+    "pre-commit==3.4.0",
+    "black==24.1.1",
+    "blacken-docs==1.16.0",
+    "isort==5.13.2",
+    "flake8==7.0.0",
+    "flake8-bugbear",
+    "flake8-comprehensions",
 ]
 
 [project.urls]

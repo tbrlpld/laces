@@ -18,27 +18,25 @@ repos:
         args: ['--unsafe']
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 23.9.1
+  - repo: local
     hooks:
       - id: black
-        language_version: python3
-        args: ['--target-version', 'py38']
-  - repo: https://github.com/adamchainz/blacken-docs
-    rev: 1.16.0
-    hooks:
+        name: black
+        entry: black
+        language: system
+        types: [python]
       - id: blacken-docs
-        additional_dependencies: [black==23.9.1]
-  - repo: https://github.com/pycqa/isort
-    # isort config is in setup.cfg
-    rev: 5.12.0
-    hooks:
+        name: blacken-docs
+        entry: blacken-docs
+        language: system
+        files: '\.(rst|md|markdown|py|tex)$'
       - id: isort
-  - repo: https://github.com/pycqa/flake8
-    # flake8 config is in setup.cfg
-    rev: 6.1.0
-    hooks:
+        name: isort
+        entry: isort
+        language: system
+        types: [python]
       - id: flake8
-        additional_dependencies:
-          - flake8-bugbear
-          - flake8-comprehensions
+        name: flake8
+        entry: flake8
+        language: system
+        types: [python]

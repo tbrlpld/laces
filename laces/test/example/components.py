@@ -4,6 +4,7 @@ Examples of how components might be defined.
 This is unlikely to be an exhaustive list of examples, but it should be enough to
 demonstrate the basic concepts of how components work.
 """
+
 from dataclasses import asdict, dataclass
 
 from django.utils.html import format_html
