@@ -18,6 +18,8 @@ class Component(metaclass=MediaDefiningClass):
     See also: https://docs.djangoproject.com/en/4.2/topics/forms/media/
     """
 
+    template_name: str
+
     def render_html(
         self,
         parent_context: Optional[Union[Context, dict[str, Any]]] = None,
