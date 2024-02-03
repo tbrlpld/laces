@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Any, Optional, Protocol, Union
+from typing import TYPE_CHECKING, List, Protocol, Union
 
 from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
@@ -6,6 +6,8 @@ from django.template.loader import get_template
 
 
 if TYPE_CHECKING:
+    from typing import Any, Optional
+
     from django.utils.safestring import SafeString
 
 
@@ -26,7 +28,7 @@ class Component(metaclass=MediaDefiningClass):
 
     def render_html(
         self,
-        parent_context: Optional[Union[Context, dict[str, Any]]] = None,
+        parent_context: "Optional[Union[Context, dict[str, Any]]]" = None,
     ) -> "SafeString":
         """
         Return string representation of the object.
@@ -50,12 +52,12 @@ class Component(metaclass=MediaDefiningClass):
 
     def get_context_data(
         self,
-        parent_context: Union[Context, dict[str, Any]],
-    ) -> Union[Context, dict[str, Any]]:
+        parent_context: "Union[Context, dict[str, Any]]",
+    ) -> "Union[Context, dict[str, Any]]":
         return {}
 
 
-class MediaContainer(list["HasMediaProperty"]):
+class MediaContainer(List["HasMediaProperty"]):
     """
     A list that provides a `media` property that combines the media definitions
     of its members.
@@ -91,7 +93,7 @@ class MediaContainer(list["HasMediaProperty"]):
 class HasRenderHtmlMethod(Protocol):
     def render_html(  # noqa: E704
         self,
-        parent_context: Optional[Union[Context, dict[str, Any]]],
+        parent_context: "Optional[Union[Context, dict[str, Any]]]",
     ) -> "SafeString": ...
 
 
