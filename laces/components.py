@@ -1,8 +1,12 @@
-from typing import Any, Optional, Protocol, Union
+from typing import TYPE_CHECKING, Any, Optional, Protocol, Union
 
 from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
 from django.template.loader import get_template
+
+
+if TYPE_CHECKING:
+    from django.utils.safestring import SafeString
 
 
 class Component(metaclass=MediaDefiningClass):
@@ -23,7 +27,7 @@ class Component(metaclass=MediaDefiningClass):
     def render_html(
         self,
         parent_context: Optional[Union[Context, dict[str, Any]]] = None,
-    ) -> str:
+    ) -> "SafeString":
         """
         Return string representation of the object.
 
@@ -82,6 +86,22 @@ class MediaContainer(list["HasMediaProperty"]):
         for item in self:
             media += item.media
         return media
+
+
+class HasRenderHtmlMethod(Protocol):
+    def render_html(  # noqa: E704
+        self,
+        parent_context: Optional[Union[Context, dict[str, Any]]],
+    ) -> "SafeString": ...
+
+
+class HasRenderMethod(Protocol):
+    def render(  # noqa: E704
+        self,
+    ) -> "SafeString": ...
+
+
+Renderable = Union[HasRenderHtmlMethod, HasRenderMethod]
 
 
 class HasMediaProperty(Protocol):

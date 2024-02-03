@@ -1,6 +1,17 @@
+from typing import TYPE_CHECKING
+
 from django import template
 from django.template.base import token_kwargs
 from django.utils.html import conditional_escape
+from django.utils.safestring import SafeString
+
+
+if TYPE_CHECKING:
+    from typing import Optional
+
+    from django.template.base import FilterExpression, Parser, Token
+
+    from laces.components import Renderable
 
 
 register = template.library.Library()
@@ -16,19 +27,19 @@ class ComponentNode(template.Node):
 
     def __init__(
         self,
-        component,
-        extra_context=None,
-        isolated_context=False,
-        fallback_render_method=None,
-        target_var=None,
-    ):
+        component: "FilterExpression",
+        extra_context: "Optional[dict[str, FilterExpression]]" = None,
+        isolated_context: bool = False,
+        fallback_render_method: "Optional[FilterExpression]" = None,
+        target_var: "Optional[str]" = None,
+    ) -> None:
         self.component = component
         self.extra_context = extra_context or {}
         self.isolated_context = isolated_context
         self.fallback_render_method = fallback_render_method
         self.target_var = target_var
 
-    def render(self, context: template.Context) -> str:
+    def render(self, context: template.Context) -> "SafeString":
         """
         Render the ComponentNode template node.
 
@@ -51,7 +62,7 @@ class ComponentNode(template.Node):
         The `as` keyword can be used to store the rendered component in a variable
         in the parent context. The variable name is passed after the `as` keyword.
         """
-        component = self.component.resolve(context)
+        component: Renderable = self.component.resolve(context)
 
         if self.fallback_render_method:
             fallback_render_method = self.fallback_render_method.resolve(context)
@@ -75,7 +86,7 @@ class ComponentNode(template.Node):
 
         if self.target_var:
             context[self.target_var] = html
-            return ""
+            return SafeString("")
         else:
             if context.autoescape:
                 html = conditional_escape(html)
@@ -83,7 +94,7 @@ class ComponentNode(template.Node):
 
 
 @register.tag(name="component")
-def component(parser, token):
+def component(parser: "Parser", token: "Token") -> ComponentNode:
     """
     Template tag to render a component via ComponentNode.
 
