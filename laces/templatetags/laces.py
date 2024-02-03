@@ -1,6 +1,6 @@
 from django import template
 from django.template.base import token_kwargs
-from django.template.defaultfilters import conditional_escape
+from django.utils.html import conditional_escape
 
 
 register = template.library.Library()
