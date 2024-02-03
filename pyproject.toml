@@ -79,6 +79,7 @@ exclude = [
 ]
 
 [tool.mypy]
+files = ["."]
 plugins = ["mypy_django_plugin.main"]
 
 [tool.django-stubs]
