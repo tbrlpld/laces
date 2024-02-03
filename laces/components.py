@@ -1,6 +1,6 @@
 from typing import Any, MutableMapping
 
-from django.forms import Media, MediaDefiningClass
+from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
 from django.template.loader import get_template
 
