@@ -7,7 +7,7 @@ from django.conf import settings
 from django.forms.widgets import Media
 from django.template import Context
 from django.test import SimpleTestCase
-from django.utils.html import SafeString
+from django.utils.safestring import SafeString
 
 from laces.components import Component, MediaContainer
 
