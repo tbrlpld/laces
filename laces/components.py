@@ -1,4 +1,4 @@
-from typing import Any, Optional, Union
+from typing import Any, Optional, Protocol, Union
 
 from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
@@ -51,7 +51,7 @@ class Component(metaclass=MediaDefiningClass):
         return {}
 
 
-class MediaContainer(list):
+class MediaContainer(list["HasMediaProperty"]):
     """
     A list that provides a `media` property that combines the media definitions
     of its members.
@@ -70,7 +70,7 @@ class MediaContainer(list):
     """
 
     @property
-    def media(self):
+    def media(self) -> Media:
         """
         Return a `Media` object containing the media definitions of all members.
 
@@ -82,3 +82,8 @@ class MediaContainer(list):
         for item in self:
             media += item.media
         return media
+
+
+class HasMediaProperty(Protocol):
+    @property
+    def media(self) -> Media: ...  # noqa: E704
