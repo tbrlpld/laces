@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
     from django.template.base import FilterExpression, Parser, Token
 
-    from laces.components import Renderable
+    from laces.protocols import Renderable
 
 
 register = template.library.Library()
@@ -39,7 +39,7 @@ class ComponentNode(template.Node):
         self.fallback_render_method = fallback_render_method
         self.target_var = target_var
 
-    def render(self, context: template.Context) -> "SafeString":
+    def render(self, context: template.Context) -> SafeString:
         """
         Render the ComponentNode template node.
 

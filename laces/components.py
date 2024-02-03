@@ -1,12 +1,14 @@
-from typing import TYPE_CHECKING, List, Protocol, Union
+from typing import TYPE_CHECKING, List
 
 from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
 from django.template.loader import get_template
 
+from laces.protocols import HasMediaProperty
+
 
 if TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any, Optional, Union
 
     from django.utils.safestring import SafeString
 
@@ -57,7 +59,7 @@ class Component(metaclass=MediaDefiningClass):
         return {}
 
 
-class MediaContainer(List["HasMediaProperty"]):
+class MediaContainer(List[HasMediaProperty]):
     """
     A list that provides a `media` property that combines the media definitions
     of its members.
@@ -88,24 +90,3 @@ class MediaContainer(List["HasMediaProperty"]):
         for item in self:
             media += item.media
         return media
-
-
-class HasRenderHtmlMethod(Protocol):
-    def render_html(  # noqa: E704
-        self,
-        parent_context: "Optional[Union[Context, dict[str, Any]]]",
-    ) -> "SafeString": ...
-
-
-class HasRenderMethod(Protocol):
-    def render(  # noqa: E704
-        self,
-    ) -> "SafeString": ...
-
-
-Renderable = Union[HasRenderHtmlMethod, HasRenderMethod]
-
-
-class HasMediaProperty(Protocol):
-    @property
-    def media(self) -> Media: ...  # noqa: E704
