@@ -1,4 +1,4 @@
-from typing import Any, MutableMapping
+from typing import Any, Optional, Union
 
 from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
@@ -18,7 +18,10 @@ class Component(metaclass=MediaDefiningClass):
     See also: https://docs.djangoproject.com/en/4.2/topics/forms/media/
     """
 
-    def render_html(self, parent_context: MutableMapping[str, Any] = None) -> str:
+    def render_html(
+        self,
+        parent_context: Optional[Union[Context, dict[str, Any]]] = None,
+    ) -> str:
         """
         Return string representation of the object.
 
@@ -40,8 +43,9 @@ class Component(metaclass=MediaDefiningClass):
         return template.render(context_data)
 
     def get_context_data(
-        self, parent_context: MutableMapping[str, Any]
-    ) -> MutableMapping[str, Any]:
+        self,
+        parent_context: Union[Context, dict[str, Any]],
+    ) -> Union[Context, dict[str, Any]]:
         return {}
 
 
