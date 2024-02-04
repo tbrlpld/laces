@@ -55,7 +55,7 @@ class Component(metaclass=MediaDefiningClass):
     def get_context_data(
         self,
         parent_context: "Union[Context, dict[str, Any]]",
-    ) -> "Union[Context, dict[str, Any]]":
+    ) -> "Optional[Union[Context, dict[str, Any]]]":
         return {}
 
 

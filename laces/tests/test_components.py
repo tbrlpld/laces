@@ -2,6 +2,7 @@ import os
 import random
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 from django.forms.widgets import Media
@@ -10,6 +11,10 @@ from django.test import SimpleTestCase
 from django.utils.safestring import SafeString
 
 from laces.components import Component, MediaContainer
+
+
+if TYPE_CHECKING:
+    from typing import Any, Optional, Union
 
 
 class TestComponent(SimpleTestCase):
@@ -65,11 +70,11 @@ class TestComponentSubclasses(SimpleTestCase):
     """
 
     @classmethod
-    def make_example_template_name(cls) -> None:
+    def make_example_template_name(cls) -> str:
         return f"example-{random.randint(1000, 10000)}.html"
 
     @classmethod
-    def get_example_template_name(cls) -> None:
+    def get_example_template_name(cls) -> str:
         example_template_name = cls.make_example_template_name()
         while os.path.exists(example_template_name):
             example_template_name = cls.make_example_template_name()
@@ -118,7 +123,10 @@ class TestComponentSubclasses(SimpleTestCase):
         class ExampleComponent(Component):
             template_name = self.example_template_name
 
-            def get_context_data(self, parent_context):
+            def get_context_data(
+                self,
+                parent_context: "Optional[Union[Context, dict[str, Any]]]",
+            ) -> dict[str, str]:
                 return {"name": "World"}
 
         # -----------------------------------------------------------------------------
@@ -144,7 +152,10 @@ class TestComponentSubclasses(SimpleTestCase):
 
         # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
-            def get_context_data(self, parent_context) -> None:
+            def get_context_data(
+                self,
+                parent_context: "Optional[Union[Context, dict[str, Any]]]",
+            ) -> None:
                 return None
 
         # -----------------------------------------------------------------------------
