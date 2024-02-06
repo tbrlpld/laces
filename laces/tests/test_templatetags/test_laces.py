@@ -61,7 +61,7 @@ class TestComponentTag(SimpleTestCase):
 
         self.component = ExampleComponent()
 
-    def set_parent_template(self, template_string) -> None:
+    def set_parent_template(self, template_string: str) -> None:
         template_string = "{% load laces %}" + template_string
         self.parent_template = Template(template_string)
 
@@ -297,7 +297,7 @@ class TestComponentTag(SimpleTestCase):
     ) -> None:
         # -----------------------------------------------------------------------------
         class ExampleNonComponentWithRenderMethod:
-            def render(self):
+            def render(self) -> str:
                 return "Rendered non-component"
 
         # -----------------------------------------------------------------------------
@@ -335,7 +335,7 @@ class TestComponentTag(SimpleTestCase):
     ) -> None:
         # -----------------------------------------------------------------------------
         class ExampleNonComponentWithoutRenderMethod:
-            def __repr__(self):
+            def __repr__(self) -> str:
                 return "<Example repr>"
 
         # -----------------------------------------------------------------------------
