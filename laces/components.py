@@ -58,6 +58,18 @@ class Component(metaclass=MediaDefiningClass):
     ) -> "Optional[Union[Context, dict[str, Any]]]":
         return {}
 
+    # fmt: off
+    if TYPE_CHECKING:
+        # It's ugly, I know. But it seems to be the best way to make `mypy` happy.
+        # The `media` property is dynamically added by the `MediaDefiningClass`
+        # metaclass. Because of how dynamic it is, `mypy` is not able to pick it up.
+        # This is why we need to add a type hint for it here. The other way would be a
+        # stub, but that would require the whole module to be stubbed and that is even
+        # more annoying to keep up to date.
+        @property
+        def media(self) -> Media: ...  # noqa: E704
+    # fmt: on
+
 
 class MediaContainer(List[HasMediaProperty]):
     """
