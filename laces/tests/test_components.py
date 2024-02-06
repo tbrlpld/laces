@@ -17,7 +17,32 @@ if TYPE_CHECKING:
     from typing import Any, Optional, Union
 
 
-class TestComponent(SimpleTestCase):
+class MediaAssertionMixin:
+    @staticmethod
+    def assertMediaEqual(first: Media, second: Media) -> bool:
+        """
+        Compare two `Media` instances.
+
+        The `Media` class does not implement `__eq__`, but its `__repr__` shows how to
+        recreate the original instance. We can use this to compare two `Media` instances.
+
+        Parameters
+        ----------
+        first : Media
+            First `Media` instance.
+        second : Media
+            Second `Media` instance.
+
+        Returns
+        -------
+        bool
+            Whether the two `Media` instances are equal.
+
+        """
+        return repr(first) == repr(second)
+
+
+class TestComponent(MediaAssertionMixin, SimpleTestCase):
     """Directly test the Component class."""
 
     def setUp(self) -> None:
@@ -51,15 +76,12 @@ class TestComponent(SimpleTestCase):
         definition.
 
         """
-        self.assertIsInstance(self.component.media, Media)
         empty_media = Media()
-        # We need to compare the internal dicts and lists as the `Media` class does not
-        # implement `__eq__`.
-        self.assertEqual(self.component.media._css, empty_media._css)
-        self.assertEqual(self.component.media._js, empty_media._js)
+        self.assertIsInstance(self.component.media, Media)
+        self.assertMediaEqual(self.component.media, empty_media)
 
 
-class TestComponentSubclasses(SimpleTestCase):
+class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
     """
     Test the Component class through  subclasses.
 
@@ -183,14 +205,16 @@ class TestComponentSubclasses(SimpleTestCase):
         result = ExampleComponent().media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, ["example.js"])
+        self.assertMediaEqual(
+            result,
+            Media(css={"all": ["example.css"]}, js=["example.js"]),
+        )
 
     def tearDown(self) -> None:
         os.remove(path=self.example_template)
 
 
-class TestMediaContainer(SimpleTestCase):
+class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
     """
     Test the MediaContainer class.
 
@@ -211,8 +235,7 @@ class TestMediaContainer(SimpleTestCase):
         result = self.media_container.media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, {})
-        self.assertEqual(result._js, [])
+        self.assertMediaEqual(result, Media())
 
     def test_single_member(self) -> None:
         # -----------------------------------------------------------------------------
@@ -226,10 +249,8 @@ class TestMediaContainer(SimpleTestCase):
         result = self.media_container.media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, example.media._css)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, example.media._js)
-        self.assertEqual(result._js, [])
+        self.assertMediaEqual(result, example.media)
+        self.assertMediaEqual(result, Media(css={"all": ["example.css"]}))
 
     def test_two_members_of_same_class(self) -> None:
         # -----------------------------------------------------------------------------
@@ -245,10 +266,10 @@ class TestMediaContainer(SimpleTestCase):
         result = self.media_container.media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, example_1.media._css)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, example_1.media._js)
-        self.assertEqual(result._js, ["example.js"])
+        self.assertMediaEqual(
+            result,
+            Media(css={"all": ["example.css"]}, js=["example.js"]),
+        )
 
     def test_two_members_of_different_classes(self) -> None:
         # -----------------------------------------------------------------------------
@@ -273,11 +294,13 @@ class TestMediaContainer(SimpleTestCase):
         result = self.media_container.media
 
         self.assertIsInstance(result, Media)
-        self.assertEqual(
-            result._css,
-            {
-                "all": ["other.css", "shared.css"],
-                "print": ["print.css"],
-            },
+        self.assertMediaEqual(
+            result,
+            Media(
+                css={
+                    "all": ["other.css", "shared.css"],
+                    "print": ["print.css"],
+                },
+                js=["example.js", "other.js"],
+            ),
         )
-        self.assertEqual(result._js, ["example.js", "other.js"])
