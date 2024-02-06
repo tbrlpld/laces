@@ -3,6 +3,7 @@ import random
 
 from copy import deepcopy
 from pathlib import Path
+from typing import TYPE_CHECKING
 from unittest.mock import MagicMock
 
 from django.conf import settings
@@ -11,6 +12,10 @@ from django.test import SimpleTestCase
 from django.utils.html import format_html
 
 from laces.components import Component
+
+
+if TYPE_CHECKING:
+    from typing import Any, Dict, List
 
 
 class CopyingMock(MagicMock):
@@ -31,7 +36,7 @@ class CopyingMock(MagicMock):
     https://docs.python.org/3/library/unittest.mock-examples.html#coping-with-mutable-arguments  # noqa: E501
     """
 
-    def __call__(self, /, *args, **kwargs):
+    def __call__(self, /, *args: "List[Any]", **kwargs: "Dict[str, Any]") -> "Any":
         args = deepcopy(args)
         kwargs = deepcopy(kwargs)
         return super().__call__(*args, **kwargs)
