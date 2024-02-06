@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from django.conf import settings
-from django.forms.widgets import Media
+from django.forms import widgets
 from django.template import Context
 from django.test import SimpleTestCase
 from django.utils.safestring import SafeString
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
 
 class MediaAssertionMixin:
     @staticmethod
-    def assertMediaEqual(first: Media, second: Media) -> bool:
+    def assertMediaEqual(first: widgets.Media, second: widgets.Media) -> bool:
         """
         Compare two `Media` instances.
 
@@ -28,9 +28,9 @@ class MediaAssertionMixin:
 
         Parameters
         ----------
-        first : Media
+        first : widgets.Media
             First `Media` instance.
-        second : Media
+        second : widgets.Media
             Second `Media` instance.
 
         Returns
@@ -76,8 +76,8 @@ class TestComponent(MediaAssertionMixin, SimpleTestCase):
         definition.
 
         """
-        empty_media = Media()
-        self.assertIsInstance(self.component.media, Media)
+        empty_media = widgets.Media()
+        self.assertIsInstance(self.component.media, widgets.Media)
         self.assertMediaEqual(self.component.media, empty_media)
 
 
@@ -204,10 +204,10 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
 
         result = ExampleComponent().media
 
-        self.assertIsInstance(result, Media)
+        self.assertIsInstance(result, widgets.Media)
         self.assertMediaEqual(
             result,
-            Media(css={"all": ["example.css"]}, js=["example.js"]),
+            widgets.Media(css={"all": ["example.css"]}, js=["example.js"]),
         )
 
     def tearDown(self) -> None:
@@ -234,13 +234,13 @@ class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
     def test_empty(self) -> None:
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
-        self.assertMediaEqual(result, Media())
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(result, widgets.Media())
 
     def test_single_member(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["example.css"]})
+            media = widgets.Media(css={"all": ["example.css"]})
 
         # -----------------------------------------------------------------------------
         example = ExampleClass()
@@ -248,14 +248,14 @@ class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
+        self.assertIsInstance(result, widgets.Media)
         self.assertMediaEqual(result, example.media)
-        self.assertMediaEqual(result, Media(css={"all": ["example.css"]}))
+        self.assertMediaEqual(result, widgets.Media(css={"all": ["example.css"]}))
 
     def test_two_members_of_same_class(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["example.css"]}, js=["example.js"])
+            media = widgets.Media(css={"all": ["example.css"]}, js=["example.js"])
 
         # -----------------------------------------------------------------------------
         example_1 = ExampleClass()
@@ -265,19 +265,19 @@ class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
+        self.assertIsInstance(result, widgets.Media)
         self.assertMediaEqual(
             result,
-            Media(css={"all": ["example.css"]}, js=["example.js"]),
+            widgets.Media(css={"all": ["example.css"]}, js=["example.js"]),
         )
 
     def test_two_members_of_different_classes(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["shared.css"]}, js=["example.js"])
+            media = widgets.Media(css={"all": ["shared.css"]}, js=["example.js"])
 
         class OtherExampleClass:
-            media = Media(
+            media = widgets.Media(
                 css={
                     "all": ["other.css", "shared.css"],
                     "print": ["print.css"],
@@ -293,10 +293,10 @@ class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
+        self.assertIsInstance(result, widgets.Media)
         self.assertMediaEqual(
             result,
-            Media(
+            widgets.Media(
                 css={
                     "all": ["other.css", "shared.css"],
                     "print": ["print.css"],
