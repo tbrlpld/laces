@@ -56,11 +56,10 @@ class TestComponentTag(SimpleTestCase):
         self.parent_template = Template("")
 
         class ExampleComponent(Component):
-            pass
+            # Using a mock to be able to check if the `render_html` method is called.
+            render_html = CopyingMock(return_value="Rendered HTML")
 
         self.component = ExampleComponent()
-        # Using a mock to be able to check if the `render_html` method is called.
-        self.component.render_html = CopyingMock(return_value="Rendered HTML")
 
     def set_parent_template(self, template_string) -> None:
         template_string = "{% load laces %}" + template_string
