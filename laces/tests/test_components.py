@@ -26,7 +26,8 @@ class MediaAssertionMixin:
         Compare two `Media` instances.
 
         The `Media` class does not implement `__eq__`, but its `__repr__` shows how to
-        recreate the original instance. We can use this to compare two `Media` instances.
+        recreate the instance.
+        We can use this to compare two `Media` instances.
 
         Parameters
         ----------
@@ -85,7 +86,7 @@ class TestComponent(MediaAssertionMixin, SimpleTestCase):
 
 class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
     """
-    Test the Component class through  subclasses.
+    Test the Component class through subclasses.
 
     Most functionality of the Component class is only unlocked through subclassing and
     definition of certain attributes (like `template_name`) or overriding of the
@@ -171,7 +172,7 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
         default, the `get_context_data` method provides and empty dict. If an override
         wanted to `get_context_data` return `None`, it should be expected that no
         context data is available during rendering. The underlying `template.render`
-        method does not seem to be ok with `None` the provided context.
+        method does not seem to be ok with `None` as the provided context.
         """
 
         # -----------------------------------------------------------------------------
