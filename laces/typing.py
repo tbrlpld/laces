@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING, Protocol, Union
+from typing import TYPE_CHECKING, Protocol, TypeAlias, Union
 
 
 if TYPE_CHECKING:
@@ -8,11 +8,13 @@ if TYPE_CHECKING:
     from django.template import Context
     from django.utils.safestring import SafeString
 
+    RenderContext: TypeAlias = Union[Context, dict[str, Any]]
+
 
 class HasRenderHtmlMethod(Protocol):
     def render_html(  # noqa: E704
         self,
-        parent_context: "Optional[Union[Context, dict[str, Any]]]",
+        parent_context: "Optional[RenderContext]",
     ) -> "SafeString": ...
 
 
@@ -22,7 +24,7 @@ class HasRenderMethod(Protocol):
     ) -> "SafeString": ...
 
 
-Renderable = Union[HasRenderHtmlMethod, HasRenderMethod]
+Renderable: TypeAlias = Union[HasRenderHtmlMethod, HasRenderMethod]
 
 
 class HasMediaProperty(Protocol):

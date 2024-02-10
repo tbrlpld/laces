@@ -4,13 +4,15 @@ from django.forms.widgets import Media, MediaDefiningClass
 from django.template import Context
 from django.template.loader import get_template
 
-from laces.protocols import HasMediaProperty
+from laces.typing import HasMediaProperty
 
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Union
+    from typing import Optional
 
     from django.utils.safestring import SafeString
+
+    from laces.typing import RenderContext
 
 
 class Component(metaclass=MediaDefiningClass):
@@ -30,7 +32,7 @@ class Component(metaclass=MediaDefiningClass):
 
     def render_html(
         self,
-        parent_context: "Optional[Union[Context, dict[str, Any]]]" = None,
+        parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
         """
         Return string representation of the object.
@@ -54,8 +56,8 @@ class Component(metaclass=MediaDefiningClass):
 
     def get_context_data(
         self,
-        parent_context: "Union[Context, dict[str, Any]]",
-    ) -> "Optional[Union[Context, dict[str, Any]]]":
+        parent_context: "RenderContext",
+    ) -> "Optional[RenderContext]":
         return {}
 
     # fmt: off

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
     from django.template.base import FilterExpression, Parser, Token
 
-    from laces.protocols import Renderable
+    from laces.typing import Renderable
 
 
 register = template.library.Library()
