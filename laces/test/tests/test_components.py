@@ -22,7 +22,7 @@ from laces.test.example.components import (
     ReturnsFixedContentComponent,
     SectionWithHeadingAndParagraphComponent,
 )
-from laces.tests.test_components import MediaAssertionMixin
+from laces.tests.utils import MediaAssertionMixin
 
 
 class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
