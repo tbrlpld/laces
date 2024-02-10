@@ -19,6 +19,8 @@ if TYPE_CHECKING:
 
     from django.utils.safestring import SafeString
 
+    from laces.typing import RenderContext
+
 
 class CopyingMock(MagicMock):
     """
@@ -67,8 +69,21 @@ class TestComponentTag(SimpleTestCase):
 
     def render_parent_template_with_context(
         self,
-        context: "Dict[str, Any]",
+        context: "RenderContext",
     ) -> "SafeString":
+        """
+        Render the parent template with the given context.
+
+        Parameters
+        ----------
+        context: RenderContext
+            Context to render the parent template with.
+
+        Returns
+        -------
+        SafeString
+            The parent template rendered with the given context.
+        """
         return self.parent_template.render(Context(context))
 
     def assertVariablesAvailableInRenderHTMLParentContext(
@@ -87,8 +102,8 @@ class TestComponentTag(SimpleTestCase):
             self.assertIn(key, actual_context)
             actual_value = actual_context[key]
             if not isinstance(actual_value, Component):
-                # Because we are inspecting copies of the context variables, we can
-                # not easily compare the components by identity. For now, we just
+                # Because we are inspecting copies of the context variables, we cannot
+                # easily compare the components by identity. For now, we just
                 # skip components.
                 self.assertEqual(actual_value, value)
 
