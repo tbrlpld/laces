@@ -5,6 +5,7 @@ These tests are very basic and only ensure that the examples are configured as
 desired. More thorough tests can be found in the `laces.tests.test_components` module.
 """
 
+from django.forms import widgets
 from django.test import SimpleTestCase
 
 from laces.test.example.components import (
@@ -21,6 +22,7 @@ from laces.test.example.components import (
     ReturnsFixedContentComponent,
     SectionWithHeadingAndParagraphComponent,
 )
+from laces.tests.test_components import MediaAssertionMixin
 
 
 class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
@@ -253,22 +255,22 @@ class TestListSection(SimpleTestCase):
         )
 
 
-class TestMediaDefiningComponent(SimpleTestCase):
-    def setUp(self):
+class TestMediaDefiningComponent(MediaAssertionMixin, SimpleTestCase):
+    def setUp(self) -> None:
         self.component = MediaDefiningComponent()
 
-    def test_media(self):
-        self.assertEqual(
-            self.component.media._css,
-            {
-                "all": [
-                    "component.css",
-                ]
-            },
-        )
-        self.assertEqual(
-            self.component.media._js,
-            [
-                "component.js",
-            ],
+    def test_media(self) -> None:
+        self.assertMediaEqual(
+            self.component.media,
+            widgets.Media(
+                css={
+                    "all": [
+                        "component.css",
+                    ]
+                },
+                js=[
+                    "component.js",
+                    "test.js",
+                ],
+            ),
         )
