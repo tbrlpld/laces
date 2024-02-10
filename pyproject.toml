@@ -56,7 +56,8 @@ dev = [
     "flake8-bugbear",
     "flake8-comprehensions",
     "mypy==1.7.1",
-    "django-stubs[compatible-mypy]==4.2.7"
+    "django-stubs[compatible-mypy]==4.2.7",
+    "types-requests==2.31.0.20240125",
 ]
 
 [project.urls]
