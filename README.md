@@ -874,14 +874,13 @@ Additionally, you have to set the environment variable `VIRTUALENV_DISCOVERY=pye
 This project uses the [Trusted Publisher model for PyPI releases](https://docs.pypi.org/trusted-publishers/).
 This means that publishing is done through GitHub Actions when a [new release is created on GitHub](https://github.com/tbrlpld/laces/releases/new).
 
-To create a release, you need a Git tag.
-The tag can either be created on the command line and pushed or in the "create release" interface on GitHub.
-The tag name should be the version number prefixed with a `v` (e.g. `v0.1.0`).
-
 Before publishing a new release, make sure to update
 
-- the changelog in `CHANGELOG.md`, and
-- the version number in `laces/__init__.py`.
+- [ ] the changelog in `CHANGELOG.md`, and
+- [ ] the version number in `laces/__init__.py`.
+
+To update these files, you will have to create a release-prep branch and PR.
+Once that PR is merged into `main` you are ready to create the release.
 
 To manually test publishing the package, you can use `flit`.
 Be sure to configure the `testpypi` repository in your `~/.pypirc` file according to the Flit [documentation](https://flit.pypa.io/en/stable/upload.html#controlling-package-uploads).
@@ -893,3 +892,24 @@ When you're ready to test the publishing, run:
 $ flit build
 $ flit publish --repository testpypi
 ```
+
+Once you are ready to actually release the new version, you need to first create a git tag.
+The tag name should be the version number prefixed with a `v` (e.g. `v0.1.0`).
+
+To create the tag on the command line:
+
+```sh
+$ git switch main
+$ git pull
+$ git tag v0.1.1
+$ git push --tags
+```
+
+Once the tag is on GitHub, you can visit the [Tags screen](https://github.com/tbrlpld/laces/tags).
+There you click "create release" in the overflow menu of the tag that you have just created.
+On the release screen you can click "generate release notes", which will compile release notes based on the merged PRs since the last release.
+Edit the generated release notes to make them a bit more concise (e.g. remove small fix-up PRs or group related changes).
+
+Once the release notes are ready, click "publish release".
+This will trigger the release workflow, which you can observe on the ["Actions" tab](https://github.com/tbrlpld/laces/actions).
+When the workflow completes, check the new release on [PyPI](https://pypi.org/project/laces/).
