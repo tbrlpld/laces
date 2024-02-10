@@ -8,7 +8,7 @@ from laces.test.example.views import kitchen_sink
 
 
 class TestKitchenSink(TestCase):
-    def test_get(self):
+    def test_get(self) -> None:
         factory = RequestFactory()
         request = factory.get("/")
 
