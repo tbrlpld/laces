@@ -5,12 +5,14 @@ These tests are very basic and only ensure that the examples are configured as
 desired. More thorough tests can be found in the `laces.tests.test_components` module.
 """
 
+from django.forms import widgets
 from django.test import SimpleTestCase
 
 from laces.test.example.components import (
     DataclassAsDictContextComponent,
     HeadingComponent,
     ListSectionComponent,
+    MediaDefiningComponent,
     ParagraphComponent,
     PassesFixedNameToContextComponent,
     PassesInstanceAttributeToContextComponent,
@@ -20,6 +22,7 @@ from laces.test.example.components import (
     ReturnsFixedContentComponent,
     SectionWithHeadingAndParagraphComponent,
 )
+from laces.tests.utils import MediaAssertionMixin
 
 
 class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
@@ -249,4 +252,25 @@ class TestListSection(SimpleTestCase):
                 </ul>
             </section>
             """,
+        )
+
+
+class TestMediaDefiningComponent(MediaAssertionMixin, SimpleTestCase):
+    def setUp(self) -> None:
+        self.component = MediaDefiningComponent()
+
+    def test_media(self) -> None:
+        self.assertMediaEqual(
+            self.component.media,
+            widgets.Media(
+                css={
+                    "all": [
+                        "component.css",
+                    ]
+                },
+                js=[
+                    "component.js",
+                    "test.js",
+                ],
+            ),
         )

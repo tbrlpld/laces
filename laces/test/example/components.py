@@ -14,7 +14,7 @@ from laces.components import Component
 
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional
+    from typing import Any, Dict, List, Optional
 
     from django.utils.safestring import SafeString
 
@@ -109,6 +109,24 @@ class SectionWithHeadingAndParagraphComponent(Component):
         }
 
 
+class ListSectionComponent(Component):
+    template_name = "components/list-section.html"
+
+    def __init__(self, heading: "HeadingComponent", items: "List[Component]") -> None:
+        super().__init__()
+        self.heading = heading
+        self.items = items
+
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
+        return {
+            "heading": self.heading,
+            "items": self.items,
+        }
+
+
 class HeadingComponent(Component):
     def __init__(self, text: str):
         super().__init__()
@@ -133,24 +151,6 @@ class ParagraphComponent(Component):
         return format_html("<p>{}</p>\n", self.text)
 
 
-class ListSectionComponent(Component):
-    template_name = "components/list-section.html"
-
-    def __init__(self, heading: "HeadingComponent", items: "list[Component]"):
-        super().__init__()
-        self.heading = heading
-        self.items = items
-
-    def get_context_data(
-        self,
-        parent_context: "Optional[RenderContext]" = None,
-    ) -> "RenderContext":
-        return {
-            "heading": self.heading,
-            "items": self.items,
-        }
-
-
 class BlockquoteComponent(Component):
     def __init__(self, text: str):
         super().__init__()
@@ -161,3 +161,41 @@ class BlockquoteComponent(Component):
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
         return format_html("<blockquote>{}</blockquote>\n", self.text)
+
+
+class MediaDefiningComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
+        return {"name": "Media"}
+
+    class Media:
+        css = {"all": ("component.css",)}
+        js = ("component.js",)
+
+
+class HeaderWithMediaComponent(Component):
+    def render_html(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "SafeString":
+        return format_html("<header>Header with Media</header>")
+
+    class Media:
+        css = {"all": ("header.css",)}
+        js = ("header.js", "common.js")
+
+
+class FooterWithMediaComponent(Component):
+    def render_html(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "SafeString":
+        return format_html("<footer>Footer with Media</footer>")
+
+    class Media:
+        css = {"all": ("footer.css",)}
+        js = ("footer.js", "common.js")
