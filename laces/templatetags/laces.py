@@ -62,7 +62,7 @@ class ComponentNode(template.Node):
         The `as` keyword can be used to store the rendered component in a variable
         in the parent context. The variable name is passed after the `as` keyword.
         """
-        component: Renderable = self.component.resolve(context)
+        component: "Renderable" = self.component.resolve(context)
 
         if self.fallback_render_method:
             fallback_render_method = self.fallback_render_method.resolve(context)
