@@ -80,7 +80,7 @@ class WelcomePanel(Component):
 <h1>Hello World!</h1>
 ```
 
-With the above in place, you then instantiate the component (e.g. in a view) and pass it to another template for rendering.
+With the above in place, you then instantiate the component (e.g., in a view) and pass it to another template for rendering.
 
 ```python
 # my_app/views.py
@@ -390,7 +390,7 @@ When you have many components in a page, it can be cumbersome to output the medi
 To make that process a bit easier, Laces provides a `MediaContainer` class.
 The `MediaContainer` class is a subclass of Python's built-in `list` class which combines the `media` of all it's members.
 
-In a view we can create a `MediaContainer` instance containing several media defining components and pass it to the view template.
+In a view we can create a `MediaContainer` instance containing several media-defining components and pass it to the view template.
 
 ```python
 # my_app/views.py
@@ -453,7 +453,7 @@ It can be used to combine the `media` properties of any kind of objects that hav
 
 ## Patterns for using components
 
-Below, we want so show a few more examples of how components can be used that were not covered in the ["Getting started" section](#getting-started) above.
+Below, we want to show a few more examples of how components can be used that were not covered in the ["Getting started" section](#getting-started) above.
 
 ### Nesting components
 
@@ -504,7 +504,7 @@ assert dashboard.welcome.name == request.user.first_name
 
 ### Nested groups of components
 
-The nesting of components is of course not limited to single instances.
+The nesting of components is not limited to single instances.
 We can also nest groups of components.
 
 ```python
@@ -744,10 +744,10 @@ As in the example above, custom constructor methods pair very well with the use 
 ### Why "Laces"?
 
 "Laces" is somewhat of a reference to the feature of tying data and templates together.
-The components are also "self-rendering", which could be a seen as "self-reliance", which relates to "bootstrapping".
-And, aren't "bootstraps" just a long kind of "(shoe)laces"?
+The components are also "self-rendering," which could be seen as "self-reliance," which relates to "bootstrapping."
+And aren't "bootstraps" just a long kind of "(shoe)laces?"
 
-Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also taking a component focused approach to improve the experience when working with Django templates, but with a quite different way.
+Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also takes a component focused approach to improve the experience when working with Django templates, but in a quite different way.
 
 ### Supported versions
 
@@ -765,7 +765,7 @@ $ git clone https://github.com/tbrlpld/laces.git
 $ cd laces
 ```
 
-With your preferred virtualenv activated, install testing dependencies:
+With your preferred virtualenv activated, install the development dependencies:
 
 #### Using pip
 
@@ -787,8 +787,6 @@ Note that this project uses [pre-commit](https://github.com/pre-commit/pre-commi
 It is included in the project testing requirements. To set up locally:
 
 ```shell
-# go to the project directory
-$ cd laces
 # initialize pre-commit
 $ pre-commit install
 
@@ -807,13 +805,13 @@ $ tox
 Or, you can run them for a specific environment:
 
 ```sh
-$ tox -e python3.11-django4.2-wagtail5.1
+$ tox -e python3.11-django4.2
 ```
 
 Or, run only a specific test:
 
 ```sh
-$ tox -e python3.11-django4.2-wagtail5.1-sqlite laces.tests.test_file.TestClass.test_method
+$ tox -e python3.11-django4.2 laces.tests.test_file.TestClass.test_method
 ```
 
 To run the test app interactively, use:
@@ -839,7 +837,7 @@ $ coverage report
 
 To get a clean report, you can run `coverage erase` before running `tox`.
 
-#### Running tests without tox
+#### Running tests without `tox`
 
 If you want to run tests without `tox`, you can use the `testmanage.py` script.
 This script is a wrapper around Django's `manage.py` and will run tests with the correct settings.
@@ -865,16 +863,18 @@ $ coverage run ./testmanage.py test
 ### Python version management
 
 Tox will attempt to find installed Python versions on your machine.
+
 If you use `pyenv` to manage multiple versions, you can tell `tox` to use those versions.
-This working, is depended on [`virtualenv-pyenv`](https://pypi.org/project/virtualenv-pyenv/) (note: this is not `pyenv-virtualenv`) which is part of the CI dependencies (just like `tox` itself is).
-To enable the use, you want to set the environment variable `VIRTUALENV_DISCOVERY=pyenv`.
+To ensure that `tox` will find Python versions installed with `pyenv` you need [`virtualenv-pyenv`](https://pypi.org/project/virtualenv-pyenv/) (note: this is not `pyenv-virtualenv`).
+`virtualenv-pyenv` is part of the development dependencies (just like `tox` itself).
+Additionally, you have to set the environment variable `VIRTUALENV_DISCOVERY=pyenv`.
 
 ### Publishing
 
 This project uses the [Trusted Publisher model for PyPI releases](https://docs.pypi.org/trusted-publishers/).
 This means that publishing is done through GitHub Actions when a [new release is created on GitHub](https://github.com/tbrlpld/laces/releases/new).
 
-To create a release you need a Git tag.
+To create a release, you need a Git tag.
 The tag can either be created on the command line and pushed or in the "create release" interface on GitHub.
 The tag name should be the version number prefixed with a `v` (e.g. `v0.1.0`).
 
