@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING
+
 from django.shortcuts import render
 
 from laces.test.example.components import (
@@ -16,7 +18,11 @@ from laces.test.example.components import (
 )
 
 
-def kitchen_sink(request):
+if TYPE_CHECKING:
+    from django.http import HttpRequest, HttpResponse
+
+
+def kitchen_sink(request: "HttpRequest") -> "HttpResponse":
     """Render a page with all example components."""
     fixed_content_template = RendersTemplateWithFixedContentComponent()
     fixed_content_return = ReturnsFixedContentComponent()
