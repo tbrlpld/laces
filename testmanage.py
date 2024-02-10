@@ -6,13 +6,19 @@ import shutil
 import sys
 import warnings
 
+from typing import TYPE_CHECKING
+
 from django.core.management import execute_from_command_line
+
+
+if TYPE_CHECKING:
+    from typing import Optional
 
 
 os.environ["DJANGO_SETTINGS_MODULE"] = "laces.test.settings"
 
 
-def make_parser():
+def make_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--deprecation",
@@ -22,11 +28,13 @@ def make_parser():
     return parser
 
 
-def parse_args(args=None):
+def parse_args(
+    args: "Optional[list[str]]" = None,
+) -> "tuple[argparse.Namespace, list[str]]":
     return make_parser().parse_known_args(args)
 
 
-def runtests():
+def runtests() -> None:
     args, rest = parse_args()
 
     only_django = r"^django(\.|$)"

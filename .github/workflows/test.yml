@@ -27,9 +27,10 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install
+        # Installing test dependencies to make sure that all imports work during type-checking.
         run: |
           python -m pip install --upgrade pip setuptools wheel
-          python -m pip install .[dev]
+          python -m pip install .[testing,dev]
       - uses: pre-commit/action@v3.0.0
 
   test:

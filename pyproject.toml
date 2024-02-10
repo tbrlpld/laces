@@ -55,6 +55,9 @@ dev = [
     "flake8==7.0.0",
     "flake8-bugbear",
     "flake8-comprehensions",
+    "mypy==1.7.1",
+    "django-stubs[compatible-mypy]==4.2.7",
+    "types-requests==2.31.0.20240125",
 ]
 
 [project.urls]
@@ -75,3 +78,11 @@ exclude = [
     "*.ini",
     "*.yml"
 ]
+
+[tool.mypy]
+files = ["."]
+plugins = ["mypy_django_plugin.main"]
+strict = true
+
+[tool.django-stubs]
+django_settings_module = "laces.test.settings"

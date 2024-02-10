@@ -2,23 +2,55 @@ import os
 import random
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from django.conf import settings
-from django.forms.widgets import Media
+from django.forms import widgets
 from django.template import Context
 from django.test import SimpleTestCase
-from django.utils.html import SafeString
+from django.utils.safestring import SafeString
 
 from laces.components import Component, MediaContainer
 
 
-class TestComponent(SimpleTestCase):
+if TYPE_CHECKING:
+    from typing import Any, Optional, Union
+
+    from laces.typing import RenderContext
+
+
+class MediaAssertionMixin:
+    @staticmethod
+    def assertMediaEqual(first: widgets.Media, second: widgets.Media) -> bool:
+        """
+        Compare two `Media` instances.
+
+        The `Media` class does not implement `__eq__`, but its `__repr__` shows how to
+        recreate the original instance. We can use this to compare two `Media` instances.
+
+        Parameters
+        ----------
+        first : widgets.Media
+            First `Media` instance.
+        second : widgets.Media
+            Second `Media` instance.
+
+        Returns
+        -------
+        bool
+            Whether the two `Media` instances are equal.
+
+        """
+        return repr(first) == repr(second)
+
+
+class TestComponent(MediaAssertionMixin, SimpleTestCase):
     """Directly test the Component class."""
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = Component()
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         """Test the `render_html` method."""
         # The default Component does not specify a `template_name` attribute which is
         # required for `render_html`. So calling the method on the Component class
@@ -26,7 +58,7 @@ class TestComponent(SimpleTestCase):
         with self.assertRaises(AttributeError):
             self.component.render_html()
 
-    def test_get_context_data_parent_context_empty_context(self):
+    def test_get_context_data_parent_context_empty_context(self) -> None:
         """
         Test the default get_context_data.
 
@@ -38,7 +70,7 @@ class TestComponent(SimpleTestCase):
         self.assertIsInstance(result, dict)
         self.assertEqual(result, {})
 
-    def test_media(self):
+    def test_media(self) -> None:
         """
         Test the `media` property.
 
@@ -46,15 +78,12 @@ class TestComponent(SimpleTestCase):
         definition.
 
         """
-        self.assertIsInstance(self.component.media, Media)
-        empty_media = Media()
-        # We need to compare the internal dicts and lists as the `Media` class does not
-        # implement `__eq__`.
-        self.assertEqual(self.component.media._css, empty_media._css)
-        self.assertEqual(self.component.media._js, empty_media._js)
+        empty_media = widgets.Media()
+        self.assertIsInstance(self.component.media, widgets.Media)
+        self.assertMediaEqual(self.component.media, empty_media)
 
 
-class TestComponentSubclasses(SimpleTestCase):
+class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
     """
     Test the Component class through  subclasses.
 
@@ -65,17 +94,17 @@ class TestComponentSubclasses(SimpleTestCase):
     """
 
     @classmethod
-    def make_example_template_name(cls):
+    def make_example_template_name(cls) -> str:
         return f"example-{random.randint(1000, 10000)}.html"
 
     @classmethod
-    def get_example_template_name(cls):
+    def get_example_template_name(cls) -> str:
         example_template_name = cls.make_example_template_name()
         while os.path.exists(example_template_name):
             example_template_name = cls.make_example_template_name()
         return example_template_name
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.example_template_name = self.get_example_template_name()
         self.example_template = (
             Path(settings.PROJECT_DIR) / "templates" / self.example_template_name
@@ -83,11 +112,11 @@ class TestComponentSubclasses(SimpleTestCase):
         # Write content to the template file to ensure it exists.
         self.set_example_template_content("")
 
-    def set_example_template_content(self, content: str):
+    def set_example_template_content(self, content: str) -> None:
         with open(self.example_template, "w") as f:
             f.write(content)
 
-    def test_render_html_with_template_name_set(self):
+    def test_render_html_with_template_name_set(self) -> None:
         """
         Test `render_html` method with a set `template_name` attribute.
         """
@@ -106,7 +135,9 @@ class TestComponentSubclasses(SimpleTestCase):
         self.assertIsInstance(result, SafeString)
         self.assertEqual(result, "Test")
 
-    def test_render_html_with_template_name_set_and_data_from_get_context_data(self):
+    def test_render_html_with_template_name_set_and_data_from_get_context_data(
+        self,
+    ) -> None:
         """
         Test `render_html` method with `get_context_data` providing data for the
         context.
@@ -116,7 +147,10 @@ class TestComponentSubclasses(SimpleTestCase):
         class ExampleComponent(Component):
             template_name = self.example_template_name
 
-            def get_context_data(self, parent_context):
+            def get_context_data(
+                self,
+                parent_context: "Optional[RenderContext]",
+            ) -> "RenderContext":
                 return {"name": "World"}
 
         # -----------------------------------------------------------------------------
@@ -127,7 +161,7 @@ class TestComponentSubclasses(SimpleTestCase):
 
         self.assertEqual(result, "Hello World")
 
-    def test_render_html_when_get_context_data_returns_None(self):
+    def test_render_html_when_get_context_data_returns_None(self) -> None:
         """
         Test `render_html` method when `get_context_data` returns `None`.
 
@@ -142,7 +176,10 @@ class TestComponentSubclasses(SimpleTestCase):
 
         # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
-            def get_context_data(self, parent_context):
+            def get_context_data(
+                self,
+                parent_context: "Optional[Union[Context, dict[str, Any]]]",
+            ) -> None:
                 return None
 
         # -----------------------------------------------------------------------------
@@ -150,7 +187,7 @@ class TestComponentSubclasses(SimpleTestCase):
         with self.assertRaises(TypeError):
             ExampleComponent().render_html()
 
-    def test_media_defined_through_nested_class(self):
+    def test_media_defined_through_nested_class(self) -> None:
         """
         Test the `media` property when defined through a nested class.
 
@@ -169,15 +206,17 @@ class TestComponentSubclasses(SimpleTestCase):
 
         result = ExampleComponent().media
 
-        self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, ["example.js"])
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(
+            result,
+            widgets.Media(css={"all": ["example.css"]}, js=["example.js"]),
+        )
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         os.remove(path=self.example_template)
 
 
-class TestMediaContainer(SimpleTestCase):
+class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
     """
     Test the MediaContainer class.
 
@@ -191,20 +230,19 @@ class TestMediaContainer(SimpleTestCase):
     https://docs.djangoproject.com/en/4.2/topics/forms/media
     """
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.media_container = MediaContainer()
 
-    def test_empty(self):
+    def test_empty(self) -> None:
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, {})
-        self.assertEqual(result._js, [])
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(result, widgets.Media())
 
-    def test_single_member(self):
+    def test_single_member(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["example.css"]})
+            media = widgets.Media(css={"all": ["example.css"]})
 
         # -----------------------------------------------------------------------------
         example = ExampleClass()
@@ -212,16 +250,14 @@ class TestMediaContainer(SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, example.media._css)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, example.media._js)
-        self.assertEqual(result._js, [])
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(result, example.media)
+        self.assertMediaEqual(result, widgets.Media(css={"all": ["example.css"]}))
 
-    def test_two_members_of_same_class(self):
+    def test_two_members_of_same_class(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["example.css"]}, js=["example.js"])
+            media = widgets.Media(css={"all": ["example.css"]}, js=["example.js"])
 
         # -----------------------------------------------------------------------------
         example_1 = ExampleClass()
@@ -231,19 +267,19 @@ class TestMediaContainer(SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
-        self.assertEqual(result._css, example_1.media._css)
-        self.assertEqual(result._css, {"all": ["example.css"]})
-        self.assertEqual(result._js, example_1.media._js)
-        self.assertEqual(result._js, ["example.js"])
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(
+            result,
+            widgets.Media(css={"all": ["example.css"]}, js=["example.js"]),
+        )
 
-    def test_two_members_of_different_classes(self):
+    def test_two_members_of_different_classes(self) -> None:
         # -----------------------------------------------------------------------------
         class ExampleClass:
-            media = Media(css={"all": ["shared.css"]}, js=["example.js"])
+            media = widgets.Media(css={"all": ["shared.css"]}, js=["example.js"])
 
         class OtherExampleClass:
-            media = Media(
+            media = widgets.Media(
                 css={
                     "all": ["other.css", "shared.css"],
                     "print": ["print.css"],
@@ -259,12 +295,14 @@ class TestMediaContainer(SimpleTestCase):
 
         result = self.media_container.media
 
-        self.assertIsInstance(result, Media)
-        self.assertEqual(
-            result._css,
-            {
-                "all": ["other.css", "shared.css"],
-                "print": ["print.css"],
-            },
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(
+            result,
+            widgets.Media(
+                css={
+                    "all": ["other.css", "shared.css"],
+                    "print": ["print.css"],
+                },
+                js=["example.js", "other.js"],
+            ),
         )
-        self.assertEqual(result._js, ["example.js", "other.js"])

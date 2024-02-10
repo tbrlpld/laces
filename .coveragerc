@@ -21,5 +21,9 @@ exclude_lines =
     if 0:
     if __name__ == .__main__.:
 
+    # Don't complain about if code meant only for type checking isn't run:
+    if TYPE_CHECKING:
+    class .*\bProtocol\):
+
 ignore_errors = True
 show_missing = True

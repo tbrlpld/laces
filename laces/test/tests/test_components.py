@@ -23,16 +23,16 @@ from laces.test.example.components import (
 
 
 class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = RendersTemplateWithFixedContentComponent()
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-world.html",
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello World</h1>\n",
@@ -40,13 +40,13 @@ class TestRendersTemplateWithFixedContentComponent(SimpleTestCase):
 
 
 class TestReturnsFixedContentComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = ReturnsFixedContentComponent()
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertFalse(hasattr(self.component, "template_name"))
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello World Return</h1>\n",
@@ -54,22 +54,22 @@ class TestReturnsFixedContentComponent(SimpleTestCase):
 
 
 class TestPassesFixedNameToContextComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = PassesFixedNameToContextComponent()
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-name.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.get_context_data(),
             {"name": "Alice"},
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Alice</h1>\n",
@@ -77,16 +77,16 @@ class TestPassesFixedNameToContextComponent(SimpleTestCase):
 
 
 class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = PassesInstanceAttributeToContextComponent(name="Bob")
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-name.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.name,
             "Bob",
@@ -96,7 +96,7 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
             {"name": "Bob"},
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Bob</h1>\n",
@@ -104,22 +104,22 @@ class TestPassesInstanceAttributeToContextComponent(SimpleTestCase):
 
 
 class TestPassesSelfToContextComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = PassesSelfToContextComponent(name="Carol")
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-self-name.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.get_context_data(),
             {"self": self.component},
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Carol's self</h1>\n",
@@ -127,16 +127,16 @@ class TestPassesSelfToContextComponent(SimpleTestCase):
 
 
 class TestDataclassAsDictContextComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = DataclassAsDictContextComponent(name="Charlie")
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-name.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.name,
             "Charlie",
@@ -146,7 +146,7 @@ class TestDataclassAsDictContextComponent(SimpleTestCase):
             {"name": "Charlie"},
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(),
             "<h1>Hello Charlie</h1>\n",
@@ -154,22 +154,22 @@ class TestDataclassAsDictContextComponent(SimpleTestCase):
 
 
 class TestPassesNameFromParentContextComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.component = PassesNameFromParentContextComponent()
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/hello-name.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.get_context_data(parent_context={"name": "Dan"}),
             {"name": "Dan"},
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertEqual(
             self.component.render_html(parent_context={"name": "Dan"}),
             "<h1>Hello Dan</h1>\n",
@@ -177,7 +177,7 @@ class TestPassesNameFromParentContextComponent(SimpleTestCase):
 
 
 class TestSectionWithHeadingAndParagraphComponent(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.heading = HeadingComponent(text="Heading")
         self.content = ParagraphComponent(text="Paragraph")
         self.component = SectionWithHeadingAndParagraphComponent(
@@ -185,13 +185,13 @@ class TestSectionWithHeadingAndParagraphComponent(SimpleTestCase):
             content=self.content,
         )
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/section.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.get_context_data(),
             {
@@ -200,7 +200,7 @@ class TestSectionWithHeadingAndParagraphComponent(SimpleTestCase):
             },
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertHTMLEqual(
             self.component.render_html(),
             """
@@ -213,7 +213,7 @@ class TestSectionWithHeadingAndParagraphComponent(SimpleTestCase):
 
 
 class TestListSection(SimpleTestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.heading = HeadingComponent(text="Heading")
         self.item = ParagraphComponent(text="Paragraph")
         self.component = ListSectionComponent(
@@ -221,13 +221,13 @@ class TestListSection(SimpleTestCase):
             items=[self.item],
         )
 
-    def test_template_name(self):
+    def test_template_name(self) -> None:
         self.assertEqual(
             self.component.template_name,
             "components/list-section.html",
         )
 
-    def test_get_context_data(self):
+    def test_get_context_data(self) -> None:
         self.assertEqual(
             self.component.get_context_data(),
             {
@@ -236,7 +236,7 @@ class TestListSection(SimpleTestCase):
             },
         )
 
-    def test_render_html(self):
+    def test_render_html(self) -> None:
         self.assertHTMLEqual(
             self.component.render_html(),
             """
