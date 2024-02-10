@@ -14,7 +14,7 @@ from laces.components import Component
 
 
 if TYPE_CHECKING:
-    from typing import Any, Dict, Optional
+    from typing import Any, Dict, List, Optional
 
     from django.utils.safestring import SafeString
 
@@ -112,12 +112,15 @@ class SectionWithHeadingAndParagraphComponent(Component):
 class ListSectionComponent(Component):
     template_name = "components/list-section.html"
 
-    def __init__(self, heading: "HeadingComponent", items: "list[Component]"):
+    def __init__(self, heading: "HeadingComponent", items: "List[Component]") -> None:
         super().__init__()
         self.heading = heading
         self.items = items
 
-    def get_context_data(self, parent_context=None):
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
         return {
             "heading": self.heading,
             "items": self.items,
@@ -163,7 +166,10 @@ class BlockquoteComponent(Component):
 class MediaDefiningComponent(Component):
     template_name = "components/hello-name.html"
 
-    def get_context_data(self, parent_context=None):
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
         return {"name": "Media"}
 
     class Media:
@@ -172,7 +178,10 @@ class MediaDefiningComponent(Component):
 
 
 class HeaderWithMediaComponent(Component):
-    def render_html(self, parent_context=None):
+    def render_html(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "SafeString":
         return format_html("<header>Header with Media</header>")
 
     class Media:
@@ -181,7 +190,10 @@ class HeaderWithMediaComponent(Component):
 
 
 class FooterWithMediaComponent(Component):
-    def render_html(self, parent_context=None):
+    def render_html(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "SafeString":
         return format_html("<footer>Footer with Media</footer>")
 
     class Media:
