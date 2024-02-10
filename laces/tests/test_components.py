@@ -16,6 +16,8 @@ from laces.components import Component, MediaContainer
 if TYPE_CHECKING:
     from typing import Any, Optional, Union
 
+    from laces.typing import RenderContext
+
 
 class MediaAssertionMixin:
     @staticmethod
@@ -147,8 +149,8 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
 
             def get_context_data(
                 self,
-                parent_context: "Optional[Union[Context, dict[str, Any]]]",
-            ) -> dict[str, str]:
+                parent_context: "Optional[RenderContext]",
+            ) -> "RenderContext":
                 return {"name": "World"}
 
         # -----------------------------------------------------------------------------

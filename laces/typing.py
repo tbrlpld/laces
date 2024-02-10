@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, Protocol, TypeAlias, Union
+from typing import TYPE_CHECKING, Protocol, Union
 
 
 if TYPE_CHECKING:
-    from typing import Any, Optional
+    from typing import Any, Optional, TypeAlias
 
     from django.forms.widgets import Media
     from django.template import Context
@@ -24,7 +24,7 @@ class HasRenderMethod(Protocol):
     ) -> "SafeString": ...
 
 
-Renderable: TypeAlias = Union[HasRenderHtmlMethod, HasRenderMethod]
+Renderable: "TypeAlias" = Union[HasRenderHtmlMethod, HasRenderMethod]
 
 
 class HasMediaProperty(Protocol):
