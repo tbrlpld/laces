@@ -1,7 +1,7 @@
 # Laces
 
-[![License: BSD-3-Clause](https://img.shields.io/badge/License-BSD--3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
-[![PyPI version](https://badge.fury.io/py/laces.svg)](https://badge.fury.io/py/laces)
+[![License: BSD-3-Clause](https://img.shields.io/github/license/tbrlpld/laces)](https://github.com/tbrlpld/laces/blob/main/LICENSE)
+[![PyPI version](https://img.shields.io/pypi/v/laces)](https://pypi.org/project/laces/)
 [![laces CI](https://github.com/tbrlpld/laces/actions/workflows/test.yml/badge.svg)](https://github.com/tbrlpld/laces/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/tbrlpld/laces/graph/badge.svg?token=FMHEHNVPSX)](https://codecov.io/gh/tbrlpld/laces)
 
