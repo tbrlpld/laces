@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING, List
 
 from django.forms.widgets import Media, MediaDefiningClass
-from django.template import Context
 from django.template.loader import get_template
 
 from laces.typing import HasMediaProperty
@@ -45,8 +44,6 @@ class Component(metaclass=MediaDefiningClass):
         consisting of HTML should typically be returned as a
         `django.utils.safestring.SafeString` instance.
         """
-        if parent_context is None:
-            parent_context = Context()
         context_data = self.get_context_data(parent_context)
         if context_data is None:
             raise TypeError("Expected a dict from get_context_data, got None")
@@ -58,6 +55,7 @@ class Component(metaclass=MediaDefiningClass):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "Optional[RenderContext]":
+        """Return the context data to render this component with."""
         return {}
 
     # fmt: off
