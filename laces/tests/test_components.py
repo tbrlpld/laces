@@ -15,7 +15,7 @@ from laces.tests.utils import MediaAssertionMixin
 
 
 if TYPE_CHECKING:
-    from typing import Any, Optional, Union
+    from typing import Optional
 
     from laces.typing import RenderContext
 
@@ -34,14 +34,28 @@ class TestComponent(MediaAssertionMixin, SimpleTestCase):
         with self.assertRaises(AttributeError):
             self.component.render_html()
 
-    def test_get_context_data_parent_context_empty_context(self) -> None:
+    def test_get_context_data_with_parent_context_empty_context(self) -> None:
         """
-        Test the default get_context_data.
+        Test the default `get_context_data`.
 
         The parent context should not matter, but we use it as it is used in
         `render_html` (which passes a `Context` object).
         """
         result = self.component.get_context_data(parent_context=Context())
+
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result, {})
+
+    def test_get_context_data_with_parent_context_none(self) -> None:
+        """Test the default `get_context_data` when received `parent_context=None`."""
+        result = self.component.get_context_data(parent_context=None)
+
+        self.assertIsInstance(result, dict)
+        self.assertEqual(result, {})
+
+    def test_get_context_data_without_parent_context_argument(self) -> None:
+        """Test the default `get_context_data` when not passing  `parent_context`."""
+        result = self.component.get_context_data()
 
         self.assertIsInstance(result, dict)
         self.assertEqual(result, {})
@@ -125,8 +139,9 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
 
             def get_context_data(
                 self,
-                parent_context: "Optional[RenderContext]",
+                parent_context: "Optional[RenderContext]" = None,
             ) -> "RenderContext":
+                """Return a context dict with fixed content."""
                 return {"name": "World"}
 
         # -----------------------------------------------------------------------------
@@ -154,8 +169,9 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
         class ExampleComponent(Component):
             def get_context_data(
                 self,
-                parent_context: "Optional[Union[Context, dict[str, Any]]]",
+                parent_context: "Optional[RenderContext]" = None,
             ) -> None:
+                """Return `None` as the context data."""
                 return None
 
         # -----------------------------------------------------------------------------

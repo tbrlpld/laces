@@ -40,6 +40,7 @@ class PassesFixedNameToContextComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with fixed `name`."""
         return {"name": "Alice"}
 
 
@@ -54,6 +55,7 @@ class PassesInstanceAttributeToContextComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with `name` attribute."""
         return {"name": self.name}
 
 
@@ -68,6 +70,7 @@ class PassesSelfToContextComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with `self`."""
         return {"self": self}
 
 
@@ -81,13 +84,20 @@ class DataclassAsDictContextComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with dataclass object as dict."""
         return asdict(self)
 
 
 class PassesNameFromParentContextComponent(Component):
     template_name = "components/hello-name.html"
 
-    def get_context_data(self, parent_context: "RenderContext") -> "RenderContext":
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
+        """Return the `name` from the parent context as the only key in the data."""
+        if not parent_context:
+            return {}
         return {"name": parent_context["name"]}
 
 
@@ -103,6 +113,7 @@ class SectionWithHeadingAndParagraphComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with heading and content."""
         return {
             "heading": self.heading,
             "content": self.content,
@@ -121,6 +132,7 @@ class ListSectionComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with heading and items."""
         return {
             "heading": self.heading,
             "items": self.items,
@@ -170,6 +182,7 @@ class MediaDefiningComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
+        """Return context data with fixed `name`."""
         return {"name": "Media"}
 
     class Media:

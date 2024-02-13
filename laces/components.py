@@ -56,7 +56,7 @@ class Component(metaclass=MediaDefiningClass):
 
     def get_context_data(
         self,
-        parent_context: "RenderContext",
+        parent_context: "Optional[RenderContext]" = None,
     ) -> "Optional[RenderContext]":
         return {}
 
