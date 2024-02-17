@@ -96,7 +96,7 @@ class PassesNameFromParentContextComponent(Component):
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
         """Return the `name` from the parent context as the only key in the data."""
-        if not parent_context:
+        if not parent_context or "name" not in parent_context:
             return {}
         return {"name": parent_context["name"]}
 
