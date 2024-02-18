@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from laces.components import MediaContainer
@@ -23,7 +24,7 @@ from laces.test.example.components import (
 
 
 if TYPE_CHECKING:
-    from django.http import HttpRequest, HttpResponse
+    from django.http import HttpRequest
 
 
 def kitchen_sink(request: "HttpRequest") -> "HttpResponse":
@@ -73,3 +74,8 @@ def kitchen_sink(request: "HttpRequest") -> "HttpResponse":
             "components_with_media": components_with_media,
         },
     )
+
+
+def component_response(request: "HttpRequest") -> HttpResponse:
+    component = RendersTemplateWithFixedContentComponent()
+    return HttpResponse(content=component.render_html())

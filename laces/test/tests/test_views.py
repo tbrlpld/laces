@@ -105,3 +105,19 @@ class TestKitchenSink(TestCase):
         response = self.client.get(url)
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
+
+
+class TestComponentResponseView(TestCase):
+    def test_get(self) -> None:
+        url = urls.reverse("component_response")
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        response_html = response.content.decode("utf-8")
+        self.assertHTMLEqual(response_html, "<h1>Hello World</h1>")
+        # Testing that the context processors are run. This would happen if you
+        # generated a response in the typical Django way with a top-level template.
+        # (E.g. `django.shortcuts.render` or `django.template.response.TemplateResponse`)
+        self.assertIn("request", response.context)
+        self.assertIn("auth", response.context)
