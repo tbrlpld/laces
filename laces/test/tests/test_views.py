@@ -107,6 +107,19 @@ class TestKitchenSink(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
 
 
+class TestSingleComponentView(TestCase):
+    def test_get(self) -> None:
+        url = urls.reverse("single_component")
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        response_html = response.content.decode("utf-8")
+        self.assertHTMLEqual(response_html, "<h1>Hello World</h1>")
+        self.assertIn("request", response.context)
+        self.assertIn("user", response.context)
+
+
 class TestComponentResponseView(TestCase):
     def test_get(self) -> None:
         url = urls.reverse("component_response")
@@ -120,4 +133,4 @@ class TestComponentResponseView(TestCase):
         # generated a response in the typical Django way with a top-level template.
         # (E.g. `django.shortcuts.render` or `django.template.response.TemplateResponse`)
         self.assertIn("request", response.context)
-        self.assertIn("auth", response.context)
+        self.assertIn("user", response.context)

@@ -76,6 +76,15 @@ def kitchen_sink(request: "HttpRequest") -> "HttpResponse":
     )
 
 
+def single_component(request: "HttpRequest") -> HttpResponse:
+    """Example view with a template that simply renders the passed component."""
+    return render(
+        request,
+        template_name="pages/single-component.html",
+        context={"the_component": RendersTemplateWithFixedContentComponent()},
+    )
+
+
 def component_response(request: "HttpRequest") -> HttpResponse:
     component = RendersTemplateWithFixedContentComponent()
     return HttpResponse(content=component.render_html())
