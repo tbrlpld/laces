@@ -134,3 +134,39 @@ class TestComponentResponseView(TestCase):
         # (E.g. `django.shortcuts.render` or `django.template.response.TemplateResponse`)
         self.assertIn("request", response.context)
         self.assertIn("user", response.context)
+
+    def test_get_compared_to_single_component_view(self) -> None:
+        # Component response view
+        component_url = urls.reverse("single_component")
+        # component_url = urls.reverse("component_response")
+        component_response = self.client.get(component_url)
+        self.assertEqual(component_response.status_code, HTTPStatus.OK)
+
+        # Single component view
+        single_url = urls.reverse("single_component")
+        single_response = self.client.get(single_url)
+        self.assertEqual(single_response.status_code, HTTPStatus.OK)
+
+        self.maxDiff = None
+
+        # String representation
+        self.assertEqual(str(component_response), str(single_response))
+
+        # Content
+        component_response_html = component_response.content.decode("utf-8")
+        single_response_html = single_response.content.decode("utf-8")
+        self.assertHTMLEqual(component_response_html, single_response_html)
+
+        # Context
+        self.assertEqual(
+            # Cannot compare the contents because they include reprs with memory
+            # addresses.
+            component_response.context.keys(),
+            single_response.context.keys(),
+        )
+
+        # Headers
+        self.assertEqual(
+            component_response.headers,
+            single_response.headers,
+        )
