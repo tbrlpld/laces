@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from django.utils.html import format_html
 
-from laces.components import Component, servable
+from laces.components import Component, register_servable
 
 
 if TYPE_CHECKING:
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     from laces.typing import RenderContext
 
 
-@servable("renders-fixed-content-template")
+@register_servable("renders-fixed-content-template")
 class RendersTemplateWithFixedContentComponent(Component):
     template_name = "components/hello-world.html"
 

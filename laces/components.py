@@ -109,7 +109,7 @@ class MediaContainer(List[HasMediaProperty]):
 _servables = {}
 
 
-def servable(name: str) -> "Callable[[type[Component]], type[Component]]":
+def register_servable(name: str) -> "Callable[[type[Component]], type[Component]]":
     def decorator(component_class: type[Component]) -> type[Component]:
         _servables[name] = component_class
         return component_class
