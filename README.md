@@ -739,7 +739,25 @@ The constructor method allows us to keep our view very simple and clean as all t
 
 As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can of course also be used without them.
 
-## About Laces and components
+## About Laces
+
+### Laces and Wagtail
+
+As mentioned in the introduction, the Laces package was extracted from [Wagtail](https://pypi.org/project/wagtail/) to make it available to the wider Django ecosystem.
+The Wagtail documentation still contains the section on what was called originally called ["Template Components"](https://docs.wagtail.org/en/v6.0.1/extending/template_components.html).
+While the code for these components was defined in submodules of the `wagtail.admin` module, there was no limitation on them being only used in the Wagtail admin.
+
+As of [Wagtail release 6.0](https://docs.wagtail.org/en/stable/releases/6.0.html#other-maintenance), Wagtail includes Laces as a dependency.
+The original implementations of `Component` and `MediaContainer` classes as well as the `{% component %}` template tag have been replaced by imports of the equivalents from Laces.
+The names are still available at their original import locations, `wagtail.admin.ui.components` and `wagtail.admin.templatetags.wagtailadmin_tags` respectively.
+So, if you have been using these imports before, no change is needed, they still work.
+
+If you want to start using components in a Wagtail project, you can use the Wagtail or Laces import paths interchangeably.
+To use the Laces template tag library with `{% load laces %}`, you need to add `laces` you your `INSTALLED_APPS`.
+
+If you want to start using component with Wagtail on a release before 6.0, it is probably best to stick with the Wagtail imports.
+This guarantees you won't run into any conflicts when upgrading.
+All the patterns shown above should work regardless, only the import paths are different.
 
 ### Why "Laces"?
 
