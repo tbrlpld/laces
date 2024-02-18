@@ -4,5 +4,5 @@ from laces.test.example.views import kitchen_sink
 
 
 urlpatterns = [
-    path("", kitchen_sink),
+    path("", kitchen_sink, name="kitchen_sink"),
 ]

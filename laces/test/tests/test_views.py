@@ -4,13 +4,14 @@ from http import HTTPStatus
 
 import django
 
+from django import urls
 from django.test import RequestFactory, TestCase
 
 from laces.test.example.views import kitchen_sink
 
 
 class TestKitchenSink(TestCase):
-    def test_get(self) -> None:
+    def test_with_request(self) -> None:
         factory = RequestFactory()
         request = factory.get("/")
 
@@ -97,3 +98,10 @@ class TestKitchenSink(TestCase):
             response_html,
             count=1,
         )
+
+    def test_get(self) -> None:
+        url = urls.reverse("kitchen_sink")
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
