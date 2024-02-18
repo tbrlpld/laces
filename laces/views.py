@@ -2,7 +2,9 @@ import logging
 
 from typing import TYPE_CHECKING
 
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
+
+from laces.components import ServableComponentNotFound, get_servable
 
 
 if TYPE_CHECKING:
@@ -13,4 +15,12 @@ logger = logging.getLogger(__name__)
 
 def serve(request: "HttpRequest", component_slug: str) -> HttpResponse:
     logger.error(component_slug)
-    return HttpResponse()
+
+    try:
+        Component = get_servable(component_slug)
+    except ServableComponentNotFound:
+        raise Http404
+
+    component = Component()
+
+    return HttpResponse(content=component.render_html())

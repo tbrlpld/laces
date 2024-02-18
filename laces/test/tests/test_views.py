@@ -120,3 +120,8 @@ class TestServeComponent(TestCase):
             response.content.decode("utf-8"),
             "<h1>Hello World</h1>",
         )
+
+    def test_get_not_registered_component(self) -> None:
+        response = self.client.get("/components/not-a-component/")
+
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)

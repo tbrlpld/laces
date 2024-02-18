@@ -8,7 +8,7 @@ from laces.typing import HasMediaProperty
 
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import Callable, Optional
 
     from django.utils.safestring import SafeString
 
@@ -104,3 +104,32 @@ class MediaContainer(List[HasMediaProperty]):
         for item in self:
             media += item.media
         return media
+
+
+_servables = {}
+
+
+def servable(name: str) -> "Callable[[type[Component]], type[Component]]":
+    def decorator(component_class: type[Component]) -> type[Component]:
+        _servables[name] = component_class
+        return component_class
+
+    return decorator
+
+
+class ServableComponentNotFound(Exception):
+    def __init__(self, slug: str) -> None:
+        self.name = slug
+        super().__init__(self.get_message())
+
+    def get_message(self) -> str:
+        return f"No servable component '{self.name}' found."
+
+
+def get_servable(slug: str) -> type[Component]:
+    try:
+        component_class = _servables[slug]
+    except KeyError:
+        raise ServableComponentNotFound(slug=slug)
+    else:
+        return component_class
