@@ -97,3 +97,26 @@ class TestKitchenSink(TestCase):
             response_html,
             count=1,
         )
+
+
+class TestServeComponent(TestCase):
+    """
+    Test the serve view from the perspective of an external project.
+
+    The functionality is not defined in this project. It's in Laces, but I want to have
+    some use cases of how this maybe be used.
+
+    This makes some assumptions about what is set up in the project. There will need to
+    be other more encapsulated tests in Laces directly.
+
+    """
+
+    def test_get_component(self) -> None:
+        # Requesting the `laces.test.example.components.RendersTemplateWithFixedContentComponent`
+        response = self.client.get("/components/renders-fixed-content-template/")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello World</h1>",
+        )
