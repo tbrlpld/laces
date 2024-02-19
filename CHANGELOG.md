@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- ...
+- Added section on "Laces and Wagtail" to README. ([#26](https://github.com/tbrlpld/laces/pull/26))
 
 ### Changed
 
