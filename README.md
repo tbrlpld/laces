@@ -753,9 +753,9 @@ The names are still available at their original import locations, `wagtail.admin
 So, if you have been using these imports before, no change is needed, they still work.
 
 If you want to start using components in a Wagtail project, you can use the Wagtail or Laces import paths interchangeably.
-To use the Laces template tag library with `{% load laces %}`, you need to add `laces` you your `INSTALLED_APPS`.
+To be able to use the Laces template tag library with `{% load laces %}`, you need to add `laces` you your `INSTALLED_APPS`.
 
-If you want to start using component with Wagtail on a release before 6.0, it is probably best to stick with the Wagtail imports.
+If you want to start using components with Wagtail on a release before 6.0, it is probably best to stick with the Wagtail imports.
 This guarantees you won't run into any conflicts when upgrading.
 All the patterns shown above should work regardless, only the import paths are different.
 
