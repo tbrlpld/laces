@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- ...
+- Added section on "Laces and Wagtail" to README. ([#26](https://github.com/tbrlpld/laces/pull/26))
 
 ### Changed
 
@@ -37,7 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Extracted component related code from Wagtail project for reuse.
+- Extracted component related code from [Wagtail](https://pypi.org/project/wagtail/) project for reuse.
 
 <!-- TEMPLATE - keep below to copy for new releases -->
 <!--
