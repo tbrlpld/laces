@@ -228,3 +228,13 @@ class ServableWithInitilizerArgumentsComponent(Component):
 class ServableIntAdderComponent(Component):
     def __init__(self, number: int) -> None:
         self.number = 0 + number
+
+
+class CustomException(Exception):
+    pass
+
+
+@register_servable("with-custom-exception-init")
+class ServableWithCustomExceptionInitializerComponent(Component):
+    def __init__(self) -> None:
+        raise CustomException

@@ -164,3 +164,8 @@ class TestServeComponent(TestCase):
         response = self.client.get("/components/int-adder/?number=2")
 
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_custom_exception(self) -> None:
+        response = self.client.get("/components/with-custom-exception-init/")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
