@@ -112,8 +112,8 @@ class TestServeComponent(TestCase):
     """
 
     def test_get_component(self) -> None:
-        # Requesting the `laces.test.example.components.RendersTemplateWithFixedContentComponent`
-        response = self.client.get("/components/renders-fixed-content-template/")
+        # Requesting the `laces.test.example.components.ServableWithWithFixedContentTemplateComponent`
+        response = self.client.get("/components/fixed-content-template/")
 
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertHTMLEqual(
@@ -125,3 +125,21 @@ class TestServeComponent(TestCase):
         response = self.client.get("/components/not-a-component/")
 
         self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_get_component_with_init_args_and_name_alice(self) -> None:
+        response = self.client.get("/components/with-init-args/?name=Alice")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello Alice</h1>",
+        )
+
+    def test_get_component_with_init_args_and_name_bob(self) -> None:
+        response = self.client.get("/components/with-init-args/?name=Bob")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello Bob</h1>",
+        )

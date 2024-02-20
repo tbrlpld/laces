@@ -21,7 +21,6 @@ if TYPE_CHECKING:
     from laces.typing import RenderContext
 
 
-@register_servable("renders-fixed-content-template")
 class RendersTemplateWithFixedContentComponent(Component):
     template_name = "components/hello-world.html"
 
@@ -200,3 +199,26 @@ class FooterWithMediaComponent(Component):
     class Media:
         css = {"all": ("footer.css",)}
         js = ("footer.js", "common.js")
+
+
+# Servables
+
+
+@register_servable("fixed-content-template")
+class ServableWithFixedContentTemplateComponent(Component):
+    template_name = "components/hello-world.html"
+
+
+@register_servable("with-init-args")
+class ServableWithInitilizerArgumentsComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def __init__(self, name: str) -> None:
+        super().__init__()
+        self.name = name
+
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
+        return {"name": self.name}
