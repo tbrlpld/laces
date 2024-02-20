@@ -143,3 +143,19 @@ class TestServeComponent(TestCase):
             response.content.decode("utf-8"),
             "<h1>Hello Bob</h1>",
         )
+
+    def test_get_component_with_init_args_and_name_and_extra_parameter(self) -> None:
+        response = self.client.get(
+            "/components/with-init-args/?name=Bob&extra=notexpected"
+        )
+
+        # You could argue that we should ignore the extra parameters. But, this seems
+        # like it would create inconsistent behavior between having too many and too few
+        # arguments. It's probably cleaner to just response the same and require the
+        # request to be fixed.
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_init_args_and_no_parameters(self) -> None:
+        response = self.client.get("/components/with-init-args/")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)

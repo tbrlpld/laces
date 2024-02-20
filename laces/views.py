@@ -2,6 +2,7 @@ import logging
 
 from typing import TYPE_CHECKING
 
+from django.core.exceptions import BadRequest
 from django.http import Http404, HttpResponse
 
 from laces.components import ServableComponentNotFound, get_servable
@@ -22,6 +23,10 @@ def serve(request: "HttpRequest", component_slug: str) -> HttpResponse:
         raise Http404
 
     kwargs = request.GET.dict()
-    component = Component(**kwargs)
+
+    try:
+        component = Component(**kwargs)
+    except TypeError as e:
+        raise BadRequest(e)
 
     return HttpResponse(content=component.render_html())
