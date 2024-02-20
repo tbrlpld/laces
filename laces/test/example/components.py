@@ -222,3 +222,9 @@ class ServableWithInitilizerArgumentsComponent(Component):
         parent_context: "Optional[RenderContext]" = None,
     ) -> "RenderContext":
         return {"name": self.name}
+
+
+@register_servable("int-adder")
+class ServableIntAdderComponent(Component):
+    def __init__(self, number: int) -> None:
+        self.number = 0 + number

@@ -159,3 +159,8 @@ class TestServeComponent(TestCase):
         response = self.client.get("/components/with-init-args/")
 
         self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_non_string_argument(self) -> None:
+        response = self.client.get("/components/int-adder/?number=2")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
