@@ -1,4 +1,4 @@
-# Laces
+# Laces 👟
 
 [![License: BSD-3-Clause](https://img.shields.io/github/license/tbrlpld/laces)](https://github.com/tbrlpld/laces/blob/main/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/laces)](https://pypi.org/project/laces/)
