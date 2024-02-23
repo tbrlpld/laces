@@ -219,9 +219,10 @@ A couple more examples of how components can be used can be found [below](#patte
 #### Using the parent context
 
 You may have noticed in the above examples that the `render_html` and `get_context_data` methods take a `parent_context` argument.
-This is the context of the template that is calling the component.
+This is the context of the template that is rendering the component.
 The `parent_context` is passed into the `render_html` method by the `{% component %}` template tag.
-In the default implementation of the `render_html` method, the `parent_context` is then passed to the `get_context_data` method.
+
+In the default implementation of the `render_html` method, the `parent_context` is passed to the `get_context_data` method.
 The default implementation of the `get_context_data` method, however, ignores the `parent_context` argument and returns an empty dictionary.
 To make use of it, you will have to override the `get_context_data` method.
 
@@ -289,7 +290,7 @@ Specifically, the keywords `with`, `only` and `as` are supported, similar to how
 
 #### Provide additional parent context variables with `with`
 
-You can pass additional parent context variables to the component using the keyword `with`:
+You can pass additional parent context variables to the component using the `with` keyword.
 
 ```html+django
 {% component welcome with name=request.user.first_name %}
@@ -301,7 +302,7 @@ For more information see the above section on the [parent context](#using-the-pa
 
 #### Limit the parent context variables with `only`
 
-To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
+To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`.
 
 ```html+django
 {% component welcome with name=request.user.first_name only %}
@@ -311,7 +312,7 @@ To limit the parent context variables passed to the component to only those vari
 
 #### Store the rendered output in a variable with `as`
 
-To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
+To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name.
 
 ```html+django
 {% component welcome as welcome_html %}
