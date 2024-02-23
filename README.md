@@ -35,7 +35,7 @@ The purpose of this package is to make these tools available to other Django pro
   - [Nested groups of components](#nested-groups-of-components)
   - [Container components](#container-components)
   - [Using dataclasses](#using-dataclasses)
-- [About Laces and components](#about-laces-and-components)
+- [About Laces](#about-laces)
 - [Contributing](#contributing)
 - [Changelog](https://github.com/tbrlpld/laces/blob/main/CHANGELOG.md)
 - [Discussions](https://github.com/tbrlpld/laces/discussions)
