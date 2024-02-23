@@ -765,7 +765,7 @@ All the patterns shown above should work regardless, only the import paths are d
 The components are also "self-rendering," which could be seen as "self-reliance," which relates to "bootstrapping."
 And while "bootstraps" aren't really "(shoe) laces," my mind made the jump anyhow.
 
-Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also takes a component focused approach to improve the experience when working with Django templates, but in a quite different way.
+Finally, it's a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also takes a component-driven approach to improving the development experience with Django templates, but in a quite different way.
 
 ### Supported versions
 
