@@ -368,7 +368,7 @@ Once you have defined the assets on the component in one of the two ways above, 
 This, again, works in the same way as it does for Django form widgets.
 The component instance will have a `media` property which returns an instance of the `django.forms.Media` class.
 This is the case, even if you used the nested `Media` class to define the assets.
-The [string representation of a `Media` objects](https://docs.djangoproject.com/en/5.0/topics/forms/media#s-media-objects) are the HTML declarations to include the assets.
+The [string representation of `Media` objects](https://docs.djangoproject.com/en/5.0/topics/forms/media#s-media-objects) are the HTML declarations to include the assets.
 
 In the example home template from above, we can output the component's media declarations like so:
 
