@@ -22,10 +22,8 @@ def serve(request: "HttpRequest", component_slug: str) -> HttpResponse:
     except ServableComponentNotFound:
         raise Http404
 
-    kwargs = request.GET.dict()
-
     try:
-        component = Component(**kwargs)
+        component = Component.from_request(request)
     except Exception as e:
         raise BadRequest(e)
 

@@ -34,9 +34,10 @@ class Component(metaclass=MediaDefiningClass):
     template_name: str
 
     @classmethod
-    def from_request(cls: "Type[T]", request: "HttpRequest") -> "T":
+    def from_request(cls: "Type[T]", request: "HttpRequest", /) -> "T":
         """Create an instance of this component based on the given request."""
-        return cls()
+        kwargs = request.GET.dict()
+        return cls(**kwargs)
 
     def render_html(
         self,
