@@ -35,7 +35,17 @@ class Component(metaclass=MediaDefiningClass):
 
     @classmethod
     def from_request(cls: "Type[T]", request: "HttpRequest", /) -> "T":
-        """Create an instance of this component based on the given request."""
+        """
+        Create an instance of this component based on the given request.
+
+        This method is mostly an extension point to add custom logic. If a component has
+        specific access controls, this would be a good spot to check them.
+
+        By default, the request's querystring parameters are passed as keyword arguments
+        to the default initializer. No type conversion is applied. This means that the
+        initializer receives all arguments as strings. To change that behavior, override
+        this method.
+        """
         kwargs = request.GET.dict()
         return cls(**kwargs)
 
