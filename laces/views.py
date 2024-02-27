@@ -26,7 +26,7 @@ def serve(request: "HttpRequest", component_slug: str) -> HttpResponse:
 
     try:
         component = Component(**kwargs)
-    except TypeError as e:
+    except Exception as e:
         raise BadRequest(e)
 
     return HttpResponse(content=component.render_html())
