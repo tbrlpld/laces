@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING
 from django.conf import settings
 from django.forms import widgets
 from django.template import Context
-from django.test import SimpleTestCase
+from django.test import RequestFactory, SimpleTestCase
 from django.utils.safestring import SafeString
 
 from laces.components import Component, MediaContainer
@@ -88,9 +88,23 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
         # Write content to the template file to ensure it exists.
         self.set_example_template_content("")
 
+        self.request_factory = RequestFactory()
+
     def set_example_template_content(self, content: str) -> None:
         with open(self.example_template, "w") as f:
             f.write(content)
+
+    def test_from_request_with_component_wo_init_args(self) -> None:
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            pass
+
+        # -----------------------------------------------------------------------------
+        request = self.request_factory.get("")
+
+        result = ExampleComponent.from_request(request)
+
+        self.assertIsInstance(result, ExampleComponent)
 
     def test_render_html_with_template_name_set(self) -> None:
         """

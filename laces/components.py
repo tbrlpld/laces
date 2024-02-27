@@ -8,11 +8,14 @@ from laces.typing import HasMediaProperty
 
 
 if TYPE_CHECKING:
-    from typing import Callable, Optional
+    from typing import Callable, Optional, Type, TypeVar
 
+    from django.http import HttpRequest
     from django.utils.safestring import SafeString
 
     from laces.typing import RenderContext
+
+    T = TypeVar("T", bound="Component")
 
 
 class Component(metaclass=MediaDefiningClass):
@@ -29,6 +32,11 @@ class Component(metaclass=MediaDefiningClass):
     """
 
     template_name: str
+
+    @classmethod
+    def from_request(cls: "Type[T]", request: "HttpRequest") -> "T":
+        """Create an instance of this component based on the given request."""
+        return cls()
 
     def render_html(
         self,
