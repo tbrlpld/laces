@@ -106,6 +106,64 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
 
         self.assertIsInstance(result, ExampleComponent)
 
+    def test_from_request_with_component_w_name_arg_request_wo_name_para(self) -> None:
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            def __init__(self, name: str) -> None:
+                self.name = name
+
+        # -----------------------------------------------------------------------------
+        request = self.request_factory.get("")
+
+        with self.assertRaises(TypeError) as ctx:
+            ExampleComponent.from_request(request)
+
+        self.assertIn("required positional argument", str(ctx.exception))
+
+    def test_from_request_with_component_w_name_arg_request_w_name_para(self) -> None:
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            def __init__(self, name: str) -> None:
+                self.name = name
+
+        # -----------------------------------------------------------------------------
+        request = self.request_factory.get("", data={"name": "Alice"})
+
+        result = ExampleComponent.from_request(request)
+
+        self.assertEqual(result.name, "Alice")
+
+    def test_from_request_with_component_w_name_arg_request_w_extra_para(self) -> None:
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            def __init__(self, name: str) -> None:
+                self.name = name
+
+        # -----------------------------------------------------------------------------
+        request = self.request_factory.get("", data={"name": "Alice", "other": "Bob"})
+
+        with self.assertRaises(TypeError) as ctx:
+            ExampleComponent.from_request(request)
+
+        self.assertIn("unexpected keyword argument", str(ctx.exception))
+
+    def test_from_request_with_component_init_raises_custom_exception(self) -> None:
+        # -----------------------------------------------------------------------------
+        class CustomException(Exception):
+            pass
+
+        class ExampleComponent(Component):
+            def __init__(self) -> None:
+                raise CustomException
+
+        # -----------------------------------------------------------------------------
+        request = self.request_factory.get("")
+
+        # No special handling happens in the `from_request` method by default.
+        # The raised exception should be exposed.
+        with self.assertRaises(CustomException):
+            ExampleComponent.from_request(request)
+
     def test_render_html_with_template_name_set(self) -> None:
         """
         Test `render_html` method with a set `template_name` attribute.
