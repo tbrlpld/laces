@@ -1,4 +1,4 @@
-# Laces
+# Laces 👟
 
 [![License: BSD-3-Clause](https://img.shields.io/github/license/tbrlpld/laces)](https://github.com/tbrlpld/laces/blob/main/LICENSE)
 [![PyPI version](https://img.shields.io/pypi/v/laces)](https://pypi.org/project/laces/)
@@ -35,7 +35,7 @@ The purpose of this package is to make these tools available to other Django pro
   - [Nested groups of components](#nested-groups-of-components)
   - [Container components](#container-components)
   - [Using dataclasses](#using-dataclasses)
-- [About Laces and components](#about-laces-and-components)
+- [About Laces](#about-laces)
 - [Contributing](#contributing)
 - [Changelog](https://github.com/tbrlpld/laces/blob/main/CHANGELOG.md)
 - [Discussions](https://github.com/tbrlpld/laces/discussions)
@@ -219,7 +219,10 @@ A couple more examples of how components can be used can be found [below](#patte
 #### Using the parent context
 
 You may have noticed in the above examples that the `render_html` and `get_context_data` methods take a `parent_context` argument.
-When you render a component in a template with the `{% component %}` template tag, then that template's context is passed to the `render_html` method as the `parent_context`, and from there to the `get_context_data` method.
+This is the context of the template that is rendering the component.
+The `parent_context` is passed into the `render_html` method by the `{% component %}` template tag.
+
+The `render_html` method, then, passes the `parent_context` to the `get_context_data` method.
 The default implementation of the `get_context_data` method, however, ignores the `parent_context` argument and returns an empty dictionary.
 To make use of it, you can override the `get_context_data` method.
 
@@ -289,7 +292,7 @@ Specifically, the keywords `with`, `only` and `as` are supported, similar to how
 
 #### Provide additional parent context variables with `with`
 
-You can pass additional parent context variables to the component using the keyword `with`:
+You can pass additional parent context variables to the component using the `with` keyword.
 
 ```html+django
 {% component welcome with name=request.user.first_name %}
@@ -301,7 +304,7 @@ For more information see the above section on the [parent context](#using-the-pa
 
 #### Limit the parent context variables with `only`
 
-To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`:
+To limit the parent context variables passed to the component to only those variables provided by the `with` keyword (and no others from the calling template's context), use `only`.
 
 ```html+django
 {% component welcome with name=request.user.first_name only %}
@@ -311,7 +314,7 @@ To limit the parent context variables passed to the component to only those vari
 
 #### Store the rendered output in a variable with `as`
 
-To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name:
+To store the component's rendered output in a variable rather than outputting it immediately, use `as` followed by the variable name.
 
 ```html+django
 {% component welcome as welcome_html %}
@@ -367,7 +370,7 @@ Once you have defined the assets on the component in one of the two ways above, 
 This, again, works in the same way as it does for Django form widgets.
 The component instance will have a `media` property which returns an instance of the `django.forms.Media` class.
 This is the case, even if you used the nested `Media` class to define the assets.
-The [string representation of a `Media` objects](https://docs.djangoproject.com/en/5.0/topics/forms/media#s-media-objects) are the HTML declarations to include the assets.
+The [string representation of `Media` objects](https://docs.djangoproject.com/en/5.0/topics/forms/media#s-media-objects) are the HTML declarations to include the assets.
 
 In the example home template from above, we can output the component's media declarations like so:
 
@@ -739,15 +742,33 @@ The constructor method allows us to keep our view very simple and clean, as all 
 
 As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can also be used without them.
 
-## About Laces and components
+## About Laces
+
+### Laces and Wagtail
+
+As mentioned in the introduction, the Laces package was extracted from [Wagtail](https://pypi.org/project/wagtail/) to make it available to the wider Django ecosystem.
+The Wagtail documentation still contains the section on what was called originally called ["Template Components"](https://docs.wagtail.org/en/v6.0.1/extending/template_components.html).
+While the code for these components was defined in submodules of the `wagtail.admin` module, there was no limitation on them being only used in the Wagtail admin.
+
+As of [Wagtail release 6.0](https://docs.wagtail.org/en/stable/releases/6.0.html#other-maintenance), Wagtail includes Laces as a dependency.
+The original implementations of `Component` and `MediaContainer` classes as well as the `{% component %}` template tag have been replaced by imports of the equivalents from Laces.
+The names are still available at their original import locations, `wagtail.admin.ui.components` and `wagtail.admin.templatetags.wagtailadmin_tags` respectively.
+So, if you have been using these imports before, no change is needed, they still work.
+
+If you want to start using components in a Wagtail project, you can use the Wagtail or Laces import paths interchangeably.
+To be able to use the Laces template tag library with `{% load laces %}`, you need to add `laces` you your `INSTALLED_APPS`.
+
+If you want to start using components with Wagtail on a release before 6.0, it is probably best to stick with the Wagtail imports.
+This guarantees you won't run into any conflicts when upgrading.
+All the patterns shown above should work regardless, only the import paths are different.
 
 ### Why "Laces"?
 
 "Laces" is somewhat of a reference to the feature of tying data and templates together.
 The components are also "self-rendering," which could be seen as "self-reliance," which relates to "bootstrapping."
-And aren't "bootstraps" just a long kind of "(shoe)laces?"
+And while "bootstraps" aren't really "(shoe) laces," my mind made the jump anyhow.
 
-Finally, it is a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also takes a component focused approach to improve the experience when working with Django templates, but in a quite different way.
+Finally, it's a nod to [@mixxorz](https://github.com/mixxorz)'s fantastic [Slippers package](https://github.com/mixxorz/slippers), which also takes a component-driven approach to improving the development experience with Django templates, but in a quite different way.
 
 ### Supported versions
 
