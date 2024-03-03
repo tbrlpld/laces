@@ -166,10 +166,22 @@ class TestPassesNameFromParentContextComponent(SimpleTestCase):
             "components/hello-name.html",
         )
 
-    def test_get_context_data(self) -> None:
+    def test_get_context_data_with_name_in_parent_context(self) -> None:
         self.assertEqual(
             self.component.get_context_data(parent_context={"name": "Dan"}),
             {"name": "Dan"},
+        )
+
+    def test_get_context_data_without_name_in_parent_context(self) -> None:
+        self.assertEqual(
+            self.component.get_context_data(parent_context={"notname": "Dan"}),
+            {},
+        )
+
+    def test_get_context_data_without_parent_context(self) -> None:
+        self.assertEqual(
+            self.component.get_context_data(),
+            {},
         )
 
     def test_render_html(self) -> None:

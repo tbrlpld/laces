@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- ...
+- Refactored handling of `parent_context` between `render_html` and `get_context_data`. This change is Wagtail-compatible. ([#24](https://github.com/tbrlpld/laces/pull/24))
 
 ### Removed
 

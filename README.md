@@ -128,7 +128,7 @@ from laces.components import Component
 
 
 class WelcomePanel(Component):
-    def render_html(self, parent_context):
+    def render_html(self, parent_context=None):
         return format_html("<h1>Hello World!</h1>")
 ```
 
@@ -156,7 +156,7 @@ from laces.components import Component
 class WelcomePanel(Component):
     template_name = "my_app/components/welcome.html"
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return {"name": "Alice"}
 ```
 
@@ -189,7 +189,7 @@ class WelcomePanel(Component):
     def __init__(self, name):
         self.name = name
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return {"name": self.name}
 ```
 
@@ -222,9 +222,9 @@ You may have noticed in the above examples that the `render_html` and `get_conte
 This is the context of the template that is rendering the component.
 The `parent_context` is passed into the `render_html` method by the `{% component %}` template tag.
 
-In the default implementation of the `render_html` method, the `parent_context` is passed to the `get_context_data` method.
+The `render_html` method, then, passes the `parent_context` to the `get_context_data` method.
 The default implementation of the `get_context_data` method, however, ignores the `parent_context` argument and returns an empty dictionary.
-To make use of it, you will have to override the `get_context_data` method.
+To make use of it, you can override the `get_context_data` method.
 
 Relying on data from the parent context somewhat forgoes some of the benefits of components, which is tying the data and template together.
 Especially for nested uses of components, you now require that the data in the right format is passed through all layers of templates again.
@@ -242,7 +242,9 @@ from laces.components import Component
 class WelcomePanel(Component):
     template_name = "my_app/components/welcome.html"
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
+        if not parent_context or "request" not in parent_context:
+            return {}
         return {"name": parent_context["request"].user.first_name}
 ```
 
@@ -308,7 +310,7 @@ To limit the parent context variables passed to the component to only those vari
 {% component welcome with name=request.user.first_name only %}
 ```
 
-**Note**: Both, `with` and `only`, only affect the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods. They do not have any direct effect on actual context that is passed to the component's template. E.g. if the component's `get_context_data` method returns a dictionary which always contains a key `foo`, then that key will be available in the component's template, regardless of whether `only` was used or not.
+**Note**: Both, `with` and `only`, affect the `parent_context` which is passed to the component's `render_html` and `get_context_data` methods. They do not have any direct effect on actual context that is passed to the component's template. E.g. if the component's `get_context_data` method returns a dictionary which always contains a key `foo`, then that key will be available in the component's template, regardless of whether `only` was used or not.
 
 #### Store the rendered output in a variable with `as`
 
@@ -476,7 +478,7 @@ class Dashboard(Component):
         self.welcome = WelcomePanel(name=user.first_name)
         ...
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return {"welcome": self.welcome}
 ```
 
@@ -534,7 +536,7 @@ class Dashboard(Component):
         ]
         ...
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return {"panels": self.panels}
 ```
 
@@ -572,7 +574,7 @@ class Section(Component):
         self.children = children
         ...
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return {"children": self.children}
 
 
@@ -663,12 +665,12 @@ class WelcomePanel(Component):
 
     name: str
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return asdict(self)
 ```
 
 With dataclasses we define the name and type of the properties we want to pass to the component in the class definition.
-Then, we can use the `asdict` function to convert the dataclass instance to a dictionary that can be directly as the template context.
+Then, we can use the `asdict` function from the `dataclasses` module to convert the dataclass instance to a dictionary that can be directly used as the template context.
 
 The `asdict` function only adds keys to the dictionary that were defined as the properties defined in the dataclass.
 In the above example, the dictionary returned by `asdict` would only contain the `name` key.
@@ -713,7 +715,7 @@ class WelcomePanel(Component):
             profile_image_url=user.profile.image.url,
         )
 
-    def get_context_data(self, parent_context):
+    def get_context_data(self, parent_context=None):
         return asdict(self)
 ```
 
@@ -736,9 +738,9 @@ def home(request):
     )
 ```
 
-The constructor method allows us to keep our view very simple and clean as all the data preparation is encapsulated in the component.
+The constructor method allows us to keep our view very simple and clean, as all the data preparation is encapsulated in the component.
 
-As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can of course also be used without them.
+As in the example above, custom constructor methods pair very well with the use of dataclasses, but they can also be used without them.
 
 ## About Laces
 
