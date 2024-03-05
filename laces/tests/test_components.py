@@ -156,17 +156,24 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
         """
         Test `render_html` method when `get_context_data` returns `None`.
 
-        The `render_html` method raises a `TypeError` when `None` is returned from
-        `get_context_method`. This behavior was present when the class was extracted
-        from Wagtail. It is not totally clear why this specific check is needed. By
-        default, the `get_context_data` method provides and empty dict. If an override
-        wanted to `get_context_data` return `None`, it should be expected that no
-        context data is available during rendering. The underlying `template.render`
-        method does not seem to be ok with `None` as the provided context.
+        Originally, the `render_html` method explicitly raised a `TypeError` when
+        `None` was returned from `get_context_method`.
+
+        I was not able to find out why this check was put in place. The components usage
+        in Wagtail does not reveal any issues when the error is removed. Also, the
+        following template rendering works just fine with the context being `None`.
+
+        It seems therefore safe to assume that this was a left-over without much current
+        need.
+
+        This test is in place to prove that a component can behave as expected when the
+        `get_context_data` method returns `None`.
         """
 
         # -----------------------------------------------------------------------------
         class ExampleComponent(Component):
+            template_name = self.example_template_name
+
             def get_context_data(
                 self,
                 parent_context: "Optional[RenderContext]" = None,
@@ -175,9 +182,11 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
                 return None
 
         # -----------------------------------------------------------------------------
+        self.set_example_template_content("Hello")
 
-        with self.assertRaises(TypeError):
-            ExampleComponent().render_html()
+        result = ExampleComponent().render_html()
+
+        self.assertEqual(result, "Hello")
 
     def test_media_defined_through_nested_class(self) -> None:
         """
