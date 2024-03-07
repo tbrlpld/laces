@@ -10,7 +10,7 @@ from typing import TYPE_CHECKING
 
 from django.utils.html import format_html
 
-from laces.components import Component
+from laces.components import Component, register_servable
 
 
 if TYPE_CHECKING:
@@ -212,3 +212,42 @@ class FooterWithMediaComponent(Component):
     class Media:
         css = {"all": ("footer.css",)}
         js = ("footer.js", "common.js")
+
+
+# Servables
+
+
+@register_servable("fixed-content-template")
+class ServableWithFixedContentTemplateComponent(Component):
+    template_name = "components/hello-world.html"
+
+
+@register_servable("with-init-args")
+class ServableWithInitilizerArgumentsComponent(Component):
+    template_name = "components/hello-name.html"
+
+    def __init__(self, name: str) -> None:
+        super().__init__()
+        self.name = name
+
+    def get_context_data(
+        self,
+        parent_context: "Optional[RenderContext]" = None,
+    ) -> "RenderContext":
+        return {"name": self.name}
+
+
+@register_servable("int-adder")
+class ServableIntAdderComponent(Component):
+    def __init__(self, number: int) -> None:
+        self.number = 0 + number
+
+
+class CustomException(Exception):
+    pass
+
+
+@register_servable("with-custom-exception-init")
+class ServableWithCustomExceptionInitializerComponent(Component):
+    def __init__(self) -> None:
+        raise CustomException
