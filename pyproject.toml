@@ -13,7 +13,6 @@ maintainers= [
 ]
 description = "Django components that know how to render themselves."
 readme = "README.md"
-license = {file = "LICENSE"}
 classifiers = [
     # https://pypi.org/classifiers/
     "Development Status :: 3 - Alpha",
