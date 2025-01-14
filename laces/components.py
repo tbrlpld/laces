@@ -45,9 +45,6 @@ class Component(metaclass=MediaDefiningClass):
         `django.utils.safestring.SafeString` instance.
         """
         context_data = self.get_context_data(parent_context)
-        if context_data is None:
-            raise TypeError("Expected a dict from get_context_data, got None")
-
         template = get_template(self.template_name)
         return template.render(context_data)
 

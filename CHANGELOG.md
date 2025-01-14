@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
-- ...
+- The `TypeError` that was raised in `render_html` when `get_context_data` returned `None` was removed. This change is Wagtail-compatible. ([#30](https://github.com/tbrlpld/laces/pull/30))
 
 ## [0.1.1] - 2024-02-10
 
