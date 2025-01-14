@@ -5,8 +5,8 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "laces"
 authors = [
-    {name = "Tibor Leupold", email = "tibor@lpld.io"},
     {name = "Matt Westcott", email = "matt@west.co.tt"},
+    {name = "Tibor Leupold", email = "tibor@lpld.io"},
 ]
 maintainers= [
     {name = "Tibor Leupold", email = "tibor@lpld.io"},
