@@ -4,7 +4,13 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "laces"
-authors = [{name = "Tibor Leupold", email = "tibor@lpld.io"}]
+authors = [
+    {name = "Tibor Leupold", email = "tibor@lpld.io"},
+    {name = "Matt Westcott", email = "matt@west.co.tt"},
+]
+maintainers= [
+    {name = "Tibor Leupold", email = "tibor@lpld.io"},
+]
 description = "Django components that know how to render themselves."
 readme = "README.md"
 license = {file = "LICENSE"}
