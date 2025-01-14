@@ -152,16 +152,18 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
 
         self.assertEqual(result, "Hello World")
 
-    def test_render_html_when_get_context_data_returns_None(self) -> None:
+    def test_render_html_when_get_context_data_returns_none(self) -> None:
         """
         Test `render_html` method when `get_context_data` returns `None`.
 
         Originally, the `render_html` method explicitly raised a `TypeError` when
         `None` was returned from `get_context_method`.
 
-        I was not able to find out why this check was put in place. The components usage
-        in Wagtail does not reveal any issues when the error is removed. Also, the
-        following template rendering works just fine with the context being `None`.
+        I was not able to find out why this check was put in place. The usage of
+        components in Wagtail does not reveal any issues when the raising of the
+        exception is removed. Also, the following template rendering (with
+        `django.template.base.Template.render`) works just fine with the context being
+        `None`.
 
         It seems therefore safe to assume that this was a left-over without much current
         need.
