@@ -97,3 +97,75 @@ class TestKitchenSink(TestCase):
             response_html,
             count=1,
         )
+
+
+class TestServeComponent(TestCase):
+    """
+    Test the serve view from the perspective of an external project.
+
+    The functionality is not defined in this project. It's in Laces, but I want to have
+    some use cases of how this maybe be used.
+
+    This makes some assumptions about what is set up in the project. There will need to
+    be other more encapsulated tests in Laces directly.
+
+    """
+
+    def test_get_component(self) -> None:
+        # Requesting the `laces.test.example.components.ServableWithWithFixedContentTemplateComponent`
+        response = self.client.get("/components/fixed-content-template/")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello World</h1>",
+        )
+
+    def test_get_not_registered_component(self) -> None:
+        response = self.client.get("/components/not-a-component/")
+
+        self.assertEqual(response.status_code, HTTPStatus.NOT_FOUND)
+
+    def test_get_component_with_init_args_and_name_alice(self) -> None:
+        response = self.client.get("/components/with-init-args/?name=Alice")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello Alice</h1>",
+        )
+
+    def test_get_component_with_init_args_and_name_bob(self) -> None:
+        response = self.client.get("/components/with-init-args/?name=Bob")
+
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        self.assertHTMLEqual(
+            response.content.decode("utf-8"),
+            "<h1>Hello Bob</h1>",
+        )
+
+    def test_get_component_with_init_args_and_name_and_extra_parameter(self) -> None:
+        response = self.client.get(
+            "/components/with-init-args/?name=Bob&extra=notexpected"
+        )
+
+        # You could argue that we should ignore the extra parameters. But, this seems
+        # like it would create inconsistent behavior between having too many and too few
+        # arguments. It's probably cleaner to just response the same and require the
+        # request to be fixed.
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_init_args_and_no_parameters(self) -> None:
+        response = self.client.get("/components/with-init-args/")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_non_string_argument(self) -> None:
+        response = self.client.get("/components/int-adder/?number=2")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
+
+    def test_get_component_with_custom_exception(self) -> None:
+        response = self.client.get("/components/with-custom-exception-init/")
+
+        self.assertEqual(response.status_code, HTTPStatus.BAD_REQUEST)
