@@ -39,6 +39,12 @@ dynamic = ["version"]
 dependencies = [
     "Django>=3.2",
 ]
+keywords = [
+    "django",
+    "components",
+    "templates",
+    "render",
+]
 
 [project.optional-dependencies]
 testing = [
