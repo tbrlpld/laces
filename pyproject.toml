@@ -33,6 +33,7 @@ dynamic = ["version"]
 dependencies = [
     "Django>=3.2",
 ]
+
 [project.optional-dependencies]
 testing = [
     "dj-database-url==2.1.0",
@@ -62,7 +63,13 @@ dev = [
 ]
 
 [project.urls]
-Home = "https://github.com/tbrlpld/laces"
+homepage = "https://github.com/tbrlpld/laces"
+source = "https://github.com/tbrlpld/laces"
+documentation = "https://github.com/tbrlpld/laces/blob/main/README.md"
+changelog = "https://github.com/tbrlpld/laces/blob/main/CHANGELOG.md"
+issues = "https://github.com/tbrlpld/laces/issues"
+releasenotes = "https://github.com/tbrlpld/laces/releases"
+download = "https://pypi.org/project/laces/#files"
 
 [tool.flit.module]
 name = "laces"
