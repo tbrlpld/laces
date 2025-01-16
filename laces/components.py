@@ -97,5 +97,6 @@ class MediaContainer(List[HasMediaProperty]):
         """
         media = Media()
         for item in self:
-            media += item.media
+            if hasattr(item, "media"):
+                media += item.media
         return media
