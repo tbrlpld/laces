@@ -309,3 +309,22 @@ class TestMediaContainer(MediaAssertionMixin, SimpleTestCase):
                 js=["example.js", "other.js"],
             ),
         )
+
+    def test_member_without_media_prop(self) -> None:
+        # -----------------------------------------------------------------------------
+        class ExampleClass:
+            nomedia = None
+
+        # -----------------------------------------------------------------------------
+        example = ExampleClass()
+        # We need to ignore the typing of the following line, because the members are
+        # types to have a media property.
+        self.media_container.append(example)  # type: ignore
+
+        result = self.media_container.media
+
+        self.assertIsInstance(result, widgets.Media)
+        self.assertMediaEqual(
+            result,
+            widgets.Media(),
+        )
