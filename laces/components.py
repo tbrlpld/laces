@@ -49,6 +49,18 @@ class Component(metaclass=MediaDefiningClass):
         return template.render(context_data)
 
     def get_template_name(self) -> str:
+        """
+        Return the name of the template used to render the component.
+
+        Returns the `template_name` attribute of the component by default. You may
+        override this method to return different templates depending on the component's
+        state.
+
+        Returns
+        -------
+        str
+            Name of the template used to render the component.
+        """
         return self.template_name
 
     def get_context_data(
