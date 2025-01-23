@@ -1,6 +1,7 @@
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, List, cast
 
 from django.forms.widgets import Media, MediaDefiningClass
+from django.template import Template
 from django.template.loader import get_template
 
 from laces.typing import HasMediaProperty
@@ -45,8 +46,15 @@ class Component(metaclass=MediaDefiningClass):
         `django.utils.safestring.SafeString` instance.
         """
         context_data = self.get_context_data(parent_context)
-        template = get_template(self.get_template_name())
+        template = self.get_template()
         return template.render(context_data)
+
+    def get_template(self) -> Template:
+        """
+        Return the template object used to render the component.
+        """
+        template = cast(Template, get_template(self.get_template_name()))
+        return template
 
     def get_template_name(self) -> str:
         """
