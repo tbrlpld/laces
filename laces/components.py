@@ -45,8 +45,11 @@ class Component(metaclass=MediaDefiningClass):
         `django.utils.safestring.SafeString` instance.
         """
         context_data = self.get_context_data(parent_context)
-        template = get_template(self.template_name)
+        template = get_template(self.get_template_name())
         return template.render(context_data)
+
+    def get_template_name(self) -> str:
+        return self.template_name
 
     def get_context_data(
         self,

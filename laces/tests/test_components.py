@@ -125,6 +125,29 @@ class TestComponentSubclasses(MediaAssertionMixin, SimpleTestCase):
         self.assertIsInstance(result, SafeString)
         self.assertEqual(result, "Test")
 
+    def test_render_html_with_custom_get_template_name_method(self) -> None:
+        """
+        Test `render_html` method with a custom `get_template_name` method.
+        """
+        example_template_name = self.example_template_name
+
+        # -----------------------------------------------------------------------------
+        class ExampleComponent(Component):
+            custom_template_prop = example_template_name
+
+            def get_template_name(self) -> str:
+                return self.custom_template_prop
+
+        # -----------------------------------------------------------------------------
+
+        self.set_example_template_content("Test")
+
+        result = ExampleComponent().render_html()
+
+        self.assertIsInstance(result, str)
+        self.assertIsInstance(result, SafeString)
+        self.assertEqual(result, "Test")
+
     def test_render_html_with_template_name_set_and_data_from_get_context_data(
         self,
     ) -> None:
