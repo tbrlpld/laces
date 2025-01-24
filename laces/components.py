@@ -59,7 +59,7 @@ class Component(metaclass=MediaDefiningClass):
         `get_template_name`.
 
         If no valid template was found, use the template string returned by
-        `get_template_string`. The string is interpreted by the default template engine.
+        `get_template_string`. The string is interpreted by the first template engine.
         """
         if template_name := self.get_template_name():
             template = loader.get_template(template_name)
@@ -69,7 +69,7 @@ class Component(metaclass=MediaDefiningClass):
             # Use the first engine to render the template string.
             # This is somewhat analogous to how `loader.get_template` works.
             # `loader.get_template` iterates through all the engines until the template
-            # is found. Here, we only use the first, because we don't have a signal to,
+            # is found. Here, we only use the first, because we don't have a signal,
             # like a not-found error, to move on to the next one.
             engines = django_template.engines.all()
             first_engine = engines[0]
