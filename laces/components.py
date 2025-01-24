@@ -1,8 +1,8 @@
 from typing import TYPE_CHECKING, List, cast
 
+from django import template as django_template
 from django.forms.widgets import Media, MediaDefiningClass
-from django.template import Template
-from django.template.loader import get_template
+from django.template import Template, loader
 
 from laces.typing import HasMediaProperty
 
@@ -29,6 +29,7 @@ class Component(metaclass=MediaDefiningClass):
     """
 
     template_name: str
+    template_string: str
 
     def render_html(
         self,
@@ -52,11 +53,32 @@ class Component(metaclass=MediaDefiningClass):
     def get_template(self) -> Template:
         """
         Return the template object used to render the component.
-        """
-        template = cast(Template, get_template(self.get_template_name()))
-        return template
 
-    def get_template_name(self) -> str:
+        First attempts to find a template via the name returned to by
+        `get_template_name`.
+
+        If no valid template was found, use the template string returned by
+        `get_template_string`. The string is interpreted by the default template engine.
+        """
+        if template_name := self.get_template_name():
+            template = cast(Template, loader.get_template(template_name))
+            return template
+
+        if template_string := self.get_template_string():
+            # Use the first engine to render the template string.
+            # This is somewhat analogous to how `loader.get_template` works.
+            # `loader.get_template` iterates through all the engines until the template
+            # is found. Here, we only use the first, because we don't have a signal to,
+            # like a not-found error, to move on to the next one.
+            engines = django_template.engines.all()
+            first_engine = engines[0]
+            template = cast(Template, first_engine.from_string(template_string))
+            return template
+
+        # TODO: Use a custom exception
+        raise ValueError("No template defined for the component.")
+
+    def get_template_name(self) -> "Optional[str]":
         """
         Return the name of the template used to render the component.
 
@@ -66,10 +88,27 @@ class Component(metaclass=MediaDefiningClass):
 
         Returns
         -------
-        str
-            Name of the template used to render the component.
+        str | None
+            Name of the template used to render the component. None if no template name
+            is defined.
         """
-        return self.template_name
+        return getattr(self, "template_name", None)
+
+    def get_template_string(self) -> "Optional[str]":
+        """
+        Return the template string to use when rendering the component.
+
+        Returns the `template_string` attribute of the component by default. You may
+        override this method to return different templates depending on the component's
+        state.
+
+        Returns
+        -------
+        str | None
+            String of template code to render the component with. None if no template
+            string was defined.
+        """
+        return getattr(self, "template_string", None)
 
     def get_context_data(
         self,
