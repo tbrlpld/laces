@@ -1,8 +1,8 @@
-from typing import TYPE_CHECKING, List, cast
+from typing import TYPE_CHECKING, List
 
 from django import template as django_template
 from django.forms.widgets import Media, MediaDefiningClass
-from django.template import Template, loader
+from django.template import loader
 
 from laces.typing import HasMediaProperty
 
@@ -10,6 +10,7 @@ from laces.typing import HasMediaProperty
 if TYPE_CHECKING:
     from typing import Optional
 
+    from django.template.backends.base import _EngineTemplate
     from django.utils.safestring import SafeString
 
     from laces.typing import RenderContext
@@ -50,7 +51,7 @@ class Component(metaclass=MediaDefiningClass):
         template = self.get_template()
         return template.render(context_data)
 
-    def get_template(self) -> Template:
+    def get_template(self) -> "_EngineTemplate":
         """
         Return the template object used to render the component.
 
@@ -61,7 +62,7 @@ class Component(metaclass=MediaDefiningClass):
         `get_template_string`. The string is interpreted by the default template engine.
         """
         if template_name := self.get_template_name():
-            template = cast(Template, loader.get_template(template_name))
+            template = loader.get_template(template_name)
             return template
 
         if template_string := self.get_template_string():
@@ -72,7 +73,7 @@ class Component(metaclass=MediaDefiningClass):
             # like a not-found error, to move on to the next one.
             engines = django_template.engines.all()
             first_engine = engines[0]
-            template = cast(Template, first_engine.from_string(template_string))
+            template = first_engine.from_string(template_string)
             return template
 
         # TODO: Use a custom exception
