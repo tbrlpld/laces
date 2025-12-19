@@ -4,6 +4,7 @@
 [![PyPI version](https://img.shields.io/pypi/v/laces)](https://pypi.org/project/laces/)
 [![laces CI](https://github.com/tbrlpld/laces/actions/workflows/test.yml/badge.svg)](https://github.com/tbrlpld/laces/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/tbrlpld/laces/graph/badge.svg?token=FMHEHNVPSX)](https://codecov.io/gh/tbrlpld/laces)
+[![Published on Django Packages](https://img.shields.io/badge/Published%20on-Django%20Packages-0c3c26)](https://djangopackages.org/packages/p/laces/)
 
 ---
 
