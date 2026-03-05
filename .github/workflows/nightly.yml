@@ -9,8 +9,6 @@ on:
 jobs:
   nightly-django-test:
     runs-on: ubuntu-latest
-    env:
-      WEBHOOK_EXISTS: ${{ secrets.SLACK_WEBHOOK_URL != '' }}
 
     steps:
       - uses: actions/checkout@v4
