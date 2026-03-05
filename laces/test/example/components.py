@@ -9,6 +9,7 @@ from dataclasses import asdict, dataclass
 from typing import TYPE_CHECKING
 
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from laces.components import Component
 
@@ -30,7 +31,7 @@ class ReturnsFixedContentComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
-        return format_html("<h1>Hello World Return</h1>\n")
+        return mark_safe("<h1>Hello World Return</h1>\n")
 
 
 class PassesFixedNameToContextComponent(Component):
@@ -195,7 +196,7 @@ class HeaderWithMediaComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
-        return format_html("<header>Header with Media</header>")
+        return mark_safe("<header>Header with Media</header>")
 
     class Media:
         css = {"all": ("header.css",)}
@@ -207,7 +208,7 @@ class FooterWithMediaComponent(Component):
         self,
         parent_context: "Optional[RenderContext]" = None,
     ) -> "SafeString":
-        return format_html("<footer>Footer with Media</footer>")
+        return mark_safe("<footer>Footer with Media</footer>")
 
     class Media:
         css = {"all": ("footer.css",)}

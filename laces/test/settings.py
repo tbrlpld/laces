@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/stable/ref/settings/
 import os
 
 import dj_database_url
-import django
 
 
 # Build paths inside the project like this: os.path.join(PROJECT_DIR, ...)
@@ -116,10 +115,6 @@ LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 
 USE_I18N = True
-
-if django.VERSION < (4, 0):
-    # Deprecated since 4.0. See also: https://docs.djangoproject.com/en/4.2/ref/settings/#use-l10n
-    USE_L10N = True
 
 USE_TZ = True
 

@@ -9,7 +9,7 @@ from unittest.mock import MagicMock
 from django.conf import settings
 from django.template import Context, Template, TemplateSyntaxError
 from django.test import SimpleTestCase
-from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 
 from laces.components import Component
 
@@ -135,7 +135,7 @@ class TestComponentTag(SimpleTestCase):
         )
 
     def test_render_html_return_not_escaped_when_formatted_html(self) -> None:
-        self.component.render_html.return_value = format_html("<h1>My component</h1>")
+        self.component.render_html.return_value = mark_safe("<h1>My component</h1>")
         self.set_parent_template("{% component my_component %}")
 
         result = self.render_parent_template_with_context(
