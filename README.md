@@ -124,13 +124,13 @@ If the return value contains HTML, it should be marked as safe using `django.uti
 ```python
 # my_app/components.py
 
-from django.utils.html import format_html
+from django.utils.safestring import mark_safe
 from laces.components import Component
 
 
 class WelcomePanel(Component):
     def render_html(self, parent_context=None):
-        return format_html("<h1>Hello World!</h1>")
+        return mark_safe("<h1>Hello World!</h1>")
 ```
 
 ### Passing context to the component template
