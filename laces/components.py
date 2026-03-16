@@ -7,11 +7,14 @@ from laces.typing import HasMediaProperty
 
 
 if TYPE_CHECKING:
-    from typing import Optional
+    from typing import Callable, Optional, Type, TypeVar
 
+    from django.http import HttpRequest
     from django.utils.safestring import SafeString
 
     from laces.typing import RenderContext
+
+    T = TypeVar("T", bound="Component")
 
 
 class Component(metaclass=MediaDefiningClass):
@@ -28,6 +31,22 @@ class Component(metaclass=MediaDefiningClass):
     """
 
     template_name: str
+
+    @classmethod
+    def from_request(cls: "Type[T]", request: "HttpRequest", /) -> "T":
+        """
+        Create an instance of this component based on the given request.
+
+        This method is mostly an extension point to add custom logic. If a component has
+        specific access controls, this would be a good spot to check them.
+
+        By default, the request's querystring parameters are passed as keyword arguments
+        to the default initializer. No type conversion is applied. This means that the
+        initializer receives all arguments as strings. To change that behavior, override
+        this method.
+        """
+        kwargs = request.GET.dict()
+        return cls(**kwargs)
 
     def render_html(
         self,
@@ -99,3 +118,32 @@ class MediaContainer(List[HasMediaProperty]):
         for item in self:
             media += item.media
         return media
+
+
+_servables = {}
+
+
+def register_servable(name: str) -> "Callable[[type[Component]], type[Component]]":
+    def decorator(component_class: type[Component]) -> type[Component]:
+        _servables[name] = component_class
+        return component_class
+
+    return decorator
+
+
+class ServableComponentNotFound(Exception):
+    def __init__(self, slug: str) -> None:
+        self.name = slug
+        super().__init__(self.get_message())
+
+    def get_message(self) -> str:
+        return f"No servable component '{self.name}' found."
+
+
+def get_servable(slug: str) -> type[Component]:
+    try:
+        component_class = _servables[slug]
+    except KeyError:
+        raise ServableComponentNotFound(slug=slug)
+    else:
+        return component_class
